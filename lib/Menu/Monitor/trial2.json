@@ -1,0 +1,41 @@
+{
+    "status": "OK",
+    "data": {
+        "info": {
+            "lokasi": {
+                "id": 1,
+                "nama": "Kebun Raya Bradamante"
+            },
+            "hub": {
+                "id": 1,
+                "nama": "GG-Core-1"
+            },
+            "alat": {
+                "id": 1,
+                "nama": "freertos-1"
+            }
+        },
+        "data": [
+            {
+                "id": 1,
+                "jenis": "suhu udara",
+                "data": 30.65,
+                "min": 29.06,
+                "max": 30.65,
+                "mean": 30.31,
+                "tanggal_sensor": " 2021-02-05T12: 02: 11.000Z",
+                "tanggal_update": "2021-02-05T05: 02: 12.000Z"
+            },
+            {
+                "id": 2,
+                "jenis": "kelembaban",
+                "data": 64.1445,
+                "min": 63.9746,
+                "max": 72.29,
+                "mean": 65.64,
+                "tanggal_sensor": "2021-02-05T12: 02: 11.000Z",
+                "tanggal_update": "2021-02-05T05: 02: 12.000Z"
+            }
+        ]
+    }
+}
