@@ -7,7 +7,7 @@ import 'package:ch_v2_1/Menu/Monitor/monitor_outdoor.dart';
 String namaalat;
 String alat;
 List<dynamic> lokasi;
-List<dynamic> list2 = new List<dynamic>();
+List<dynamic> list2 = [];
 int data1;
 int data3;
 int data4;

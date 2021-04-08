@@ -1,3 +1,4 @@
+import 'package:ch_v2_1/Menu/Automasi/automasi.dart';
 import 'package:ch_v2_1/Menu/Kamera/kamera_utama.dart';
 import 'package:ch_v2_1/Menu/Kontrol/kontrol_utama.dart';
 import 'package:ch_v2_1/Menu/Monitor/monitor_utama.dart';
@@ -49,6 +50,9 @@ class _MenuState extends State<Menu> with SingleTickerProviderStateMixin {
         route = KameraUtama();
       }
       if (index == 3) {
+        route = Automasi();
+      }
+      if (index == 4) {
         route = Logout();
       }
       print(_selectedIndex);
@@ -143,6 +147,17 @@ class _MenuState extends State<Menu> with SingleTickerProviderStateMixin {
                   icon: Icon(Icons.video_library),
                   title: new Text(
                     "Kamera",
+                    style: new TextStyle(
+                      fontSize: MediaQuery.of(context).size.height / 65,
+                      fontFamily: "Mont",
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+                BottomNavigationBarItem(
+                  icon: Icon(Icons.smart_button_rounded),
+                  title: new Text(
+                    "Automasi",
                     style: new TextStyle(
                       fontSize: MediaQuery.of(context).size.height / 65,
                       fontFamily: "Mont",

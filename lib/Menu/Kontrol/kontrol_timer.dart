@@ -54,8 +54,6 @@ class _KontrolTimerState extends State<KontrolTimer> {
               onPressed: () {},
             ),
             TextButton(
-              // shape: RoundedRectangleBorder(
-              //     borderRadius: BorderRadius.circular(5.0)),
               onPressed: () {
                 DatePicker.showTimePicker(context,
                     theme: DatePickerTheme(

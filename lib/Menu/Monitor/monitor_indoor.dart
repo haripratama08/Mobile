@@ -9,11 +9,11 @@ import 'package:ch_v2_1/Validator/validation.dart';
 import 'package:ch_v2_1/API/api.dart';
 import 'package:ch_v2_1/Menu/menu.dart';
 
-List<dynamic> list2 = new List<dynamic>();
+List<dynamic> list2 = [];
 int status1 = 0;
-List<dynamic> idlokasi = new List<dynamic>();
-List<dynamic> idhub = new List<dynamic>();
-List<dynamic> idalat = new List<dynamic>();
+List<dynamic> idlokasi = [];
+List<dynamic> idhub = [];
+List<dynamic> idalat = [];
 int number;
 int data1;
 int data3;
@@ -23,7 +23,7 @@ int alat = 0;
 String nama;
 String nama1;
 String nama2;
-List<String> listnama = new List<String>();
+List<String> listnama = [];
 var warna;
 int index;
 int location;
@@ -44,7 +44,6 @@ bool loading = false;
 class _MonitorIndoorState extends State<MonitorIndoor> with Validation {
   TextEditingController alias = new TextEditingController();
   String msg = '';
-  double _progressValue;
   final formKey = GlobalKey<FormState>();
   GantiAlias ganti = GantiAlias();
   Future loadDevice() async {
@@ -56,7 +55,7 @@ class _MonitorIndoorState extends State<MonitorIndoor> with Validation {
     if (this.mounted) {
       setState(() {
         listnama.clear();
-        List<Widget> list = new List<Widget>();
+        List<Widget> list = [];
         for (int i = 0; i < data2.data.lokasi.length; i++) {
           for (int j = 0; j < data2.data.lokasi[i].hub.length; j++) {
             for (int k = 0; k < data2.data.lokasi[i].hub[j].alat.length; k++) {
@@ -177,18 +176,10 @@ class _MonitorIndoorState extends State<MonitorIndoor> with Validation {
                           child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          CircularProgressIndicator(
-                            value: _progressValue,
-                            backgroundColor: Colors.green[900],
-                            valueColor:
-                                new AlwaysStoppedAnimation<Color>(Colors.white),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.all(10.0),
-                            child: Text('Memuat ulang',
-                                style: TextStyle(
-                                    fontFamily: 'Mont', fontSize: 12)),
-                          ),
+                          Container(
+                              height: MediaQuery.of(context).size.width / 5,
+                              width: MediaQuery.of(context).size.width / 5,
+                              child: Image.asset("asset/img/loading-blog.gif")),
                         ],
                       )),
                     );
@@ -202,7 +193,7 @@ class _MonitorIndoorState extends State<MonitorIndoor> with Validation {
                             data(status1);
                             change(index);
                             Semua(
-                              loading: true,
+                                loading: true,
                                 idlokas: idlokas,
                                 idhu: idhu,
                                 idala: idala,

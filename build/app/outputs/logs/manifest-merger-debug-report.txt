@@ -9,6 +9,8 @@ MERGED from [:video_player] C:\Users\hghg\Desktop\CH V2\ch_v2.1\ch_v2_1\build\vi
 MERGED from [:shared_preferences] C:\Users\hghg\Desktop\CH V2\ch_v2.1\ch_v2_1\build\shared_preferences\intermediates\library_manifest\debug\AndroidManifest.xml:2:1-7:12
 MERGED from [:image_picker] C:\Users\hghg\Desktop\CH V2\ch_v2.1\ch_v2_1\build\image_picker\intermediates\library_manifest\debug\AndroidManifest.xml:2:1-22:12
 MERGED from [:flutter_plugin_android_lifecycle] C:\Users\hghg\Desktop\CH V2\ch_v2.1\ch_v2_1\build\flutter_plugin_android_lifecycle\intermediates\library_manifest\debug\AndroidManifest.xml:2:1-7:12
+MERGED from [:sqflite] C:\Users\hghg\Desktop\CH V2\ch_v2.1\ch_v2_1\build\sqflite\intermediates\library_manifest\debug\AndroidManifest.xml:2:1-7:12
+MERGED from [:path_provider] C:\Users\hghg\Desktop\CH V2\ch_v2.1\ch_v2_1\build\path_provider\intermediates\library_manifest\debug\AndroidManifest.xml:2:1-7:12
 MERGED from [:wakelock] C:\Users\hghg\Desktop\CH V2\ch_v2.1\ch_v2_1\build\wakelock\intermediates\library_manifest\debug\AndroidManifest.xml:2:1-7:12
 MERGED from [com.google.android.exoplayer:exoplayer-hls:2.9.6] C:\Users\hghg\.gradle\caches\transforms-2\files-2.1\8c3705bbd667037279238ef2abf82aeb\jetified-exoplayer-hls-2.9.6\AndroidManifest.xml:17:1-24:12
 MERGED from [com.google.android.exoplayer:exoplayer-dash:2.9.6] C:\Users\hghg\.gradle\caches\transforms-2\files-2.1\abc3bf6a606482dee0b03d120626f450\jetified-exoplayer-dash-2.9.6\AndroidManifest.xml:17:1-24:12
@@ -122,6 +124,10 @@ MERGED from [:image_picker] C:\Users\hghg\Desktop\CH V2\ch_v2.1\ch_v2_1\build\im
 MERGED from [:image_picker] C:\Users\hghg\Desktop\CH V2\ch_v2.1\ch_v2_1\build\image_picker\intermediates\library_manifest\debug\AndroidManifest.xml:5:5-44
 MERGED from [:flutter_plugin_android_lifecycle] C:\Users\hghg\Desktop\CH V2\ch_v2.1\ch_v2_1\build\flutter_plugin_android_lifecycle\intermediates\library_manifest\debug\AndroidManifest.xml:5:5-44
 MERGED from [:flutter_plugin_android_lifecycle] C:\Users\hghg\Desktop\CH V2\ch_v2.1\ch_v2_1\build\flutter_plugin_android_lifecycle\intermediates\library_manifest\debug\AndroidManifest.xml:5:5-44
+MERGED from [:sqflite] C:\Users\hghg\Desktop\CH V2\ch_v2.1\ch_v2_1\build\sqflite\intermediates\library_manifest\debug\AndroidManifest.xml:5:5-44
+MERGED from [:sqflite] C:\Users\hghg\Desktop\CH V2\ch_v2.1\ch_v2_1\build\sqflite\intermediates\library_manifest\debug\AndroidManifest.xml:5:5-44
+MERGED from [:path_provider] C:\Users\hghg\Desktop\CH V2\ch_v2.1\ch_v2_1\build\path_provider\intermediates\library_manifest\debug\AndroidManifest.xml:5:5-44
+MERGED from [:path_provider] C:\Users\hghg\Desktop\CH V2\ch_v2.1\ch_v2_1\build\path_provider\intermediates\library_manifest\debug\AndroidManifest.xml:5:5-44
 MERGED from [:wakelock] C:\Users\hghg\Desktop\CH V2\ch_v2.1\ch_v2_1\build\wakelock\intermediates\library_manifest\debug\AndroidManifest.xml:5:5-44
 MERGED from [:wakelock] C:\Users\hghg\Desktop\CH V2\ch_v2.1\ch_v2_1\build\wakelock\intermediates\library_manifest\debug\AndroidManifest.xml:5:5-44
 MERGED from [com.google.android.exoplayer:exoplayer-hls:2.9.6] C:\Users\hghg\.gradle\caches\transforms-2\files-2.1\8c3705bbd667037279238ef2abf82aeb\jetified-exoplayer-hls-2.9.6\AndroidManifest.xml:20:5-22:41

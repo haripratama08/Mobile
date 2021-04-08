@@ -115,13 +115,6 @@ class _RegisterPageState extends State<RegisterPage> with Validation {
                       backgroundColor: Colors.white,
                       radius: 47,
                       backgroundImage: AssetImage('asset/img/pngwing.com.png'),
-
-                      // child: ClipOval(
-                      //   child: Image.asset(
-                      //     'asset/img/pngwing.com.png',
-                      //     alignment: Alignment.center,
-                      //   ),
-                      // ),
                     )),
               )
             : GestureDetector(

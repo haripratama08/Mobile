@@ -28,18 +28,18 @@ String min;
 int idjns;
 int before = 0;
 int panjang;
-List<String> name = new List<String>();
-List<Widget> items = new List<Widget>();
-List<String> itemsshadow = new List<String>();
-List<int> iditems = new List<int>();
+List<String> name = [];
+List<Widget> items = [];
+List<String> itemsshadow = [];
+List<int> iditems = [];
 Map<String, dynamic> sensor;
-List<dynamic> loc = new List<dynamic>();
-List<dynamic> huc = new List<dynamic>();
-List<int> idloka = new List<int>();
-List<dynamic> dev = new List<dynamic>();
+List<dynamic> loc = [];
+List<dynamic> huc = [];
+List<int> idloka = [];
+List<dynamic> dev = [];
 String jenissensor1;
 int status1 = 0;
-double nilai1;
+String nilai1;
 int lokas;
 int hu;
 int ala = 0;
@@ -49,13 +49,15 @@ String jenissensor2;
 String tanggal2;
 String jnssensor;
 double nilai2;
-List<dynamic> list2 = new List<dynamic>();
+int idalatsebelum;
+List<dynamic> list2 = [];
 int alat = 0;
-List<dynamic> idlokasi = new List<dynamic>();
-List<dynamic> idhub = new List<dynamic>();
-List<dynamic> idalat = new List<dynamic>();
-List<bool> noty = new List<bool>();
+List<dynamic> idlokasi = [];
+List<dynamic> idhub = [];
+List<dynamic> idalat = [];
+List<bool> noty = [];
 int number;
+String nilaisebelum;
 int itemsbefore;
 int data1;
 int data3;
@@ -67,7 +69,7 @@ String nama1;
 String nama2;
 int notif;
 bool notify;
-List<String> listnama = new List<String>();
+List<String> listnama = [];
 var warna;
 int index;
 int location;
@@ -75,10 +77,11 @@ int hub;
 int device;
 int state;
 String outputDate;
-List<String> tempatlist = new List<String>();
+List<String> tempatlist = [];
 String tempat;
 int i;
 int panjangtempat;
+bool refresh = false;
 
 class Semua extends StatefulWidget {
   final bool loading;
@@ -94,9 +97,11 @@ class Semua extends StatefulWidget {
 }
 
 class _SemuaState extends State<Semua> {
+  GlobalKey<ScaffoldState> _scaffoldKey;
   @override
   void dispose() {
     loadDevice2();
+    _scaffoldKey?.currentState?.dispose();
     super.dispose();
   }
 
@@ -118,6 +123,21 @@ class _SemuaState extends State<Semua> {
     });
   }
 
+  void refreshData() {
+    setState(() {
+      refresh = true;
+      FocusScope.of(context).requestFocus(FocusNode());
+      Semua(idlokas: idlokas, idhu: idhu, idala: idala, items: []);
+    });
+    print("Refreshing");
+    Future.delayed(Duration(seconds: 2), () {
+      setState(() {
+        refresh = false;
+        print("Refreshed");
+      });
+    });
+  }
+
   Future loadDevice2() async {
     var jsonString = await http.get(
         'https://ydtmch9j99.execute-api.us-east-1.amazonaws.com/dev/api/data?uuid=$uuid',
@@ -126,16 +146,13 @@ class _SemuaState extends State<Semua> {
     Data2 data2 = Data2.fromJson(jsonResponse);
     if (this.mounted) {
       setState(() {
-        print("dev $jsonResponse");
-        List<Widget> list = new List<Widget>();
+        List<Widget> list = [];
         for (int i = 0; i < data2.data.lokasi.length; i++) {
           panjangtempat = data2.data.lokasi.length;
-          print("jumlah panjang $panjangtempat");
           if (tempatlist.length == panjangtempat) {
           } else {
             tempat = data2.data.lokasi[i].nama;
             tempatlist.add(tempat);
-            print(tempatlist);
           }
           for (int j = 0; j < data2.data.lokasi[i].hub.length; j++) {
             for (int k = 0; k < data2.data.lokasi[i].hub[j].alat.length; k++) {
@@ -244,6 +261,7 @@ class _SemuaState extends State<Semua> {
       var jsonResponse = json.decode(jsonString.body);
       if (this.mounted) {
         setState(() {
+          idalatsebelum = dev[0];
           panjang = ((jsonResponse["data"])["data"].length);
           for (var i = 0; i < panjang; i++) {
             if (items.length == panjang) {
@@ -252,7 +270,8 @@ class _SemuaState extends State<Semua> {
               iditems.clear();
               itemsshadow.clear();
             } else {
-              nilai1 = (((jsonResponse["data"])["data"])[i])["data"];
+              nilai1 = ((((jsonResponse["data"])["data"])[i])["data"])
+                  .toStringAsFixed(1);
               idjns = (((jsonResponse["data"])["data"])[i])["id"];
               tanggal1 =
                   ((((jsonResponse["data"])["data"])[i])["tanggal_sensor"]);
@@ -302,8 +321,8 @@ class _SemuaState extends State<Semua> {
                 setState(() {
                   noty.add(notifikasitoogle);
                   iditems.add(notif);
-                  print("iditems $iditems");
                   itemsshadow.add(jnssensor);
+                  nilaisebelum = nilai1;
                   items.add(
                     parameter(jnssensor, satuan, img, nilai1, min, max, mean,
                         outputDate, notifikasitoogle, idjns, i),
@@ -317,10 +336,23 @@ class _SemuaState extends State<Semua> {
         return loadSensor();
       }
     } else {
+      print(idala);
+      print(idhu);
+      print(idlokas);
+      if (idala != idalatsebelum) {
+        setState(() {
+          loading = true;
+        });
+      } else {
+        setState(() {
+          loading = false;
+        });
+      }
       var jsonString = await http.get(
           '$endPoint/mobile/sensor?lokasi=$idlokas&hub=$idhu&alat=$idala',
           headers: {HttpHeaders.authorizationHeader: '$token'});
       var jsonResponse = json.decode(jsonString.body);
+      print(jsonResponse);
       if (this.mounted) {
         setState(() {
           loading = false;
@@ -328,12 +360,21 @@ class _SemuaState extends State<Semua> {
           for (var i = 0; i < panjang; i++) {
             if (items.length == panjang) {
             } else if (items.length > panjang) {
-              loading = true;
+              setState(() {
+                loading = true;
+              });
               items.clear();
               iditems.clear();
               itemsshadow.clear();
             } else {
-              nilai1 = (((jsonResponse["data"])["data"])[i])["data"];
+              if (nilai1 != nilaisebelum) {
+                items.clear();
+                iditems.clear();
+                itemsshadow.clear();
+              } else {}
+
+              nilai1 = ((((jsonResponse["data"])["data"])[i])["data"])
+                  .toStringAsFixed(1);
               idjns = (((jsonResponse["data"])["data"])[i])["id"];
               tanggal1 =
                   ((((jsonResponse["data"])["data"])[i])["tanggal_sensor"]);
@@ -353,7 +394,9 @@ class _SemuaState extends State<Semua> {
               jnssensor = (((jsonResponse["data"])["data"])[i])["jenis"];
               if (itemsshadow.contains(jnssensor) &&
                   itemsbefore == items.length) {
-                loading = true;
+                setState(() {
+                  loading = true;
+                });
                 items.clear();
                 iditems.clear();
                 itemsshadow.clear();
@@ -381,15 +424,20 @@ class _SemuaState extends State<Semua> {
                 } else if (notif == 1) {
                   notifikasitoogle = true;
                 }
+                print(" height ${MediaQuery.of(context).size.height}");
+                print(" width ${MediaQuery.of(context).size.width}");
+                print(
+                    " width ${MediaQuery.of(context).size.height / MediaQuery.of(context).size.width}");
                 setState(() {
                   noty.add(notifikasitoogle);
                   iditems.add(notif);
-                  print("udah");
                   itemsshadow.add(jnssensor);
                   items.add(
                     parameter(jnssensor, satuan, img, nilai1, min, max, mean,
                         outputDate, notifikasitoogle, idjns, i),
                   );
+                  idalatsebelum = idala;
+                  nilaisebelum = nilai1;
                   loading = false;
                 });
               }
@@ -424,10 +472,6 @@ class _SemuaState extends State<Semua> {
 
   void change(int index) {
     setState(() {
-      print("masuk change");
-      print(idlokas);
-      print(idhu);
-      print(idala);
       status1 = index;
       idlokas = idlokasi[index];
       idhu = idhub[index];
@@ -439,95 +483,156 @@ class _SemuaState extends State<Semua> {
   void data(int index) {
     if (index == null) {
       change(0);
-      print("index null");
       idlokas = idlokasi[0];
       idhu = idhub[0];
       idala = idalat[0];
     } else {
       change(index);
       items.clear();
-      print("index sama dengan $index");
       idlokas = idlokasi[index];
       idhu = idhub[index];
       idala = idalat[index];
     }
   }
 
+  double bot;
   int status1 = 0;
-
+  int _current = 0;
   @override
   Widget build(BuildContext context) {
-    if (panjang == null || panjang == 0 || panjang.isNaN) {
-      return Container(
-          height: MediaQuery.of(context).size.height,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Center(
-                  child: CircularProgressIndicator(
-                backgroundColor: Colors.green[900],
-                valueColor: new AlwaysStoppedAnimation<Color>(Colors.white),
-              )),
-              Padding(
-                padding: const EdgeInsets.all(10.0),
-                child: Text('Memuat data',
-                    style: TextStyle(fontFamily: 'Mont', fontSize: 12)),
-              ),
-            ],
-          ));
+    if (panjang == null || panjang == 0 || panjang.isNaN || refresh == true) {
+      return AlertDialog(
+          content: SingleChildScrollView(
+              child: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            Container(
+                width: MediaQuery.of(context).size.width / 5,
+                height: MediaQuery.of(context).size.width / 5,
+                child: Image.asset("asset/img/loading.gif")),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Text("Silahkan Menunggu",
+                  style: TextStyle(fontFamily: 'Mont')),
+            ),
+          ],
+        ),
+      )));
     } else {
       return DefaultTabController(
         initialIndex: 0,
         length: panjangtempat + 1,
         child: Scaffold(
+          key: _scaffoldKey,
           body: Container(
-            child: Container(
+            child: RefreshIndicator(
+              onRefresh: () {
+                return Future.delayed(
+                  Duration(seconds: 1),
+                  () {
+                    setState(() {
+                      Menu();
+                      FocusScope.of(context).requestFocus(FocusNode());
+                    });
+                  },
+                );
+              },
               child: Column(
                 children: <Widget>[
                   Column(
                     children: [
                       (loading == true)
                           ? Container(
-                              height: MediaQuery.of(context).size.width * 8 / 9,
+                              height: (MediaQuery.of(context).size.width *
+                                      7.5 /
+                                      9) +
+                                  30,
                               child: Column(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
-                                  Center(
-                                      child: CircularProgressIndicator(
-                                    backgroundColor: Colors.green[900],
-                                    valueColor:
-                                        new AlwaysStoppedAnimation<Color>(
-                                            Colors.white),
-                                  )),
-                                  Padding(
-                                    padding: const EdgeInsets.all(10.0),
-                                    child: Text('Memuat Ulang',
-                                        style: TextStyle(
-                                            fontFamily: 'Mont', fontSize: 12)),
-                                  ),
+                                  Container(
+                                      height:
+                                          MediaQuery.of(context).size.width / 5,
+                                      width:
+                                          MediaQuery.of(context).size.width / 5,
+                                      child: Image.asset(
+                                          "asset/img/loading-blog.gif")),
                                 ],
                               ))
-                          : Center(
-                              child: CarouselSlider(
-                                  items: items,
-                                  options: CarouselOptions(
-                                    height: MediaQuery.of(context).size.width *
-                                        8 /
-                                        9,
-                                    aspectRatio: 7 / 9,
-                                    viewportFraction: 0.8,
-                                    initialPage: 0,
-                                    enableInfiniteScroll: true,
-                                    reverse: false,
-                                    autoPlay: true,
-                                    autoPlayInterval: Duration(seconds: 8),
-                                    autoPlayAnimationDuration:
-                                        Duration(milliseconds: 800),
-                                    autoPlayCurve: Curves.fastOutSlowIn,
-                                    enlargeCenterPage: true,
-                                    scrollDirection: Axis.horizontal,
-                                  )),
-                            ),
+                          : GestureDetector(
+                              child: Center(
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    CarouselSlider(
+                                      items: items,
+                                      options: CarouselOptions(
+                                          height: MediaQuery.of(context)
+                                                  .size
+                                                  .width *
+                                              7.5 /
+                                              9,
+                                          aspectRatio: 7 / 9,
+                                          viewportFraction: 0.8,
+                                          initialPage: 0,
+                                          enableInfiniteScroll: true,
+                                          reverse: false,
+                                          autoPlay: true,
+                                          autoPlayInterval:
+                                              Duration(seconds: 8),
+                                          autoPlayAnimationDuration:
+                                              Duration(milliseconds: 800),
+                                          autoPlayCurve: Curves.fastOutSlowIn,
+                                          enlargeCenterPage: true,
+                                          scrollDirection: Axis.horizontal,
+                                          onPageChanged: (index, reason) {
+                                            setState(() {
+                                              bot = MediaQuery.of(context)
+                                                      .size
+                                                      .width /
+                                                  9;
+                                              _current = index;
+                                            });
+                                          }),
+                                    ),
+                                    Padding(
+                                      padding: const EdgeInsets.fromLTRB(
+                                          0, 0, 0, 30),
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: items.map((url) {
+                                          int index = items.indexOf(url);
+                                          return Container(
+                                            width: 8.0,
+                                            height: 8.0,
+                                            margin: EdgeInsets.symmetric(
+                                                vertical: 10.0,
+                                                horizontal: 2.0),
+                                            decoration: BoxDecoration(
+                                              shape: BoxShape.circle,
+                                              color: _current == index
+                                                  ? Colors.green[900]
+                                                  : Color.fromRGBO(
+                                                      0, 0, 0, 0.4),
+                                            ),
+                                          );
+                                        }).toList(),
+                                      ),
+                                    )
+                                  ],
+                                ),
+                              ),
+                              onVerticalDragUpdate:
+                                  (DragUpdateDetails details) {
+                                if (details.globalPosition.direction < 1 &&
+                                    (details.globalPosition.dy > 100 &&
+                                        details.globalPosition.dy < 500)) {
+                                  refreshData();
+                                }
+                              },
+                            )
                     ],
                   ),
                   SizedBox(
@@ -590,7 +695,7 @@ class _SemuaState extends State<Semua> {
       String jenissensor,
       String satuan,
       String img,
-      double nilai,
+      String nilai,
       String min,
       String max,
       String mean,
@@ -605,206 +710,202 @@ class _SemuaState extends State<Semua> {
           children: <Widget>[
             Center(
                 child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                Text(
-                  jenissensor.inCaps,
-                  style: TextStyle(
-                      fontFamily: 'Mont',
-                      fontSize: MediaQuery.of(context).size.height / 35),
-                ),
-                SizedBox(
-                  height: 5,
-                ),
-                Center(
-                  child: Image.asset(
-                    img,
-                    height: MediaQuery.of(context).size.height / 20,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                  Text(
+                    jenissensor.inCaps,
+                    style: TextStyle(
+                        fontFamily: 'Mont',
+                        fontSize: MediaQuery.of(context).size.height / 35),
                   ),
-                ),
-                SizedBox(height: 5),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    Padding(
-                      padding: const EdgeInsets.only(left: 15),
-                      child: Row(
-                        children: <Widget>[
-                          new Text(
-                            "$nilai",
-                            style: TextStyle(
+                  SizedBox(
+                    height: 5,
+                  ),
+                  Center(
+                    child: Image.asset(
+                      img,
+                      height: MediaQuery.of(context).size.height / 20,
+                    ),
+                  ),
+                  SizedBox(height: 5),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      Padding(
+                        padding: const EdgeInsets.only(left: 15),
+                        child: Row(
+                          children: <Widget>[
+                            new Text(
+                              "$nilai",
+                              style: TextStyle(
+                                  fontSize:
+                                      MediaQuery.of(context).size.height / 20,
+                                  fontFamily: "Mont"),
+                            ),
+                            new Text(
+                              satuan,
+                              style: TextStyle(
                                 fontSize:
                                     MediaQuery.of(context).size.height / 20,
-                                fontFamily: "Mont"),
-                          ),
-                          new Text(
-                            satuan,
-                            style: TextStyle(
-                              fontSize: MediaQuery.of(context).size.height / 20,
+                              ),
                             ),
-                          ),
-                        ],
-                      ),
-                    )
-                  ],
-                ),
-                SizedBox(height: 5),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    Column(
-                      children: <Widget>[
-                        Text(
-                          "Min",
-                          style: TextStyle(
-                            fontFamily: "Mont",
-                            fontSize: MediaQuery.of(context).size.height / 60,
-                          ),
+                          ],
                         ),
-                        Container(
-                            decoration: BoxDecoration(
-                                color: Colors.green[900],
-                                borderRadius: BorderRadius.circular(5)),
-                            child: Center(
-                                child: Text("$min",
-                                    style: TextStyle(
-                                        fontFamily: 'Mont',
-                                        fontSize:
-                                            MediaQuery.of(context).size.height /
-                                                60,
-                                        color: Colors.white))),
-                            height: 40,
-                            width: 50)
-                      ],
-                    ),
-                    SizedBox(width: 5),
-                    Column(
-                      children: <Widget>[
-                        Text("Mean",
-                            style: TextStyle(
-                              fontFamily: "Mont",
-                              fontSize: MediaQuery.of(context).size.height / 60,
-                            )),
-                        Container(
-                            decoration: BoxDecoration(
-                                color: Colors.green[900],
-                                borderRadius: BorderRadius.circular(5)),
-                            child: Center(
-                                child: Text("$mean",
-                                    style: TextStyle(
-                                        fontSize:
-                                            MediaQuery.of(context).size.height /
-                                                60,
-                                        fontFamily: 'Mont',
-                                        color: Colors.white))),
-                            height: 40,
-                            width: 50)
-                      ],
-                    ),
-                    SizedBox(width: 5),
-                    Column(
-                      children: <Widget>[
-                        Text("Max",
-                            style: TextStyle(
-                              fontFamily: "Mont",
-                              fontSize: MediaQuery.of(context).size.height / 60,
-                            )),
-                        Container(
-                            decoration: BoxDecoration(
-                                color: Colors.green[900],
-                                borderRadius: BorderRadius.circular(5)),
-                            child: Center(
-                                child: Text("$max",
-                                    style: TextStyle(
-                                        fontSize:
-                                            MediaQuery.of(context).size.height /
-                                                60,
-                                        fontFamily: 'Mont',
-                                        color: Colors.white))),
-                            height: 40,
-                            width: 50)
-                      ],
-                    ),
-                  ],
-                ),
-                SizedBox(height: 10),
-                Center(
-                  child: new Text(
-                    time,
-                    style: TextStyle(fontFamily: "Mont"),
+                      )
+                    ],
                   ),
-                ),
-                SizedBox(height: 10),
-                Center(
-                  child: Container(
-                      height: MediaQuery.of(context).size.height / 20,
-                      width: MediaQuery.of(context).size.width / 2.5,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
+                  SizedBox(height: 5),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      Column(
                         children: <Widget>[
-                          Padding(
-                            padding: const EdgeInsets.all(5.0),
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: <Widget>[
-                                new Text(
-                                  'Atur',
-                                  style: TextStyle(
-                                      fontFamily: 'Mont', fontSize: 11),
-                                ),
-                                new Text(
-                                  'Notifikasi',
-                                  style: TextStyle(
-                                      fontFamily: 'Mont', fontSize: 11),
-                                ),
-                              ],
+                          Text(
+                            "Min",
+                            style: TextStyle(
+                              fontFamily: "Mont",
+                              fontSize: MediaQuery.of(context).size.height / 60,
                             ),
                           ),
-                          Center(
-                            child: Switch(
-                              value: toogle,
-                              onChanged: (value) {
-                                setState(() {
-                                  FocusScope.of(context)
-                                      .requestFocus(FocusNode());
-                                  Semua(
-                                      idlokas: idlokas,
-                                      idhu: idhu,
-                                      idala: idala,
-                                      items: []);
-                                  loadSensor();
-                                  jum = jum;
-                                  idsens = i;
-                                  print("jum $jum");
-                                  print(itemsshadow);
-                                  print(idsens);
-                                  print(iditems);
-                                  print("jenis sensor $i");
-                                  if (value == false) {
-                                    state = 0;
-                                  } else {
-                                    state = 1;
-                                  }
-                                  kucing = iditems[jum];
-                                  print(itemsshadow);
-                                  print(iditems[0]);
-                                  print("state $state");
-                                  print("id items ${iditems[jum]}");
-                                  gantinotif(state, idsens, token);
-                                });
-                              },
-                              activeTrackColor: Colors.green[900],
-                              activeColor: Colors.green,
-                            ),
-                          ),
+                          Container(
+                              decoration: BoxDecoration(
+                                  color: Colors.green[900],
+                                  borderRadius: BorderRadius.circular(5)),
+                              child: Center(
+                                  child: Text("$min",
+                                      style: TextStyle(
+                                          fontFamily: 'Mont',
+                                          fontSize: MediaQuery.of(context)
+                                                  .size
+                                                  .height /
+                                              60,
+                                          color: Colors.white))),
+                              height: 40,
+                              width: 50)
                         ],
                       ),
-                      decoration: BoxDecoration(
-                          border: Border.all(width: 1.5),
-                          borderRadius: BorderRadius.circular(10))),
-                ),
-              ],
-            )),
+                      SizedBox(width: 5),
+                      Column(
+                        children: <Widget>[
+                          Text("Mean",
+                              style: TextStyle(
+                                fontFamily: "Mont",
+                                fontSize:
+                                    MediaQuery.of(context).size.height / 60,
+                              )),
+                          Container(
+                              decoration: BoxDecoration(
+                                  color: Colors.green[900],
+                                  borderRadius: BorderRadius.circular(5)),
+                              child: Center(
+                                  child: Text("$mean",
+                                      style: TextStyle(
+                                          fontSize: MediaQuery.of(context)
+                                                  .size
+                                                  .height /
+                                              60,
+                                          fontFamily: 'Mont',
+                                          color: Colors.white))),
+                              height: 40,
+                              width: 50)
+                        ],
+                      ),
+                      SizedBox(width: 5),
+                      Column(
+                        children: <Widget>[
+                          Text("Max",
+                              style: TextStyle(
+                                fontFamily: "Mont",
+                                fontSize:
+                                    MediaQuery.of(context).size.height / 60,
+                              )),
+                          Container(
+                              decoration: BoxDecoration(
+                                  color: Colors.green[900],
+                                  borderRadius: BorderRadius.circular(5)),
+                              child: Center(
+                                  child: Text("$max",
+                                      style: TextStyle(
+                                          fontSize: MediaQuery.of(context)
+                                                  .size
+                                                  .height /
+                                              60,
+                                          fontFamily: 'Mont',
+                                          color: Colors.white))),
+                              height: 40,
+                              width: 50)
+                        ],
+                      ),
+                    ],
+                  ),
+                  SizedBox(height: 10),
+                  Center(
+                    child: new Text(
+                      time,
+                      style: TextStyle(fontFamily: "Mont"),
+                    ),
+                  ),
+                  SizedBox(height: 10),
+                  Center(
+                    child: Container(
+                        height: MediaQuery.of(context).size.height / 20,
+                        width: MediaQuery.of(context).size.width / 2.5,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: <Widget>[
+                            Padding(
+                              padding: const EdgeInsets.all(5.0),
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: <Widget>[
+                                  new Text(
+                                    'Atur',
+                                    style: TextStyle(
+                                        fontFamily: 'Mont', fontSize: 11),
+                                  ),
+                                  new Text(
+                                    'Notifikasi',
+                                    style: TextStyle(
+                                        fontFamily: 'Mont', fontSize: 11),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            Center(
+                              child: Switch(
+                                value: toogle,
+                                onChanged: (value) {
+                                  setState(() {
+                                    FocusScope.of(context)
+                                        .requestFocus(FocusNode());
+                                    Semua(
+                                        idlokas: idlokas,
+                                        idhu: idhu,
+                                        idala: idala,
+                                        items: []);
+                                    loadSensor();
+                                    jum = jum;
+                                    idsens = i;
+                                    if (value == false) {
+                                      state = 0;
+                                    } else {
+                                      state = 1;
+                                    }
+                                    kucing = iditems[jum];
+                                    gantinotif(state, idsens, token);
+                                  });
+                                },
+                                activeTrackColor: Colors.green[900],
+                                activeColor: Colors.green,
+                              ),
+                            ),
+                          ],
+                        ),
+                        decoration: BoxDecoration(
+                            border: Border.all(width: 1.5),
+                            borderRadius: BorderRadius.circular(10))),
+                  ),
+                ])),
           ],
         ),
       ),

@@ -212,187 +212,52 @@ class JenisSensor {
       };
 }
 
-// class Data2 {
-//   Data2({
-//     this.status,
-//     this.data,
-//   });
+class SmartTimer {
+  int _id;
+  String _name;
+  String _time;
+  String _state;
 
-//   String status;
-//   Data3 data;
+  // konstruktor versi 1
+  SmartTimer(this._name, this._state, this._time);
 
-//   factory Data2.fromJson(Map<String, dynamic> json) => Data2(
-//         status: json["status"],
-//         data: Data3.fromJson(json["data"]),
-//       );
+  // konstruktor versi 2: konversi dari Map ke Contact
+  SmartTimer.fromMap(Map<String, dynamic> map) {
+    this._id = map['id'];
+    this._name = map['name'];
+    this._time = map['time'];
+    this._state = map['state'];
+  }
+  //getter dan setter (mengambil dan mengisi data kedalam object)
+  // getter
+  int get id => _id;
+  String get name => _name;
+  String get time => _time;
+  String get state => _state;
 
-//   Map<String, dynamic> toJson() => {
-//         "status": status,
-//         "data": data.toJson(),
-//       };
-// }
+  // setter
+  set name(String value) {
+    _name = value;
+  }
 
-// class Data3 {
-//   Data3({
-//     this.uuid,
-//     this.lokasi,
-//   });
+  set time(String value) {
+    _time = value;
+  }
 
-//   String uuid;
-//   List<Lokasi> lokasi;
+  set state(String value) {
+    state = value;
+  }
 
-//   factory Data3.fromJson(Map<String, dynamic> json) => Data3(
-//         uuid: json["uuid"],
-//         lokasi:
-//             List<Lokasi>.from(json["lokasi"].map((x) => Lokasi.fromJson(x))),
-//       );
-
-//   Map<String, dynamic> toJson() => {
-//         "uuid": uuid,
-//         "lokasi": List<dynamic>.from(lokasi.map((x) => x.toJson())),
-//       };
-// }
-
-// class Lokasi {
-//   Lokasi({
-//     this.id,
-//     this.nama,
-//     this.hub,
-//   });
-
-//   int id;
-//   String nama;
-//   List<Hub> hub;
-
-//   factory Lokasi.fromJson(Map<String, dynamic> json) => Lokasi(
-//         id: json["id"],
-//         nama: json["nama"],
-//         hub: List<Hub>.from(json["hub"].map((x) => Hub.fromJson(x))),
-//       );
-
-//   Map<String, dynamic> toJson() => {
-//         "id": id,
-//         "nama": nama,
-//         "hub": List<dynamic>.from(hub.map((x) => x.toJson())),
-//       };
-// }
-
-// class Hub {
-//   Hub({
-//     this.id,
-//     this.nama,
-//     this.alat,
-//   });
-
-//   int id;
-//   String nama;
-//   List<Alat> alat;
-
-//   factory Hub.fromJson(Map<String, dynamic> json) => Hub(
-//         id: json["id"],
-//         nama: json["nama"],
-//         alat: List<Alat>.from(json["alat"].map((x) => Alat.fromJson(x))),
-//       );
-
-//   Map<String, dynamic> toJson() => {
-//         "id": id,
-//         "nama": nama,
-//         "alat": List<dynamic>.from(alat.map((x) => x.toJson())),
-//       };
-// }
-
-// class Alat {
-//   Alat({
-//     this.id,
-//     this.alias,
-//     this.nama,
-//     this.sensor,
-//   });
-
-//   int id;
-//   String nama;
-//   List<Sensor> sensor;
-//   String alias;
-
-//   factory Alat.fromJson(Map<String, dynamic> json) => Alat(
-//         id: json["id"],
-//         nama: json["nama"],
-//         sensor:
-//             List<Sensor>.from(json["sensor"].map((x) => Sensor.fromJson(x))),
-//         alias: json["alias"],
-//       );
-
-//   Map<String, dynamic> toJson() => {
-//         "id": id,
-//         "nama": nama,
-//         "sensor": List<dynamic>.from(sensor.map((x) => x.toJson())),
-//         "alias": alias,
-//       };
-// }
-
-// class Sensor {
-//   Sensor({
-//     this.id,
-//     this.jenisSensor,
-//   });
-
-//   int id;
-//   JenisSensor jenisSensor;
-
-//   factory Sensor.fromJson(Map<String, dynamic> json) => Sensor(
-//         id: json["id"],
-//         jenisSensor: JenisSensor.fromJson(json["jenis_sensor"]),
-//       );
-
-//   Map<String, dynamic> toJson() => {
-//         "id": id,
-//         "jenis_sensor": jenisSensor.toJson(),
-//       };
-// }
-
-// class JenisSensor {
-//   JenisSensor({
-//     this.jenis,
-//   });
-
-//   String jenis;
-
-//   factory JenisSensor.fromJson(Map<String, dynamic> json) => JenisSensor(
-//         jenis: json["jenis"],
-//       );
-
-//   Map<String, dynamic> toJson() => {
-//         "jenis": jenis,
-//       };
-// }
-
-// class User {
-//   User({
-//     this.idlokasi,
-//     this.idhub,
-//     this.idalat,
-//     this.idsensor,
-//   });
-
-//   int idlokasi;
-//   int idhub;
-//   int idalat;
-//   int idsensor;
-
-//   factory User.fromJson(Map<String, dynamic> json) => User(
-//         idlokasi: json["idlokasi"],
-//         idhub: json["idhub"],
-//         idalat: json["idalat"],
-//         idsensor: json["idsensor"],
-//       );
-
-//   Map<String, dynamic> toJson() => {
-//         "idlokasi": idlokasi,
-//         "idhub": idhub,
-//         "idalat": idalat,
-//         "idsensor": idsensor,
-//       };
-// }
+  // konversi dari Contact ke Map
+  Map<String, dynamic> toMap() {
+    Map<String, dynamic> map = Map<String, dynamic>();
+    map['id'] = this._id;
+    map['name'] = name;
+    map['time'] = time;
+    map['state'] = state;
+    return map;
+  }
+}
 
 class Alat2 {
   Alat2({
