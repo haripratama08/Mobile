@@ -1,0 +1,123 @@
+1<?xml version="1.0" encoding="utf-8"?>
+2<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+3    package="com.example.ch_v2_1"
+4    android:versionCode="1"
+5    android:versionName="1.0.0" >
+6
+7    <uses-sdk
+8        android:minSdkVersion="16"
+9        android:targetSdkVersion="29" />
+10    <!--
+11         Flutter needs it to communicate with the running application
+12         to allow setting breakpoints, to provide hot reload, etc.
+13    -->
+14    <uses-permission android:name="android.permission.INTERNET" />
+14-->C:\Users\hghg\Desktop\CH V2\ch_v2.1\ch_v2_1\android\app\src\debug\AndroidManifest.xml:8:5-66
+14-->C:\Users\hghg\Desktop\CH V2\ch_v2.1\ch_v2_1\android\app\src\debug\AndroidManifest.xml:8:22-64
+15    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+15-->[:image_picker] C:\Users\hghg\Desktop\CH V2\ch_v2.1\ch_v2_1\build\image_picker\intermediates\library_manifest\debug\AndroidManifest.xml:7:5-80
+15-->[:image_picker] C:\Users\hghg\Desktop\CH V2\ch_v2.1\ch_v2_1\build\image_picker\intermediates\library_manifest\debug\AndroidManifest.xml:7:22-77
+16    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+16-->[:image_picker] C:\Users\hghg\Desktop\CH V2\ch_v2.1\ch_v2_1\build\image_picker\intermediates\library_manifest\debug\AndroidManifest.xml:8:5-81
+16-->[:image_picker] C:\Users\hghg\Desktop\CH V2\ch_v2.1\ch_v2_1\build\image_picker\intermediates\library_manifest\debug\AndroidManifest.xml:8:22-78
+17    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+17-->[com.google.android.exoplayer:exoplayer-core:2.9.6] C:\Users\hghg\.gradle\caches\transforms-2\files-2.1\4f47599c1c7dbc8b2c14db69d4720f2e\jetified-exoplayer-core-2.9.6\AndroidManifest.xml:24:5-79
+17-->[com.google.android.exoplayer:exoplayer-core:2.9.6] C:\Users\hghg\.gradle\caches\transforms-2\files-2.1\4f47599c1c7dbc8b2c14db69d4720f2e\jetified-exoplayer-core-2.9.6\AndroidManifest.xml:24:22-76
+18
+19    <application
+19-->C:\Users\hghg\Desktop\CH V2\ch_v2.1\ch_v2_1\android\app\src\main\AndroidManifest.xml:7:3-29:17
+20        android:name="io.flutter.app.FlutterApplication"
+20-->C:\Users\hghg\Desktop\CH V2\ch_v2.1\ch_v2_1\android\app\src\main\AndroidManifest.xml:7:16-64
+21        android:appComponentFactory="androidx.core.app.CoreComponentFactory"
+21-->[androidx.core:core:1.1.0] C:\Users\hghg\.gradle\caches\transforms-2\files-2.1\a528b13ac93e64cafa3d0480e2c93207\core-1.1.0\AndroidManifest.xml:24:18-86
+22        android:debuggable="true"
+23        android:icon="@mipmap/ic_launcher"
+23-->C:\Users\hghg\Desktop\CH V2\ch_v2.1\ch_v2_1\android\app\src\main\AndroidManifest.xml:7:89-123
+24        android:label="ch_v2_1"
+24-->C:\Users\hghg\Desktop\CH V2\ch_v2.1\ch_v2_1\android\app\src\main\AndroidManifest.xml:7:65-88
+25        android:usesCleartextTraffic="true" >
+25-->C:\Users\hghg\Desktop\CH V2\ch_v2.1\ch_v2_1\android\app\src\debug\AndroidManifest.xml:3:18-53
+26        <activity
+26-->C:\Users\hghg\Desktop\CH V2\ch_v2.1\ch_v2_1\android\app\src\main\AndroidManifest.xml:8:5-25:16
+27            android:name="com.example.ch_v2_1.MainActivity"
+27-->C:\Users\hghg\Desktop\CH V2\ch_v2.1\ch_v2_1\android\app\src\main\AndroidManifest.xml:8:15-43
+28            android:configChanges="orientation|keyboardHidden|keyboard|screenSize|smallestScreenSize|locale|layoutDirection|fontScale|screenLayout|density|uiMode"
+28-->C:\Users\hghg\Desktop\CH V2\ch_v2.1\ch_v2_1\android\app\src\main\AndroidManifest.xml:8:110-260
+29            android:hardwareAccelerated="true"
+29-->C:\Users\hghg\Desktop\CH V2\ch_v2.1\ch_v2_1\android\app\src\main\AndroidManifest.xml:8:261-295
+30            android:launchMode="singleTop"
+30-->C:\Users\hghg\Desktop\CH V2\ch_v2.1\ch_v2_1\android\app\src\main\AndroidManifest.xml:8:44-74
+31            android:theme="@style/LaunchTheme"
+31-->C:\Users\hghg\Desktop\CH V2\ch_v2.1\ch_v2_1\android\app\src\main\AndroidManifest.xml:8:75-109
+32            android:windowSoftInputMode="adjustResize" >
+32-->C:\Users\hghg\Desktop\CH V2\ch_v2.1\ch_v2_1\android\app\src\main\AndroidManifest.xml:8:296-338
+33
+34            <!--
+35           Specifies an Android theme to apply to this Activity as soon as
+36                 the Android process has started. This theme is visible to the user
+37                 while the Flutter UI initializes. After that, this theme continues
+38                 to determine the Window background behind the Flutter UI.
+39            -->
+40            <meta-data
+40-->C:\Users\hghg\Desktop\CH V2\ch_v2.1\ch_v2_1\android\app\src\main\AndroidManifest.xml:13:7-114
+41                android:name="io.flutter.embedding.android.NormalTheme"
+41-->C:\Users\hghg\Desktop\CH V2\ch_v2.1\ch_v2_1\android\app\src\main\AndroidManifest.xml:13:18-73
+42                android:resource="@style/NormalTheme" />
+42-->C:\Users\hghg\Desktop\CH V2\ch_v2.1\ch_v2_1\android\app\src\main\AndroidManifest.xml:13:74-111
+43            <!-- <uses-library android:name="org.apache.http.legacy" android:required="false" /> -->
+44            <!--
+45           Displays an Android View that continues showing the launch screen
+46                 Drawable until Flutter paints its first frame, then this splash
+47                 screen fades out. A splash screen is useful to avoid any visual
+48                 gap between the end of Android's launch screen and the painting of
+49                 Flutter's first frame.
+50            -->
+51            <meta-data
+51-->C:\Users\hghg\Desktop\CH V2\ch_v2.1\ch_v2_1\android\app\src\main\AndroidManifest.xml:20:7-132
+52                android:name="io.flutter.embedding.android.SplashScreenDrawable"
+52-->C:\Users\hghg\Desktop\CH V2\ch_v2.1\ch_v2_1\android\app\src\main\AndroidManifest.xml:20:18-82
+53                android:resource="@drawable/launch_background" />
+53-->C:\Users\hghg\Desktop\CH V2\ch_v2.1\ch_v2_1\android\app\src\main\AndroidManifest.xml:20:83-129
+54
+55            <intent-filter>
+55-->C:\Users\hghg\Desktop\CH V2\ch_v2.1\ch_v2_1\android\app\src\main\AndroidManifest.xml:21:7-24:23
+56                <action android:name="android.intent.action.MAIN" />
+56-->C:\Users\hghg\Desktop\CH V2\ch_v2.1\ch_v2_1\android\app\src\main\AndroidManifest.xml:22:9-61
+56-->C:\Users\hghg\Desktop\CH V2\ch_v2.1\ch_v2_1\android\app\src\main\AndroidManifest.xml:22:17-58
+57
+58                <category android:name="android.intent.category.LAUNCHER" />
+58-->C:\Users\hghg\Desktop\CH V2\ch_v2.1\ch_v2_1\android\app\src\main\AndroidManifest.xml:23:9-69
+58-->C:\Users\hghg\Desktop\CH V2\ch_v2.1\ch_v2_1\android\app\src\main\AndroidManifest.xml:23:19-66
+59            </intent-filter>
+60        </activity>
+61        <!--
+62 Don't delete the meta-data below.
+63             This is used by the Flutter tool to generate GeneratedPluginRegistrant.java
+64        -->
+65        <meta-data
+65-->C:\Users\hghg\Desktop\CH V2\ch_v2.1\ch_v2_1\android\app\src\main\AndroidManifest.xml:28:5-68
+66            android:name="flutterEmbedding"
+66-->C:\Users\hghg\Desktop\CH V2\ch_v2.1\ch_v2_1\android\app\src\main\AndroidManifest.xml:28:16-47
+67            android:value="2" />
+67-->C:\Users\hghg\Desktop\CH V2\ch_v2.1\ch_v2_1\android\app\src\main\AndroidManifest.xml:28:48-65
+68
+69        <provider
+69-->[:image_picker] C:\Users\hghg\Desktop\CH V2\ch_v2.1\ch_v2_1\build\image_picker\intermediates\library_manifest\debug\AndroidManifest.xml:11:9-19:20
+70            android:name="io.flutter.plugins.imagepicker.ImagePickerFileProvider"
+70-->[:image_picker] C:\Users\hghg\Desktop\CH V2\ch_v2.1\ch_v2_1\build\image_picker\intermediates\library_manifest\debug\AndroidManifest.xml:12:13-82
+71            android:authorities="com.example.ch_v2_1.flutter.image_provider"
+71-->[:image_picker] C:\Users\hghg\Desktop\CH V2\ch_v2.1\ch_v2_1\build\image_picker\intermediates\library_manifest\debug\AndroidManifest.xml:13:13-74
+72            android:exported="false"
+72-->[:image_picker] C:\Users\hghg\Desktop\CH V2\ch_v2.1\ch_v2_1\build\image_picker\intermediates\library_manifest\debug\AndroidManifest.xml:14:13-37
+73            android:grantUriPermissions="true" >
+73-->[:image_picker] C:\Users\hghg\Desktop\CH V2\ch_v2.1\ch_v2_1\build\image_picker\intermediates\library_manifest\debug\AndroidManifest.xml:15:13-47
+74            <meta-data
+74-->[:image_picker] C:\Users\hghg\Desktop\CH V2\ch_v2.1\ch_v2_1\build\image_picker\intermediates\library_manifest\debug\AndroidManifest.xml:16:13-18:75
+75                android:name="android.support.FILE_PROVIDER_PATHS"
+75-->[:image_picker] C:\Users\hghg\Desktop\CH V2\ch_v2.1\ch_v2_1\build\image_picker\intermediates\library_manifest\debug\AndroidManifest.xml:17:17-67
+76                android:resource="@xml/flutter_image_picker_file_paths" />
+76-->[:image_picker] C:\Users\hghg\Desktop\CH V2\ch_v2.1\ch_v2_1\build\image_picker\intermediates\library_manifest\debug\AndroidManifest.xml:18:17-72
+77        </provider>
+78    </application>
+79
+80</manifest>

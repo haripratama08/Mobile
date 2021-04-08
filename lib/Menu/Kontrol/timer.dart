@@ -92,7 +92,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         ],
                       ),
                       Text(
-                        "  Change",
+                        "Change",
                         style: TextStyle(
                             color: Colors.teal,
                             fontWeight: FontWeight.bold,
