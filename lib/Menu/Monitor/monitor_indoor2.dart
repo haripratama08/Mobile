@@ -168,7 +168,7 @@ class _MonitorIndoorState extends State<MonitorIndoor2> with Validation {
                 shrinkWrap: true,
                 physics: ScrollPhysics(),
                 scrollDirection: Axis.vertical,
-                itemCount: alat == null ? 0 : alat,
+                itemCount: listnama.length == null ? 0 : listnama.length,
                 itemBuilder: (BuildContext context, int index) {
                   void status(int ins) {
                     if (status1 == ins) {
@@ -179,7 +179,7 @@ class _MonitorIndoorState extends State<MonitorIndoor2> with Validation {
                   }
 
                   status(index);
-                  if (listnama.length != alat) {
+                  if (listnama.length == null) {
                     if (msg == "Tidak Ada Alat") {
                       return Container(
                         height: MediaQuery.of(context).size.height / 3,

@@ -52,43 +52,59 @@ class _MonitorIndoorState extends State<MonitorIndoor> with Validation {
         headers: {HttpHeaders.authorizationHeader: '$token'});
     var jsonResponse = json.decode(jsonString.body);
     Data2 data2 = Data2.fromJson(jsonResponse);
+    print(jsonResponse);
     if (this.mounted) {
       setState(() {
-        listnama.clear();
-        List<Widget> list = [];
-        for (int i = 0; i < data2.data.lokasi.length; i++) {
-          for (int j = 0; j < data2.data.lokasi[i].hub.length; j++) {
-            for (int k = 0; k < data2.data.lokasi[i].hub[j].alat.length; k++) {
-              alat = data2.data.lokasi[i].hub[j].alat.length;
-              data1 = data2.data.lokasi[i].id;
-              data3 = data2.data.lokasi[i].hub[j].id;
-              data4 = data2.data.lokasi[i].hub[j].alat[k].id;
-              data5 = data2.data.lokasi[i].hub[j].alat[k].alias;
-              if (listnama.contains(data5)) {
-              } else {
-                listnama.add('$data5');
+        alat = 1;
+        if (alat == listnama.length) {
+          setState(() {
+            loading = false;
+          });
+        } else {
+          // listnama.clear();
+          List<Widget> list = [];
+          for (int i = 0; i < data2.data.lokasi.length; i++) {
+            for (int j = 0; j < data2.data.lokasi[i].hub.length; j++) {
+              for (int k = 0;
+                  k < data2.data.lokasi[i].hub[j].alat.length;
+                  k++) {
+                alat = data2.data.lokasi[i].hub[j].alat.length;
+                data1 = data2.data.lokasi[i].id;
+                data3 = data2.data.lokasi[i].hub[j].id;
+                data4 = data2.data.lokasi[i].hub[j].alat[k].id;
+                data5 = data2.data.lokasi[i].hub[j].alat[k].alias;
+
+                if (listnama.contains(data5)) {
+                } else {
+                  listnama.add('$data5');
+                }
+                number = listnama.length;
+                if (idlokasi.length == number) {
+                } else {
+                  idlokasi.add(data1);
+                }
+                if (idhub.length == number) {
+                } else {
+                  idhub.add(data3);
+                }
+                if (idalat.length == number) {
+                } else {
+                  idalat.add(data4);
+                }
+
+                // print(idalat);
+                // print("panjang alat : $alat");
+                // print("panjang list ${listnama.length}");
+                print(listnama);
+                list2.add(
+                    ('{ "idlokasi" : $data1,  "idhub" : $data3,  "idalat" : $data4, "nama" : $data5}'));
               }
-              number = listnama.length;
-              if (idlokasi.length == number) {
-              } else {
-                idlokasi.add(data1);
-              }
-              if (idhub.length == number) {
-              } else {
-                idhub.add(data3);
-              }
-              if (idalat.length == number) {
-              } else {
-                idalat.add(data4);
-              }
-              list2.add(
-                  ('{ "idlokasi" : $data1,  "idhub" : $data3,  "idalat" : $data4, "nama" : $data5}'));
             }
           }
+          return new Row(
+            children: list,
+          );
         }
-        return new Row(
-          children: list,
-        );
       });
     }
     return loadDevice();
@@ -158,7 +174,7 @@ class _MonitorIndoorState extends State<MonitorIndoor> with Validation {
                 shrinkWrap: true,
                 physics: ScrollPhysics(),
                 scrollDirection: Axis.vertical,
-                itemCount: alat == null ? 0 : alat,
+                itemCount: listnama.length == null ? 0 : listnama.length,
                 itemBuilder: (BuildContext context, int index) {
                   void status(int ins) {
                     if (status1 == ins) {
@@ -169,7 +185,7 @@ class _MonitorIndoorState extends State<MonitorIndoor> with Validation {
                   }
 
                   status(index);
-                  if (listnama.length != alat) {
+                  if (listnama.length == null) {
                     return Container(
                       height: MediaQuery.of(context).size.height / 3,
                       child: Center(
@@ -314,7 +330,11 @@ class _MonitorIndoorState extends State<MonitorIndoor> with Validation {
                     onTap: () {
                       FocusScope.of(context).requestFocus(FocusNode());
                       doGanti();
-                      listnama.clear();
+                      setState(() {
+                        loading = true;
+                        listnama.clear();
+                      });
+                      // listnama.clear();
                       loadDevice();
                     },
                     child: Container(
