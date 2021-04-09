@@ -52,7 +52,6 @@ class _MonitorIndoorState extends State<MonitorIndoor> with Validation {
         headers: {HttpHeaders.authorizationHeader: '$token'});
     var jsonResponse = json.decode(jsonString.body);
     Data2 data2 = Data2.fromJson(jsonResponse);
-    print(jsonResponse);
     if (this.mounted) {
       setState(() {
         alat = 1;

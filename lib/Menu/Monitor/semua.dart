@@ -352,7 +352,7 @@ class _SemuaState extends State<Semua> {
           '$endPoint/mobile/sensor?lokasi=$idlokas&hub=$idhu&alat=$idala',
           headers: {HttpHeaders.authorizationHeader: '$token'});
       var jsonResponse = json.decode(jsonString.body);
-      print(jsonResponse);
+
       if (this.mounted) {
         setState(() {
           loading = false;

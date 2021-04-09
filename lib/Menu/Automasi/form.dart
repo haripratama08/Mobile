@@ -107,15 +107,14 @@ class EntryFormState extends State<EntryForm> {
                           textScaleFactor: 1.5,
                         ),
                         onPressed: () {
-                          if (_time == null) {
-                            // tambah data
-                            timer = SmartTimer(
-                                nameController.text, state, "$_date : $_time");
-                          } else {
-                            // ubah data
-                            timer.name = nameController.text;
-                            timer.state = stateController.text;
-                          }
+                          print("nama $nameController");
+                          print("state $state");
+                          print("_date $_date");
+
+                          // tambah data
+                          timer = SmartTimer(
+                              nameController.text, state, "$_date : $_time");
+
                           // kembali ke layar sebelumnya dengan membawa objek contact
                           Navigator.pop(context, timer);
                         },

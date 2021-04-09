@@ -63,6 +63,7 @@ class DbHelper {
   Future<int> insert(SmartTimer object) async {
     Database db = await this.database;
     int count = await db.insert('timer', object.toMap());
+    print(count);
     return count;
   }
 
