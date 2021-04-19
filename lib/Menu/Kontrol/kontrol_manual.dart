@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:ch_v2_1/Menu/Kontrol/kontrol_utama.dart';
 
 class KontrolManual extends StatefulWidget {
   @override
@@ -27,7 +28,7 @@ class _KontrolManualState extends State<KontrolManual> {
                 },
                 child: Container(
                     child: Center(
-                      child: Text("OFF",
+                      child: Text("$statesend",
                           style: TextStyle(
                               color: Colors.white,
                               fontFamily: 'Mont',

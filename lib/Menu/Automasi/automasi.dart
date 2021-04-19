@@ -119,6 +119,7 @@ class _Automasi extends State<Automasi> with SingleTickerProviderStateMixin {
   }
 
   void addTimer(SmartTimer object) async {
+    
     int result = await dbHelper.insert(object);
     if (result > 0) {
       updateListView();

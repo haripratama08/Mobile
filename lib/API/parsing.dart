@@ -389,3 +389,149 @@ class Alat3 {
         "nama": nama,
       };
 }
+
+class Kontrol {
+  Kontrol({
+    this.status,
+    this.data,
+  });
+
+  String status;
+  Data20 data;
+
+  factory Kontrol.fromJson(Map<String, dynamic> json) => Kontrol(
+        status: json["status"],
+        data: Data20.fromJson(json["data"]),
+      );
+
+  Map<String, dynamic> toJson() => {
+        "status": status,
+        "data": data.toJson(),
+      };
+}
+
+class Data20 {
+  Data20({
+    this.uuid,
+    this.lokasi,
+  });
+
+  String uuid;
+  List<Lokasi2> lokasi;
+
+  factory Data20.fromJson(Map<String, dynamic> json) => Data20(
+        uuid: json["uuid"],
+        lokasi:
+            List<Lokasi2>.from(json["lokasi"].map((x) => Lokasi2.fromJson(x))),
+      );
+
+  Map<String, dynamic> toJson() => {
+        "uuid": uuid,
+        "lokasi": List<dynamic>.from(lokasi.map((x) => x.toJson())),
+      };
+}
+
+class Lokasi2 {
+  Lokasi2({
+    this.id,
+    this.nama,
+    this.hub,
+  });
+
+  int id;
+  String nama;
+  List<Hub2> hub;
+
+  factory Lokasi2.fromJson(Map<String, dynamic> json) => Lokasi2(
+        id: json["id"],
+        nama: json["nama"],
+        hub: List<Hub2>.from(json["hub"].map((x) => Hub.fromJson(x))),
+      );
+
+  Map<String, dynamic> toJson() => {
+        "id": id,
+        "nama": nama,
+        "hub": List<dynamic>.from(hub.map((x) => x.toJson())),
+      };
+}
+
+class Hub2 {
+  Hub2({
+    this.id,
+    this.nama,
+    this.alat,
+  });
+
+  int id;
+  String nama;
+  List<Alat5> alat;
+
+  factory Hub2.fromJson(Map<String, dynamic> json) => Hub2(
+        id: json["id"],
+        nama: json["nama"],
+        alat: List<Alat5>.from(json["alat"].map((x) => Alat5.fromJson(x))),
+      );
+
+  Map<String, dynamic> toJson() => {
+        "id": id,
+        "nama": nama,
+        "alat": List<dynamic>.from(alat.map((x) => x.toJson())),
+      };
+}
+
+class Alat5 {
+  Alat5({
+    this.id,
+    this.nama,
+    this.kontrol,
+  });
+
+  int id;
+  String nama;
+  List<KontrolElement> kontrol;
+
+  factory Alat5.fromJson(Map<String, dynamic> json) => Alat5(
+        id: json["id"],
+        nama: json["nama"],
+        kontrol: List<KontrolElement>.from(
+            json["kontrol"].map((x) => KontrolElement.fromJson(x))),
+      );
+
+  Map<String, dynamic> toJson() => {
+        "id": id,
+        "nama": nama,
+        "kontrol": List<dynamic>.from(kontrol.map((x) => x.toJson())),
+      };
+}
+
+class KontrolElement {
+  KontrolElement({
+    this.id,
+    this.nama,
+    this.alias,
+    this.state,
+    this.idAlat,
+  });
+
+  int id;
+  String nama;
+  String alias;
+  dynamic state;
+  int idAlat;
+
+  factory KontrolElement.fromJson(Map<String, dynamic> json) => KontrolElement(
+        id: json["id"],
+        nama: json["nama"],
+        alias: json["alias"],
+        state: json["state"],
+        idAlat: json["id_alat"],
+      );
+
+  Map<String, dynamic> toJson() => {
+        "id": id,
+        "nama": nama,
+        "alias": alias,
+        "state": state,
+        "id_alat": idAlat,
+      };
+}

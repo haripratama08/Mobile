@@ -1,62 +1,33 @@
-[
-    {
-        "idlokasi": 1,
-        "idhub": 1,
-        "idalat": 1,
-        "idsensor": 1
-    },
-    {
-        "idlokasi": 1,
-        "idhub": 1,
-        "idalat": 1,
-        "idsensor": 2
-    },
-    {
-        "idlokasi": 1,
-        "idhub": 1,
-        "idalat": 1,
-        "idsensor": 3
-    },
-    {
-        "idlokasi": 1,
-        "idhub": 1,
-        "idalat": 1,
-        "idsensor": 4
-    },
-    {
-        "idlokasi": 1,
-        "idhub": 1,
-        "idalat": 1,
-        "idsensor": 10
-    },
-    {
-        "idlokasi": 1,
-        "idhub": 1,
-        "idalat": 1,
-        "idsensor": 11
-    },
-    {
-        "idlokasi": 1,
-        "idhub": 1,
-        "idalat": 1,
-        "idsensor": 12
-    },
-    {
-        "idlokasi": 1,
-        "idhub": 1,
-        "idalat": 1,
-        "idsensor": 13
-    },
-    {
-        "idlokasi": 1,
-        "idhub": 1,
-        "idalat": 3,
-        "idsensor": 8
-    },
-    {
-        "idlokasi": 1,
-        "idhub": 1,
-        "idalat": 3,
-        "idsensor": 9
+{
+    "status": "OK",
+    "data": {
+        "uuid": "aa0320d5-48e6-11eb-9e08-06542865ede0",
+        "lokasi": [
+            {
+                "id": 1,
+                "nama": "Kebun Raya Bradamante",
+                "hub": [
+                    {
+                        "id": 6,
+                        "nama": "test",
+                        "alat": [
+                            {
+                                "id": 7,
+                                "nama": "chc-jogja-1-dummy",
+                                "kontrol": [
+                                    {
+                                        "id": 1,
+                                        "nama": " chc-jogja-1-dummy",
+                                        "alias": "dummy",
+                                        "state": null,
+                                        "id_alat": 7
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                ]
+            }
+        ]
     }
-]
+}

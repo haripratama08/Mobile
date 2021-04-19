@@ -110,11 +110,9 @@ class EntryFormState extends State<EntryForm> {
                           print("nama $nameController");
                           print("state $state");
                           print("_date $_date");
-
                           // tambah data
                           timer = SmartTimer(
                               nameController.text, state, "$_date : $_time");
-
                           // kembali ke layar sebelumnya dengan membawa objek contact
                           Navigator.pop(context, timer);
                         },

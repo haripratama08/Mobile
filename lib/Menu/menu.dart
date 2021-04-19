@@ -1,12 +1,11 @@
 import 'package:ch_v2_1/Menu/Automasi/automasi.dart';
 import 'package:ch_v2_1/Menu/Kamera/kamera_utama.dart';
 import 'package:ch_v2_1/Menu/Kontrol/kontrol_utama.dart';
-import 'package:ch_v2_1/Menu/Monitor/monitor_utama.dart';
 import 'package:flutter/material.dart';
 import 'package:ch_v2_1/LoginPage/loginpage.dart';
 import 'package:ch_v2_1/Menu/Akun/logout.dart';
 import 'package:ch_v2_1/Menu/tambahan/stringcap.dart';
-import 'package:ch_v2_1/Menu/Monitor/semua.dart';
+import 'package:ch_v2_1/Menu/Monitor/monitor_semua.dart';
 
 class Menu extends StatefulWidget {
   final String nama;
@@ -34,7 +33,7 @@ class Menu extends StatefulWidget {
 }
 
 class _MenuState extends State<Menu> with SingleTickerProviderStateMixin {
-  Widget route = Monitor();
+  Widget route = Semua();
   int _selectedIndex = 0;
   int index = 0;
   void _onTabItem(int index) {

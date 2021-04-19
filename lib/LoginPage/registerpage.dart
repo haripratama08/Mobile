@@ -412,7 +412,8 @@ class _RegisterPageState extends State<RegisterPage> with Validation {
                         Icon(Icons.image),
                         Text(
                           'Foto dari galeri',
-                          style: TextStyle(fontFamily: 'Mont'),
+                          style: TextStyle(
+                              fontFamily: 'Mont', color: Colors.black),
                         ),
                       ],
                     ),
@@ -428,7 +429,8 @@ class _RegisterPageState extends State<RegisterPage> with Validation {
                         Icon(Icons.camera),
                         Text(
                           'Foto dari kamera',
-                          style: TextStyle(fontFamily: 'Mont'),
+                          style: TextStyle(
+                              fontFamily: 'Mont', color: Colors.black),
                         ),
                       ],
                     ),
