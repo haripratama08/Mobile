@@ -179,7 +179,6 @@ class _KontrolSemuaState extends State<KontrolSemua> {
                         onTap: () {
                           setState(() {
                             loading = true;
-
                             data(status1);
                             change(index);
                           });
