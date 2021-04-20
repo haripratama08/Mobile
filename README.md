@@ -2,7 +2,7 @@
 
 ## Project setup
 ```
-pub get
+flutter pub get
 ```
 
 ### Compiles and hot-reloads for development
