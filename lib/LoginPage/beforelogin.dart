@@ -36,7 +36,7 @@ class BeforeLogin extends StatelessWidget {
               Container(
                 height: 45,
                 padding: EdgeInsets.fromLTRB(120, 0, 120, 0),
-                child: RaisedButton(
+                child: MaterialButton(
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(5.0),
                     ),
@@ -69,7 +69,7 @@ class BeforeLogin extends StatelessWidget {
               Container(
                 height: 45,
                 padding: EdgeInsets.fromLTRB(120, 0, 120, 0),
-                child: RaisedButton(
+                child: MaterialButton(
                     shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(5.0),
                         side: BorderSide(width: 1.5, color: Colors.white)),

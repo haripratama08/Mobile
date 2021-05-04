@@ -5,7 +5,7 @@
         "lokasi": [
             {
                 "id": 1,
-                "nama": "Kebun Raya Bradamante",
+                "nama": " Kebun Raya Bradamante",
                 "hub": [
                     {
                         "id": 6,
@@ -17,10 +17,36 @@
                                 "kontrol": [
                                     {
                                         "id": 1,
-                                        "nama": " chc-jogja-1-dummy",
+                                        "nama": "chc-jogja-1-dummy",
                                         "alias": "dummy",
-                                        "state": null,
+                                        "state": "ON",
                                         "id_alat": 7
+                                    },
+                                    {
+                                        "id": 2,
+                                        "nama": "chc-jogja-1-dummy",
+                                        "alias": "dummy",
+                                        "state": "ON",
+                                        "id_alat": 7
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        "id": 1,
+                        "nama": "GG-Core-1",
+                        "alat": [
+                            {
+                                "id": 1,
+                                "nama": "freertos-gg-1-dummy",
+                                "kontrol": [
+                                    {
+                                        "id": 8,
+                                        "nama": "chc-jogja-2-dummy",
+                                        "alias": "dummy2",
+                                        "state": "OFF",
+                                        "id_alat": 1
                                     }
                                 ]
                             }

@@ -48,9 +48,11 @@ class _LogoutState extends State<Logout> {
   @override
   Widget build(BuildContext context) {
     if (foto == null || nama == null || email == null || alamat == null) {
-      return AlertDialog(
-          content: SingleChildScrollView(
-              child: Center(
+      return
+          // AlertDialog(
+          //     content: SingleChildScrollView(
+          //         child:
+          Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
@@ -65,7 +67,8 @@ class _LogoutState extends State<Logout> {
             ),
           ],
         ),
-      )));
+      );
+      // ));
     } else {
       return Column(
         children: [

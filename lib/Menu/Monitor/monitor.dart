@@ -90,11 +90,6 @@ class _MonitorIndoorState extends State<MonitorIndoor> with Validation {
                 } else {
                   idalat.add(data4);
                 }
-
-                // print(idalat);
-                // print("panjang alat : $alat");
-                // print("panjang list ${listnama.length}");
-                // print(listnama);
                 list2.add(
                     ('{ "idlokasi" : $data1,  "idhub" : $data3,  "idalat" : $data4, "nama" : $data5}'));
               }
@@ -178,8 +173,8 @@ class _MonitorIndoorState extends State<MonitorIndoor> with Validation {
                       warna = Color(0x098765);
                     }
                   }
+
                   status(index);
-                  print("status $index");
                   if (listnama.length == null) {
                     return Container(
                       height: MediaQuery.of(context).size.height / 3,

@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
+import 'package:ch_v2_1/Menu/Kontrol/kontrol_semua.dart';
 import 'package:http/http.dart' as http;
 import 'package:ch_v2_1/LoginPage/loginpage.dart';
 import 'package:ch_v2_1/Menu/Kontrol/kontrol_auto.dart';
@@ -23,6 +24,9 @@ String topic;
 String msg;
 
 class KontrolUtama extends StatefulWidget {
+  final int iDkontrol;
+  const KontrolUtama({Key key, this.iDkontrol});
+
   @override
   _KontrolUtamaState createState() => _KontrolUtamaState();
 }
@@ -36,6 +40,11 @@ class _KontrolUtamaState extends State<KontrolUtama>
   List<int> listidhub = [];
   List<int> listidalat = [];
   List<int> listidkontrol = [];
+  List<dynamic> idl = [];
+  List<dynamic> states = [];
+  List<int> idh = [];
+  List<int> ida = [];
+  List<int> idk = [];
   int idlokasikontrol;
   List<String> listname = [];
   List<String> listkontrol = [];
@@ -45,12 +54,27 @@ class _KontrolUtamaState extends State<KontrolUtama>
   bool isSwitchedkelembapan = false;
   int panjanglokasi = 0;
   int panjangkontrol = 0;
+
+  void change(int index) {
+    status1 = index;
+    iDkontrol = listidkontrol[index];
+    loadState();
+  }
+
+  void data(int index) {
+    if (index == null) {
+      change(0);
+    } else {
+      change(index);
+    }
+  }
+
   Future loadKontrol() async {
+    print("idkontrol ${widget.iDkontrol}");
     var jsonString = await http.get(
         'https://ydtmch9j99.execute-api.us-east-1.amazonaws.com/dev/api/kontrol?uuid=$uuid',
         headers: {HttpHeaders.authorizationHeader: '$token'});
     var jsonResponse = json.decode(jsonString.body);
-    print(jsonResponse);
     if (this.mounted) {
       setState(() {
         if ((jsonResponse['status']) == 'OK') {
@@ -59,12 +83,13 @@ class _KontrolUtamaState extends State<KontrolUtama>
             String hub = (((jsonResponse['data'])['lokasi'])[i]['nama']);
             idlokasikontrol = (((jsonResponse['data'])['lokasi'])[i]['id']);
             listname.length == panjanglokasi ? print("") : listname.add(hub);
+            print(listname);
             listidlokasi.length == panjanglokasi
                 ? print("")
                 : listidlokasi.add(idlokasikontrol);
             var panjanghub =
                 (((jsonResponse['data'])['lokasi'])[i]['hub'].length);
-//----------------------------------------------------------------------//
+            //----------------------------------------------------------------------//
             for (int j = 0; j < panjanghub; j++) {
               var panjangalat = ((((jsonResponse['data'])['lokasi'])[i]['hub']
                       [j]['alat']
@@ -74,7 +99,7 @@ class _KontrolUtamaState extends State<KontrolUtama>
               listidhub.length == panjanghub
                   ? print("")
                   : listidhub.add(idhubkontrol);
-//----------------------------------------------------------------------//
+              //----------------------------------------------------------------------//
               for (int k = 0; k < panjangalat; k++) {
                 panjangkontrol = ((((jsonResponse['data'])['lokasi'])[i]['hub']
                         [j]['alat'][k]['kontrol']
@@ -84,74 +109,45 @@ class _KontrolUtamaState extends State<KontrolUtama>
                 listidalat.length == panjangalat
                     ? print("")
                     : listidalat.add(idalatkontrol);
-//---------------------------------------------------------------------//
+                //---------------------------------------------------------------------//
                 for (int l = 0; l < panjangkontrol; l++) {
                   String kontrol = ((((jsonResponse['data'])['lokasi'])[i]
                       ['hub'][j]['alat'][k]['kontrol'][l])['alias']);
-                  status = ((((jsonResponse['data'])['lokasi'])[i]['hub'][j]
-                      ['alat'][k]['kontrol'][l])['state']);
                   int idkontrol = ((((jsonResponse['data'])['lokasi'])[i]['hub']
                       [j]['alat'][k]['kontrol'][l])['id']);
-                  listkontrol.length == panjangkontrol
+                  listkontrol.contains(kontrol)
                       ? print("")
                       : listkontrol.add(kontrol);
-                  listidkontrol.length == panjangkontrol
+                  listidkontrol.contains(idkontrol)
                       ? print("")
                       : listidkontrol.add(idkontrol);
-                }
-              }
-            }
-          }
-        } else {
-          print((jsonResponse['status']));
-        }
-      });
-    }
-    return loadStatus();
-  }
-
-  Future loadStatus() async {
-    iDlokasi == null ? iDlokasi = listidlokasi[0] : iDlokasi = iDlokasi;
-    iDhub == null ? iDhub = listidhub[0] : iDhub = iDhub;
-    iDalat == null ? iDalat = listidalat[0] : iDalat = iDalat;
-    iDkontrol == null ? iDkontrol = listidkontrol[0] : iDkontrol = iDkontrol;
-    var jsonString = await http.get(
-        'https://ydtmch9j99.execute-api.us-east-1.amazonaws.com/dev/api/kontrol?uuid=$uuid',
-        headers: {HttpHeaders.authorizationHeader: '$token'});
-    var jsonResponse = json.decode(jsonString.body);
-    print(jsonResponse);
-    if (this.mounted) {
-      setState(() {
-        if ((jsonResponse['status']) == 'OK') {
-          panjanglokasi = (((jsonResponse['data'])['lokasi']).length);
-          for (int i = 0; i < panjanglokasi; i++) {
-            String hub = (((jsonResponse['data'])['lokasi'])[i]['nama']);
-            listname.length == panjanglokasi
-                ? print("listname $listname")
-                : listname.add(hub);
-            var panjanghub =
-                (((jsonResponse['data'])['lokasi'])[i]['hub'].length);
-            for (int j = 0; j < panjanghub; j++) {
-              print("nilai j $j");
-              var panjangalat = ((((jsonResponse['data'])['lokasi'])[i]['hub']
-                      [j]['alat']
-                  .length));
-              for (int k = 0; k < panjangalat; k++) {
-                print("nilai k $k");
-                panjangkontrol = ((((jsonResponse['data'])['lokasi'])[i]['hub']
-                        [j]['alat'][k]['kontrol']
-                    .length));
-                for (int l = 0; l < panjangkontrol; l++) {
-                  String kontrol = ((((jsonResponse['data'])['lokasi'])[i]
-                      ['hub'][j]['alat'][k]['kontrol'][l])['alias']);
-                  status = ((((jsonResponse['data'])['lokasi'])[i]['hub'][j]
-                      ['alat'][k]['kontrol'][l])['state']);
-                  print(status);
-                  listkontrol.length == panjangkontrol
-                      ? print("listkontrol $listkontrol")
-                      : listkontrol.add(kontrol);
-                  print("panjang kontrol $panjangkontrol");
-                  topic = "$iDlokasi/$iDhub/crophero/control";
+                  //---------------------------------------------------------------------//
+                  iDlokasi == null
+                      ? iDlokasi = listidlokasi[0]
+                      : iDlokasi = iDlokasi;
+                  iDhub == null ? iDhub = listidhub[0] : iDhub = iDhub;
+                  iDalat == null ? iDalat = listidalat[0] : iDalat = iDalat;
+                  iDkontrol == null
+                      ? iDkontrol = listidkontrol[0]
+                      : iDkontrol = iDkontrol;
+                  //---------------------------------------------------------------------//
+                  states.length == listkontrol.length
+                      ? print("state $state")
+                      : states.add(status);
+                  print("panjang kontrol ${listkontrol.length}");
+                  topic = "$iDlokasi/$iDkontrol/crophero/control";
+                  var jsonString = http.get(
+                      'http://ydtmch9j99.execute-api.us-east-1.amazonaws.com/dev/api/kontrol/state?id=$iDkontrol',
+                      headers: {HttpHeaders.authorizationHeader: '$token'});
+                  var jsonresp = json.decode(jsonString.toString());
+                  // print(jsonresp);
+                  if (this.mounted) {
+                    setState(() {
+                      print(jsonresp);
+                      status = jsonresp['state'];
+                      print("statuskontrol $status");
+                    });
+                  }
                 }
               }
             }
@@ -164,23 +160,28 @@ class _KontrolUtamaState extends State<KontrolUtama>
     return loadKontrol();
   }
 
+  Future loadState() async {
+    print(iDkontrol);
+    var jsonString = await http.get(
+        'http://ydtmch9j99.execute-api.us-east-1.amazonaws.com/dev/api/kontrol/state?id=$iDkontrol',
+        headers: {HttpHeaders.authorizationHeader: '$token'});
+    var jsonResponse = json.decode(jsonString.body);
+    if (this.mounted) {
+      setState(() {
+        print(jsonResponse);
+        status = jsonResponse['state'];
+        print("statuskontrol $status");
+      });
+    }
+    return loadState();
+  }
+
   @override
   void initState() {
     print(_selectedIndex);
     loadKontrol();
+    loadState();
     super.initState();
-  }
-
-  void change(int index) {
-    status1 = index;
-  }
-
-  void data(int index) {
-    if (index == null) {
-      change(0);
-    } else {
-      change(index);
-    }
   }
 
   @override
@@ -188,19 +189,12 @@ class _KontrolUtamaState extends State<KontrolUtama>
     _tabController.dispose();
     print(_selectedIndex);
     loadKontrol();
+    loadState();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    void statusa(int ins) {
-      if (status1 == ins) {
-        warna = Colors.green[100];
-      } else {
-        warna = Color(0x098765);
-      }
-    }
-
     void state(String status) {
       if (status == "OFF") {
         statesend = "ON";
@@ -209,17 +203,15 @@ class _KontrolUtamaState extends State<KontrolUtama>
       }
     }
 
-    print('topic : $topic');
     state(status);
-    print(panjanglokasi);
-    print(listkontrol.length);
+    print("status $topic $status");
     return DefaultTabController(
         initialIndex: 0,
         length: panjanglokasi + 1,
         child: Scaffold(
             body: (panjanglokasi == null ||
                     panjanglokasi == 0 ||
-                    panjangkontrol == null)
+                    listkontrol == null)
                 ? Center(
                     child: Container(
                         height:
@@ -271,13 +263,21 @@ class _KontrolUtamaState extends State<KontrolUtama>
                               fontSize: MediaQuery.of(context).size.height / 45,
                             ),
                           ),
-                          new Text(
-                            "$status",
-                            style: TextStyle(
-                              fontFamily: 'Mont',
-                              fontSize: MediaQuery.of(context).size.height / 50,
-                            ),
-                          ),
+                          status == null
+                              ? Container(
+                                  height:
+                                      MediaQuery.of(context).size.width / 20,
+                                  width: MediaQuery.of(context).size.width / 20,
+                                  child:
+                                      Image.asset("asset/img/loading-blog.gif"))
+                              : new Text(
+                                  "$status",
+                                  style: TextStyle(
+                                    fontFamily: 'Mont',
+                                    fontSize:
+                                        MediaQuery.of(context).size.height / 50,
+                                  ),
+                                ),
                           new Text(
                             "Mode",
                             style: TextStyle(
@@ -341,7 +341,7 @@ class _KontrolUtamaState extends State<KontrolUtama>
                                 Tab(
                                   text: "Semua",
                                 ),
-                                for (i = 0; i < panjangkontrol; i++)
+                                for (i = 0; i < panjanglokasi; i++)
                                   Tab(
                                     text: "${listname[i].substring(0, 12)}",
                                   ),
@@ -354,414 +354,8 @@ class _KontrolUtamaState extends State<KontrolUtama>
                       Expanded(
                         child: TabBarView(
                           children: [
-                            for (i = 0; i < panjangkontrol; i++)
-                              (status1 == i)
-                                  ? Scaffold(
-                                      body: Padding(
-                                        padding: const EdgeInsets.all(10.0),
-                                        child: GestureDetector(
-                                          onTap: () {
-                                            statusa(i);
-                                            print("tap $i");
-                                          },
-                                          child: Padding(
-                                            padding: const EdgeInsets.all(10.0),
-                                            child: Container(
-                                                child: Center(
-                                                    child: Row(
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment.center,
-                                                  children: <Widget>[
-                                                    Image.asset(
-                                                      'asset/img/ghico.png',
-                                                      height: 40,
-                                                    ),
-                                                    SizedBox(
-                                                      width:
-                                                          MediaQuery.of(context)
-                                                                  .size
-                                                                  .width /
-                                                              12,
-                                                    ),
-                                                    Column(
-                                                      mainAxisAlignment:
-                                                          MainAxisAlignment
-                                                              .center,
-                                                      children: <Widget>[
-                                                        new Text(
-                                                          "${listkontrol[i]}",
-                                                          style: TextStyle(
-                                                              fontFamily:
-                                                                  'Mont',
-                                                              fontSize: 15),
-                                                        ),
-                                                      ],
-                                                    ),
-                                                    SizedBox(
-                                                      width:
-                                                          MediaQuery.of(context)
-                                                                  .size
-                                                                  .width /
-                                                              12,
-                                                    ),
-                                                    GestureDetector(
-                                                      onTap: () {
-                                                        setState(() {});
-                                                      },
-                                                      child: Container(
-                                                        child: Center(
-                                                            child: Icon(Icons
-                                                                .border_color)),
-                                                        height: MediaQuery.of(
-                                                                    context)
-                                                                .size
-                                                                .width /
-                                                            10,
-                                                        width: MediaQuery.of(
-                                                                    context)
-                                                                .size
-                                                                .width /
-                                                            10,
-                                                        decoration: BoxDecoration(
-                                                            border: Border.all(
-                                                                width: 1.5,
-                                                                color: Colors
-                                                                    .black),
-                                                            borderRadius:
-                                                                BorderRadius
-                                                                    .circular(
-                                                                        5)),
-                                                      ),
-                                                    )
-                                                  ],
-                                                )),
-                                                height: MediaQuery.of(context)
-                                                        .size
-                                                        .height /
-                                                    11,
-                                                width: MediaQuery.of(context)
-                                                        .size
-                                                        .width *
-                                                    4.5 /
-                                                    5,
-                                                padding:
-                                                    const EdgeInsets.all(10),
-                                                decoration: BoxDecoration(
-                                                    color: Colors.green[100],
-                                                    border:
-                                                        Border.all(width: 2.0),
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            10))),
-                                          ),
-                                        ),
-                                      ),
-                                    )
-                                  : Scaffold(
-                                      body: Padding(
-                                        padding: const EdgeInsets.all(10.0),
-                                        child: GestureDetector(
-                                          onTap: () {
-                                            print("tap $i");
-                                            statusa(i);
-                                          },
-                                          child: Padding(
-                                            padding: const EdgeInsets.all(10.0),
-                                            child: Container(
-                                                child: Center(
-                                                    child: Row(
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment.center,
-                                                  children: <Widget>[
-                                                    Image.asset(
-                                                      'asset/img/ghico.png',
-                                                      height: 40,
-                                                    ),
-                                                    SizedBox(
-                                                      width:
-                                                          MediaQuery.of(context)
-                                                                  .size
-                                                                  .width /
-                                                              12,
-                                                    ),
-                                                    Column(
-                                                      mainAxisAlignment:
-                                                          MainAxisAlignment
-                                                              .center,
-                                                      children: <Widget>[
-                                                        new Text(
-                                                          "${listkontrol[i]}",
-                                                          style: TextStyle(
-                                                              fontFamily:
-                                                                  'Mont',
-                                                              fontSize: 15),
-                                                        ),
-                                                      ],
-                                                    ),
-                                                    SizedBox(
-                                                      width:
-                                                          MediaQuery.of(context)
-                                                                  .size
-                                                                  .width /
-                                                              12,
-                                                    ),
-                                                    GestureDetector(
-                                                      onTap: () {
-                                                        setState(() {});
-                                                      },
-                                                      child: Container(
-                                                        child: Center(
-                                                            child: Icon(Icons
-                                                                .border_color)),
-                                                        height: MediaQuery.of(
-                                                                    context)
-                                                                .size
-                                                                .width /
-                                                            10,
-                                                        width: MediaQuery.of(
-                                                                    context)
-                                                                .size
-                                                                .width /
-                                                            10,
-                                                        decoration: BoxDecoration(
-                                                            border: Border.all(
-                                                                width: 1.5,
-                                                                color: Colors
-                                                                    .black),
-                                                            borderRadius:
-                                                                BorderRadius
-                                                                    .circular(
-                                                                        5)),
-                                                      ),
-                                                    )
-                                                  ],
-                                                )),
-                                                height: MediaQuery.of(context)
-                                                        .size
-                                                        .height /
-                                                    11,
-                                                width: MediaQuery.of(context)
-                                                        .size
-                                                        .width *
-                                                    4.5 /
-                                                    5,
-                                                padding:
-                                                    const EdgeInsets.all(10),
-                                                decoration: BoxDecoration(
-                                                    color: Colors.white,
-                                                    border:
-                                                        Border.all(width: 2.0),
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            10))),
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                            for (i = 0; i < panjangkontrol; i++)
-                              (status1 == i)
-                                  ? Scaffold(
-                                      body: Padding(
-                                        padding: const EdgeInsets.all(10.0),
-                                        child: GestureDetector(
-                                          onTap: () {
-                                            statusa(i);
-                                            print("tap $i");
-                                          },
-                                          child: Padding(
-                                            padding: const EdgeInsets.all(10.0),
-                                            child: Container(
-                                                child: Center(
-                                                    child: Row(
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment.center,
-                                                  children: <Widget>[
-                                                    Image.asset(
-                                                      'asset/img/ghico.png',
-                                                      height: 40,
-                                                    ),
-                                                    SizedBox(
-                                                      width:
-                                                          MediaQuery.of(context)
-                                                                  .size
-                                                                  .width /
-                                                              12,
-                                                    ),
-                                                    Column(
-                                                      mainAxisAlignment:
-                                                          MainAxisAlignment
-                                                              .center,
-                                                      children: <Widget>[
-                                                        new Text(
-                                                          "${listkontrol[i]}",
-                                                          style: TextStyle(
-                                                              fontFamily:
-                                                                  'Mont',
-                                                              fontSize: 15),
-                                                        ),
-                                                      ],
-                                                    ),
-                                                    SizedBox(
-                                                      width:
-                                                          MediaQuery.of(context)
-                                                                  .size
-                                                                  .width /
-                                                              12,
-                                                    ),
-                                                    GestureDetector(
-                                                      onTap: () {
-                                                        setState(() {});
-                                                      },
-                                                      child: Container(
-                                                        child: Center(
-                                                            child: Icon(Icons
-                                                                .border_color)),
-                                                        height: MediaQuery.of(
-                                                                    context)
-                                                                .size
-                                                                .width /
-                                                            10,
-                                                        width: MediaQuery.of(
-                                                                    context)
-                                                                .size
-                                                                .width /
-                                                            10,
-                                                        decoration: BoxDecoration(
-                                                            border: Border.all(
-                                                                width: 1.5,
-                                                                color: Colors
-                                                                    .black),
-                                                            borderRadius:
-                                                                BorderRadius
-                                                                    .circular(
-                                                                        5)),
-                                                      ),
-                                                    )
-                                                  ],
-                                                )),
-                                                height: MediaQuery.of(context)
-                                                        .size
-                                                        .height /
-                                                    11,
-                                                width: MediaQuery.of(context)
-                                                        .size
-                                                        .width *
-                                                    4.5 /
-                                                    5,
-                                                padding:
-                                                    const EdgeInsets.all(10),
-                                                decoration: BoxDecoration(
-                                                    color: Colors.green[100],
-                                                    border:
-                                                        Border.all(width: 2.0),
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            10))),
-                                          ),
-                                        ),
-                                      ),
-                                    )
-                                  : Scaffold(
-                                      body: Padding(
-                                        padding: const EdgeInsets.all(10.0),
-                                        child: GestureDetector(
-                                          onTap: () {
-                                            statusa(i);
-                                            print("tap $i");
-                                          },
-                                          child: Padding(
-                                            padding: const EdgeInsets.all(10.0),
-                                            child: Container(
-                                                child: Center(
-                                                    child: Row(
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment.center,
-                                                  children: <Widget>[
-                                                    Image.asset(
-                                                      'asset/img/ghico.png',
-                                                      height: 40,
-                                                    ),
-                                                    SizedBox(
-                                                      width:
-                                                          MediaQuery.of(context)
-                                                                  .size
-                                                                  .width /
-                                                              12,
-                                                    ),
-                                                    Column(
-                                                      mainAxisAlignment:
-                                                          MainAxisAlignment
-                                                              .center,
-                                                      children: <Widget>[
-                                                        new Text(
-                                                          "${listkontrol[i]}",
-                                                          style: TextStyle(
-                                                              fontFamily:
-                                                                  'Mont',
-                                                              fontSize: 15),
-                                                        ),
-                                                      ],
-                                                    ),
-                                                    SizedBox(
-                                                      width:
-                                                          MediaQuery.of(context)
-                                                                  .size
-                                                                  .width /
-                                                              12,
-                                                    ),
-                                                    GestureDetector(
-                                                      onTap: () {
-                                                        setState(() {});
-                                                      },
-                                                      child: Container(
-                                                        child: Center(
-                                                            child: Icon(Icons
-                                                                .border_color)),
-                                                        height: MediaQuery.of(
-                                                                    context)
-                                                                .size
-                                                                .width /
-                                                            10,
-                                                        width: MediaQuery.of(
-                                                                    context)
-                                                                .size
-                                                                .width /
-                                                            10,
-                                                        decoration: BoxDecoration(
-                                                            border: Border.all(
-                                                                width: 1.5,
-                                                                color: Colors
-                                                                    .black),
-                                                            borderRadius:
-                                                                BorderRadius
-                                                                    .circular(
-                                                                        5)),
-                                                      ),
-                                                    )
-                                                  ],
-                                                )),
-                                                height: MediaQuery.of(context)
-                                                        .size
-                                                        .height /
-                                                    11,
-                                                width: MediaQuery.of(context)
-                                                        .size
-                                                        .width *
-                                                    4.5 /
-                                                    5,
-                                                padding:
-                                                    const EdgeInsets.all(10),
-                                                decoration: BoxDecoration(
-                                                    color: Colors.white,
-                                                    border:
-                                                        Border.all(width: 2.0),
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            10))),
-                                          ),
-                                        ),
-                                      ),
-                                    ),
+                            Semua(),
+                            Semua(),
                           ],
                         ),
                       ),

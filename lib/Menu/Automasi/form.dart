@@ -99,7 +99,7 @@ class EntryFormState extends State<EntryForm> {
                   children: <Widget>[
                     // tombol simpan
                     Expanded(
-                      child: RaisedButton(
+                      child: MaterialButton(
                         color: Theme.of(context).primaryColorDark,
                         textColor: Theme.of(context).primaryColorLight,
                         child: Text(
@@ -123,7 +123,7 @@ class EntryFormState extends State<EntryForm> {
                     ),
                     // tombol batal
                     Expanded(
-                      child: RaisedButton(
+                      child: MaterialButton(
                         color: Theme.of(context).primaryColorDark,
                         textColor: Theme.of(context).primaryColorLight,
                         child: Text(

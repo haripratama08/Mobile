@@ -9,6 +9,7 @@ import 'package:flutter/services.dart';
 import 'dart:io';
 import 'dart:async';
 import 'package:shared_preferences/shared_preferences.dart';
+// import 'package:firebase_messaging/firebase_messaging.dart';
 
 String uuid;
 String nama = '';
@@ -24,6 +25,7 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
+  // final FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
   TextEditingController username = new TextEditingController();
   TextEditingController password = new TextEditingController();
   ApiLogin apiLogin = ApiLogin();

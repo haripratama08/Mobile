@@ -1,43 +1,35 @@
 import 'dart:convert';
 import 'dart:io';
-import 'package:ch_v2_1/Menu/Kontrol/kontrol_utama.dart';
 import 'package:http/http.dart' as http;
 import 'package:ch_v2_1/LoginPage/loginpage.dart';
+import 'package:ch_v2_1/Menu/Kontrol/kontrol_utama.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-int status1 = 0;
-int i;
-int j;
-int k;
-int l;
-int iDlokasi;
-int iDhub;
-int iDalat;
-int iDkontrol;
-var warna;
-
-class KontrolSemua extends StatefulWidget {
+class Semua extends StatefulWidget {
   @override
-  _KontrolSemuaState createState() => _KontrolSemuaState();
+  _SemuaState createState() => _SemuaState();
 }
 
-class _KontrolSemuaState extends State<KontrolSemua> {
-  bool loading = false;
-  int value = 0;
-  String status;
+class _SemuaState extends State<Semua> {
+  void initState() {
+    loadKontrol();
+    super.initState();
+  }
+
+  String state;
+  int idkontrol;
+  List<String> listname = [];
+  List<String> listkontrol = [];
+  int idlokasikontrol;
   List<int> listidlokasi = [];
   List<int> listidhub = [];
   List<int> listidalat = [];
   List<int> listidkontrol = [];
-  int idlokasikontrol;
-  List<String> listname = [];
-  List<String> listkontrol = [];
-  int index = 1;
-  bool isSwitchedkelembapan = false;
   int panjanglokasi = 0;
   int panjangkontrol = 0;
-  String msg = '';
-  Future loadDeviceKontrol() async {
+
+  Future loadKontrol() async {
     var jsonString = await http.get(
         'https://ydtmch9j99.execute-api.us-east-1.amazonaws.com/dev/api/kontrol?uuid=$uuid',
         headers: {HttpHeaders.authorizationHeader: '$token'});
@@ -50,6 +42,7 @@ class _KontrolSemuaState extends State<KontrolSemua> {
             String hub = (((jsonResponse['data'])['lokasi'])[i]['nama']);
             idlokasikontrol = (((jsonResponse['data'])['lokasi'])[i]['id']);
             listname.length == panjanglokasi ? print("") : listname.add(hub);
+            // print(listname);
             listidlokasi.length == panjanglokasi
                 ? print("")
                 : listidlokasi.add(idlokasikontrol);
@@ -79,16 +72,16 @@ class _KontrolSemuaState extends State<KontrolSemua> {
                 for (int l = 0; l < panjangkontrol; l++) {
                   String kontrol = ((((jsonResponse['data'])['lokasi'])[i]
                       ['hub'][j]['alat'][k]['kontrol'][l])['alias']);
-                  status = ((((jsonResponse['data'])['lokasi'])[i]['hub'][j]
-                      ['alat'][k]['kontrol'][l])['state']);
                   int idkontrol = ((((jsonResponse['data'])['lokasi'])[i]['hub']
                       [j]['alat'][k]['kontrol'][l])['id']);
-                  listkontrol.length == panjangkontrol
+                  listkontrol.contains(kontrol)
                       ? print("")
                       : listkontrol.add(kontrol);
-                  listidkontrol.length == panjangkontrol
+                  listidkontrol.contains(idkontrol)
                       ? print("")
                       : listidkontrol.add(idkontrol);
+                  // print("panjang kontrol ${listkontrol.length}");
+                  topic = "$iDlokasi/$iDkontrol/crophero/control";
                 }
               }
             }
@@ -98,26 +91,12 @@ class _KontrolSemuaState extends State<KontrolSemua> {
         }
       });
     }
-    return loadDeviceKontrol();
-  }
-
-  Future doGanti() async {
-    // listnama.clear();
-    try {
-      // var rs = await ganti.doGanti(alias.text, idala, uuid, token);
-      // var jsonRes = json.decode(rs.body);
-      // listnama.clear();
-      setState(() {
-        loadDeviceKontrol();
-        // print(jsonRes);
-      });
-      Navigator.push(context,
-          new MaterialPageRoute(builder: (context) => new KontrolUtama()));
-    } catch (e) {}
+    return loadKontrol();
   }
 
   void change(int index) {
     status1 = index;
+    iDkontrol = listidkontrol[index];
   }
 
   void data(int index) {
@@ -126,16 +105,6 @@ class _KontrolSemuaState extends State<KontrolSemua> {
     } else {
       change(index);
     }
-  }
-
-  void initState() {
-    loadDeviceKontrol();
-    super.initState();
-  }
-
-  void dispose() {
-    loadDeviceKontrol();
-    super.dispose();
   }
 
   @override
@@ -149,9 +118,9 @@ class _KontrolSemuaState extends State<KontrolSemua> {
                 shrinkWrap: true,
                 physics: ScrollPhysics(),
                 scrollDirection: Axis.vertical,
-                itemCount: panjangkontrol == null ? 0 : panjangkontrol,
+                itemCount: listkontrol.length == null ? 0 : listkontrol.length,
                 itemBuilder: (BuildContext context, int index) {
-                  void status(int ins) {
+                  void statusa(int ins) {
                     if (status1 == ins) {
                       warna = Colors.green[100];
                     } else {
@@ -159,8 +128,8 @@ class _KontrolSemuaState extends State<KontrolSemua> {
                     }
                   }
 
-                  status(index);
-                  if (panjangkontrol == null) {
+                  statusa(index);
+                  if (listkontrol.length == null) {
                     return Container(
                       height: MediaQuery.of(context).size.height / 3,
                       child: Center(
@@ -178,9 +147,11 @@ class _KontrolSemuaState extends State<KontrolSemua> {
                     return GestureDetector(
                         onTap: () {
                           setState(() {
-                            loading = true;
                             data(status1);
                             change(index);
+                            statusa(index);
+                            print("list id kontrol $listidkontrol");
+                            KontrolUtama(iDkontrol: listidkontrol[index]);
                           });
                         },
                         child: Padding(
@@ -216,7 +187,6 @@ class _KontrolSemuaState extends State<KontrolSemua> {
                                   GestureDetector(
                                     onTap: () {
                                       setState(() {});
-                                      dialog();
                                     },
                                     child: Container(
                                       child: Center(
@@ -252,69 +222,6 @@ class _KontrolSemuaState extends State<KontrolSemua> {
           ],
         ),
       ),
-    );
-  }
-
-  void dialog() {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          actions: <Widget>[
-            Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                Padding(
-                    padding: const EdgeInsets.fromLTRB(100, 5, 100, 5),
-                    child: new Text(
-                      "Nama Baru",
-                      style: TextStyle(fontFamily: 'Mont', fontSize: 15),
-                    )),
-                Container(
-                    width: 150,
-                    height: 50,
-                    child: TextFormField(
-                      // controller: alias,
-                      keyboardType: TextInputType.text,
-                      autofocus: false,
-                      decoration: InputDecoration(
-                        fillColor: Colors.white,
-                        filled: true,
-                        hintText: nama,
-                        contentPadding:
-                            EdgeInsets.fromLTRB(10.0, 10.0, 20.0, 10.0),
-                      ),
-                      // validator: validateall,
-                    )),
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(50, 20, 50, 15),
-                  child: GestureDetector(
-                    onTap: () {
-                      FocusScope.of(context).requestFocus(FocusNode());
-                      doGanti();
-
-                      loadDeviceKontrol();
-                    },
-                    child: Container(
-                      height: 30,
-                      width: 100,
-                      decoration: BoxDecoration(
-                          color: Colors.green[900],
-                          borderRadius: BorderRadius.circular(5)),
-                      child: Center(
-                          child: Text("Terapkan",
-                              style: TextStyle(
-                                  color: Colors.white, fontFamily: 'Mont'))),
-                    ),
-                  ),
-                )
-              ],
-            ),
-          ],
-          shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.all(Radius.circular(32.0))),
-        );
-      },
     );
   }
 }
