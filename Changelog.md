@@ -29,7 +29,7 @@ Controlling
 - Controlling Menu with scalability numbers of device. 
 
 [0.3.1]
-Controlling 
+Acount 
 
 - Responsive API communication.
 - Parsing Beautifull layout about users
