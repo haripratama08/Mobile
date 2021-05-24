@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:ch_v2_1/Validator/validation.dart';
 import 'dart:io';
 import 'package:intl/intl.dart';
 import 'dart:async';
@@ -15,6 +16,7 @@ import 'package:ch_v2_1/Menu/menu.dart';
 
 bool loading = false;
 int idsensor;
+String status;
 int jum = 1;
 bool notifikasitoogle;
 String namaalat;
@@ -31,12 +33,14 @@ int panjang;
 List<String> name = [];
 List<Widget> items = [];
 List<String> itemsshadow = [];
+List<String> itemstrial = [];
 List<int> iditems = [];
 Map<String, dynamic> sensor;
 List<dynamic> loc = [];
 List<dynamic> huc = [];
 List<int> idloka = [];
 List<dynamic> dev = [];
+String sens;
 String jenissensor1;
 int status1 = 0;
 String nilai1;
@@ -68,6 +72,7 @@ String success;
 String nama1;
 String nama2;
 int notif;
+bool not;
 bool notify;
 List<String> listnama = [];
 var warna;
@@ -96,18 +101,19 @@ class Semua extends StatefulWidget {
   _SemuaState createState() => _SemuaState();
 }
 
-class _SemuaState extends State<Semua> {
-  GlobalKey<ScaffoldState> _scaffoldKey;
+class _SemuaState extends State<Semua> with Validation {
+  // GlobalKey<ScaffoldState> _scaffoldKey;
   @override
   void dispose() {
     loadDevice2();
-    _scaffoldKey?.currentState?.dispose();
+    newloadsensor();
     super.dispose();
   }
 
   @override
   void initState() {
     loadDevice2();
+    newloadsensor();
     super.initState();
   }
 
@@ -139,12 +145,12 @@ class _SemuaState extends State<Semua> {
   }
 
   Future loadDevice2() async {
-    var jsonString = await http.get(
-        'https://ydtmch9j99.execute-api.us-east-1.amazonaws.com/dev/api/data?uuid=$uuid',
-        headers: {HttpHeaders.authorizationHeader: '$token'});
+    var url = Uri.parse(
+        'https://ydtmch9j99.execute-api.us-east-1.amazonaws.com/dev/api/data?uuid=$uuid');
+    var jsonString = await http
+        .get(url, headers: {HttpHeaders.authorizationHeader: '$token'});
     var jsonResponse = json.decode(jsonString.body);
     Data2 data2 = Data2.fromJson(jsonResponse);
-    print("jsonresp: $jsonResponse");
     if (this.mounted) {
       setState(() {
         List<Widget> list = [];
@@ -198,9 +204,10 @@ class _SemuaState extends State<Semua> {
       loadSensor();
       loading = true;
     });
-    var jsonString = await http.put(
-        '$endPoint/sensor/notifikasi?set=$sets&id_sensor=$idsensor',
-        headers: {HttpHeaders.authorizationHeader: '$token'});
+    var url =
+        Uri.parse('$endPoint/sensor/notifikasi?set=$sets&id_sensor=$idsensor');
+    var jsonString = await http
+        .put(url, headers: {HttpHeaders.authorizationHeader: '$token'});
     var jsonResponse = json.decode(jsonString.body);
     items.clear();
     itemsshadow.clear();
@@ -256,18 +263,18 @@ class _SemuaState extends State<Semua> {
 
   Future loadSensor() async {
     if (idlokas == null) {
-      print("idlokasi noll");
-      print("${loc[0]}, ${huc[0]}, ${dev[0]}");
-      var jsonString = await http.get(
-          '$endPoint/mobile/sensor?lokasi=1&hub=1&alat=1',
-          headers: {HttpHeaders.authorizationHeader: '$token'});
+      var url = Uri.parse('$endPoint/mobile/sensor?lokasi=1&hub=1&alat=1');
+      // print("idlokasi noll");
+      // print("${loc[0]}, ${huc[0]}, ${dev[0]}");
+      var jsonString = await http
+          .get(url, headers: {HttpHeaders.authorizationHeader: '$token'});
       var jsonResponse = json.decode(jsonString.body);
-      print("jsonresp: $jsonResponse");
+      // print("jsonresp: $jsonResponse");
       if (this.mounted) {
         setState(() {
           idalatsebelum = dev[0];
           panjang = ((jsonResponse["data"])["data"].length);
-          print("panjang $panjang");
+          // print("panjang $panjang");
           for (var i = 0; i < panjang; i++) {
             if (items.length == panjang) {
             } else if (items.length > panjang) {
@@ -341,9 +348,9 @@ class _SemuaState extends State<Semua> {
         return loadSensor();
       }
     } else {
-      print("idalat $idala");
-      print("idhub $idhu");
-      print("idlokasi $idlokas");
+      // print("idalat $idala");
+      // print("idhub $idhu");
+      // print("idlokasi $idlokas");
       if (idala != idalatsebelum) {
         setState(() {
           loading = true;
@@ -353,15 +360,16 @@ class _SemuaState extends State<Semua> {
           loading = false;
         });
       }
-      var jsonString = await http.get(
-          '$endPoint/mobile/sensor?lokasi=$idlokas&hub=$idhu&alat=$idala',
-          headers: {HttpHeaders.authorizationHeader: '$token'});
+      var url = Uri.parse(
+          '$endPoint/mobile/sensor?lokasi=$idlokas&hub=$idhu&alat=$idala');
+      var jsonString = await http
+          .get(url, headers: {HttpHeaders.authorizationHeader: '$token'});
       var jsonResponse = json.decode(jsonString.body);
       if (this.mounted) {
         setState(() {
           loading = false;
           panjang = ((jsonResponse["data"])["data"].length);
-          print("panjang $panjang");
+          // print("panjang $panjang");
           for (var i = 0; i < panjang; i++) {
             if (items.length == panjang) {
             } else if (items.length > panjang) {
@@ -454,9 +462,140 @@ class _SemuaState extends State<Semua> {
     }
   }
 
+  Future newloadsensor() async {
+    if (idlokas == null) {
+      var url = Uri.parse(
+          'https://ydtmch9j99.execute-api.us-east-1.amazonaws.com/dev/api/mobile/sensorRev?lokasi=1&hub=1&alat=3');
+      var jsonString = await http
+          .get(url, headers: {HttpHeaders.authorizationHeader: '$token'});
+      var jsonResponse = json.decode(jsonString.body);
+      var data = jsonResponse['data'];
+      // print("json resp new loadsensor: $data");
+      if (this.mounted) {
+        setState(() {
+          panjang = ((jsonResponse['data']).length);
+          // print('panjang $panjang');
+          // print('itemstrial $itemstrial');
+          for (var i = 0; i < panjang; i++) {
+            if (itemstrial.length == panjang) {
+              print(' panjang items sama dengan panjang ');
+            } else if (itemstrial.length > panjang) {
+              setState(() {
+                loading = true;
+              });
+              itemstrial.clear();
+            } else {
+              sens = (((jsonResponse['data'])[i])["sensor"]);
+              tanggal1 = (((jsonResponse['data'])[i])["outputdate"]);
+              DateTime parseDate =
+                  new DateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
+                      .parse(tanggal1);
+              var inputDate = DateTime.parse(parseDate.toString());
+              var outputFormat = DateFormat('dd-MM-yyyy hh:mm a');
+              var outputDate = outputFormat.format(inputDate);
+              not = (((jsonResponse['data'])[i])["notifikasi"]);
+              mean = (((jsonResponse['data'])[i])["mean"]).toStringAsFixed(1);
+              max = (((jsonResponse['data'])[i])["max"]).toStringAsFixed(1);
+              min = (((jsonResponse['data'])[i])["min"]).toStringAsFixed(1);
+              itemstrial.add("$mean , $sens , $outputDate");
+              // print(itemstrial);
+            }
+          }
+        });
+        return newloadsensor();
+      }
+    } else {
+      // print("idalat $idala");
+      // print("idhub $idhu");
+      // print("idlokasi $idlokas");
+      if (idala != idalatsebelum) {
+        setState(() {
+          loading = true;
+        });
+      } else {
+        setState(() {
+          loading = false;
+        });
+      }
+      var url = Uri.parse(
+          'https://ydtmch9j99.execute-api.us-east-1.amazonaws.com/dev/api/mobile/sensorRev?lokasi=1&hub=1&alat=1');
+      var jsonString = await http
+          .get(url, headers: {HttpHeaders.authorizationHeader: '$token'});
+      var jsonResponse = json.decode(jsonString.body);
+      // print("json resp new loadsensor: $jsonResponse");
+      if (this.mounted) {
+        setState(() {});
+        return newloadsensor();
+      }
+    }
+  }
+
   TextEditingController alias = new TextEditingController();
+  TextEditingController maxvalue = new TextEditingController();
+  TextEditingController minvalue = new TextEditingController();
   String msg = '';
   final formKey = GlobalKey<FormState>();
+  PostSetParameter setparameter = PostSetParameter();
+
+  Future dosetparameter(String idsensor) async {
+    // print("masuk doset parameter");
+    // print("uuid $uuid");
+    // print(maxvalue.text);
+    // print(minvalue.text);
+    // print(token);
+    // print("idsensor $idsensor");
+    // if (formKey.currentState.validate()) {
+    //   formKey.currentState.save();
+    try {
+      var rs = await setparameter.dosetparameter(
+          uuid, idsensor, maxvalue.text, minvalue.text, token);
+      print("uuid $uuid");
+      print(maxvalue.text);
+      print(minvalue.text);
+      print(token);
+      var jsonRes = json.decode(rs.body);
+      setState(() {
+        msg = jsonRes['message'];
+        print(jsonRes);
+        print(msg);
+        status = jsonRes['status'];
+      });
+      status == "Conflict"
+          ? putsetparameter(idsensor)
+          : Navigator.push(
+              context, new MaterialPageRoute(builder: (context) => new Menu()));
+    } catch (e) {}
+    // }
+  }
+
+  PutSetParameter ptsetparameter = PutSetParameter();
+  Future putsetparameter(String idsensor) async {
+    // print("masuk doset parameter");
+    // print("uuid $uuid");
+    // print(maxvalue.text);
+    // print(minvalue.text);
+    // print(token);
+    // print("idsensor $idsensor");
+    // if (formKey.currentState.validate()) {
+    //   formKey.currentState.save();
+    try {
+      var rs = await ptsetparameter.putsetparameter(
+          idsensor, maxvalue.text, minvalue.text, token);
+      print(idsensor);
+      print(maxvalue.text);
+      var jsonRes = json.decode(rs.body);
+      setState(() {
+        msg = jsonRes['message'];
+        print("put $jsonRes");
+        print(msg);
+        status = jsonRes['status'];
+      });
+      Navigator.push(
+          context, new MaterialPageRoute(builder: (context) => new Menu()));
+    } catch (e) {}
+    // }
+  }
+
   GantiAlias ganti = GantiAlias();
   Future doGanti() async {
     if (formKey.currentState.validate()) {
@@ -506,12 +645,7 @@ class _SemuaState extends State<Semua> {
         panjangtempat == 0 ||
         panjangtempat.isNaN ||
         refresh == true) {
-      return
-
-          // AlertDialog(
-          //     content: SingleChildScrollView(
-          //         child:
-          Center(
+      return Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
@@ -527,13 +661,12 @@ class _SemuaState extends State<Semua> {
           ],
         ),
       );
-      // ));
     } else {
       return DefaultTabController(
         initialIndex: 0,
         length: panjangtempat + 1,
         child: Scaffold(
-          key: _scaffoldKey,
+          key: formKey,
           body: Container(
             child: RefreshIndicator(
               onRefresh: () {
@@ -577,17 +710,38 @@ class _SemuaState extends State<Semua> {
                                           MainAxisAlignment.center,
                                       children: [
                                         Container(
-                                            height: (MediaQuery.of(context)
-                                                        .size
-                                                        .width *
-                                                    7.5 /
-                                                    9) +
-                                                30,
-                                            child: Center(
-                                                child: Text(
-                                                    "Tidak ada data sensor yang tersedia",
-                                                    style: TextStyle(
-                                                        fontFamily: "Mont")))),
+                                          height: MediaQuery.of(context)
+                                                  .size
+                                                  .width *
+                                              7.5 /
+                                              9,
+                                          width:
+                                              MediaQuery.of(context).size.width,
+                                        )
+                                        // child: Container(
+                                        //   height: MediaQuery.of(context)
+                                        //           .size
+                                        //           .height /
+                                        //       5,
+                                        //   width: MediaQuery.of(context)
+                                        //           .size
+                                        //           .width /
+                                        //       5,
+                                        //   child: Image.asset(
+                                        //       "asset/img/loading-blog.gif"),
+                                        // ))
+                                        // Container(
+                                        //     height: (MediaQuery.of(context)
+                                        //                 .size
+                                        //                 .width *
+                                        //             7.5 /
+                                        //             9) +
+                                        //         30,
+                                        //     child: Center(
+                                        //         child: Text(
+                                        //             "Tidak ada data sensor yang tersedia",
+                                        //             style: TextStyle(
+                                        //                 fontFamily: "Mont")))),
                                       ],
                                     ),
                                   ),
@@ -888,168 +1042,96 @@ class _SemuaState extends State<Semua> {
                     ),
                   ),
                   SizedBox(height: 10),
-                  GestureDetector(
-                    onTap: () {
-                      return AlertDialog(
-                        actions: <Widget>[
-                          Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: <Widget>[
-                              Padding(
-                                  padding: const EdgeInsets.fromLTRB(
-                                      100, 10, 100, 10),
-                                  child: new Text(
-                                    "Set Parameter",
-                                    style: TextStyle(
-                                        fontFamily: 'Mont', fontSize: 18),
-                                  )),
-                              Padding(
-                                  padding:
-                                      const EdgeInsets.fromLTRB(100, 5, 100, 5),
-                                  child: new Text(
-                                    "Batas Atas",
-                                    style: TextStyle(
-                                        fontFamily: 'Mont', fontSize: 15),
-                                  )),
-                              Container(
-                                height: 30,
-                                width: 80,
-                                decoration: BoxDecoration(
-                                    border: Border.all(width: 1),
-                                    borderRadius: BorderRadius.circular(5)),
-                              ),
-                              Padding(
-                                  padding:
-                                      const EdgeInsets.fromLTRB(100, 5, 100, 5),
-                                  child: new Text(
-                                    "Batas Bawah",
-                                    style: TextStyle(
-                                        fontFamily: 'Mont', fontSize: 15),
-                                  )),
-                              Container(
-                                height: 30,
-                                width: 80,
-                                decoration: BoxDecoration(
-                                    border: Border.all(width: 1),
-                                    borderRadius: BorderRadius.circular(5)),
-                              ),
-                              Padding(
-                                padding:
-                                    const EdgeInsets.fromLTRB(50, 20, 50, 15),
-                                child: GestureDetector(
-                                  onTap: () {
-                                    FocusScope.of(context)
-                                        .requestFocus(FocusNode());
-                                    doGanti();
-                                  },
-                                  child: Container(
-                                    height: 30,
-                                    width: 100,
-                                    decoration: BoxDecoration(
-                                        color: Colors.green[900],
-                                        borderRadius: BorderRadius.circular(5)),
-                                    child: Center(
-                                        child: Text("Terapkan",
-                                            style: TextStyle(
-                                                color: Colors.white,
-                                                fontFamily: 'Mont'))),
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ],
-                        shape: RoundedRectangleBorder(
-                            borderRadius:
-                                BorderRadius.all(Radius.circular(32.0))),
-                      );
-                    },
+                  Container(
                     child: GestureDetector(
                       onTap: () {
-                        print("tap pada atur notifikasi");
-                        showDialog(
-                            context: context,
-                            builder: (BuildContext context) {
-                              return AlertDialog(
-                                actions: <Widget>[
-                                  Column(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: <Widget>[
-                                      Padding(
-                                          padding: const EdgeInsets.fromLTRB(
-                                              50, 10, 50, 10),
-                                          child: new Text(
-                                            "Atur $jenissensor",
-                                            style: TextStyle(
-                                                fontFamily: 'Mont',
-                                                fontSize: 18),
-                                          )),
-                                      Padding(
-                                          padding: const EdgeInsets.fromLTRB(
-                                              100, 5, 100, 5),
-                                          child: new Text(
-                                            "Batas Atas",
-                                            style: TextStyle(
-                                                fontFamily: 'Mont',
-                                                fontSize: 15),
-                                          )),
-                                      Container(
-                                        height: 30,
-                                        width: 80,
-                                        decoration: BoxDecoration(
-                                            border: Border.all(width: 1),
-                                            borderRadius:
-                                                BorderRadius.circular(5)),
-                                      ),
-                                      Padding(
-                                          padding: const EdgeInsets.fromLTRB(
-                                              100, 5, 100, 5),
-                                          child: new Text(
-                                            "Batas Bawah",
-                                            style: TextStyle(
-                                                fontFamily: 'Mont',
-                                                fontSize: 15),
-                                          )),
-                                      Container(
-                                        height: 30,
-                                        width: 80,
-                                        decoration: BoxDecoration(
-                                            border: Border.all(width: 1),
-                                            borderRadius:
-                                                BorderRadius.circular(5)),
-                                      ),
-                                      Padding(
-                                        padding: const EdgeInsets.fromLTRB(
-                                            50, 20, 50, 15),
-                                        child: GestureDetector(
-                                          onTap: () {
-                                            FocusScope.of(context)
-                                                .requestFocus(FocusNode());
-                                            doGanti();
-                                          },
-                                          child: Container(
-                                            height: 30,
-                                            width: 100,
-                                            decoration: BoxDecoration(
-                                                color: Colors.green[900],
-                                                borderRadius:
-                                                    BorderRadius.circular(5)),
-                                            child: Center(
-                                                child: Text("Terapkan",
-                                                    style: TextStyle(
-                                                        color: Colors.white,
-                                                        fontFamily: 'Mont'))),
-                                          ),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ],
-                                shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.all(
-                                        Radius.circular(32.0))),
-                              );
-                            });
+                        postparameter(i.toString(), jenissensor);
+                        // print(i);
+                        // print(jenissensor);
+                        // print("tap pada atur notifikasi");
+                        // showDialog(
+                        //     context: context,
+                        //     builder: (BuildContext context) {
+                        //       return AlertDialog(
+                        //         actions: <Widget>[
+                        //           Column(
+                        //             mainAxisAlignment: MainAxisAlignment.center,
+                        //             children: <Widget>[
+                        //               Padding(
+                        //                   padding: const EdgeInsets.fromLTRB(
+                        //                       50, 10, 50, 10),
+                        //                   child: new Text(
+                        //                     "Atur $jenissensor",
+                        //                     style: TextStyle(
+                        //                         fontFamily: 'Mont',
+                        //                         fontSize: 18),
+                        //                   )),
+                        //               Padding(
+                        //                   padding: const EdgeInsets.fromLTRB(
+                        //                       100, 5, 100, 5),
+                        //                   child: new Text(
+                        //                     "Batas Atas",
+                        //                     style: TextStyle(
+                        //                         fontFamily: 'Mont',
+                        //                         fontSize: 15),
+                        //                   )),
+                        //               Container(
+                        //                 height: 30,
+                        //                 width: 80,
+                        //                 decoration: BoxDecoration(
+                        //                     border: Border.all(width: 1),
+                        //                     borderRadius:
+                        //                         BorderRadius.circular(5)),
+                        //               ),
+                        //               Padding(
+                        //                   padding: const EdgeInsets.fromLTRB(
+                        //                       100, 5, 100, 5),
+                        //                   child: new Text(
+                        //                     "Batas Bawah",
+                        //                     style: TextStyle(
+                        //                         fontFamily: 'Mont',
+                        //                         fontSize: 15),
+                        //                   )),
+                        //               Container(
+                        //                 height: 30,
+                        //                 width: 80,
+                        //                 decoration: BoxDecoration(
+                        //                     border: Border.all(width: 1),
+                        //                     borderRadius:
+                        //                         BorderRadius.circular(5)),
+                        //               ),
+                        //               Padding(
+                        //                 padding: const EdgeInsets.fromLTRB(
+                        //                     50, 20, 50, 15),
+                        //                 child: GestureDetector(
+                        //                   onTap: () {
+                        //                     FocusScope.of(context)
+                        //                         .requestFocus(FocusNode());
+                        //                     doGanti();
+                        //                   },
+                        //                   child: Container(
+                        //                     height: 30,
+                        //                     width: 100,
+                        //                     decoration: BoxDecoration(
+                        //                         color: Colors.green[900],
+                        //                         borderRadius:
+                        //                             BorderRadius.circular(5)),
+                        //                     child: Center(
+                        //                         child: Text("Terapkan",
+                        //                             style: TextStyle(
+                        //                                 color: Colors.white,
+                        //                                 fontFamily: 'Mont'))),
+                        //                   ),
+                        //                 ),
+                        //               ),
+                        //             ],
+                        //           ),
+                        //         ],
+                        //         shape: RoundedRectangleBorder(
+                        //             borderRadius: BorderRadius.all(
+                        //                 Radius.circular(32.0))),
+                        //       );
+                        //     });
                       },
                       child: Container(
                           height: MediaQuery.of(context).size.height / 20,
@@ -1178,6 +1260,108 @@ class _SemuaState extends State<Semua> {
                     ),
                   ),
                 ),
+              ],
+            ),
+          ],
+          shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(Radius.circular(32.0))),
+        );
+      },
+    );
+  }
+
+  void postparameter(String idsensor, String jenissensor) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          actions: <Widget>[
+            Column(
+              // key: formKey,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                Padding(
+                    padding: const EdgeInsets.fromLTRB(50, 10, 50, 10),
+                    child: new Text(
+                      "Atur $jenissensor",
+                      style: TextStyle(fontFamily: 'Mont', fontSize: 18),
+                    )),
+                Padding(
+                    padding: const EdgeInsets.fromLTRB(100, 5, 100, 5),
+                    child: new Text(
+                      "Batas Atas",
+                      style: TextStyle(fontFamily: 'Mont', fontSize: 15),
+                    )),
+                Container(
+                    width: 150,
+                    height: 50,
+                    child: TextFormField(
+                        controller: maxvalue,
+                        keyboardType: TextInputType.number,
+                        autofocus: false,
+                        decoration: InputDecoration(
+                          fillColor: Colors.white,
+                          filled: true,
+                          hintText: max,
+                          contentPadding:
+                              EdgeInsets.fromLTRB(10.0, 10.0, 20.0, 10.0),
+                        ),
+                        validator: (value) {
+                          if (value.isEmpty) {
+                            return ' min';
+                          }
+                        })),
+                Padding(
+                    padding: const EdgeInsets.fromLTRB(100, 5, 100, 5),
+                    child: new Text(
+                      "Batas Bawah",
+                      style: TextStyle(fontFamily: 'Mont', fontSize: 15),
+                    )),
+                Container(
+                    width: 150,
+                    height: 50,
+                    child: TextFormField(
+                      controller: minvalue,
+                      keyboardType: TextInputType.number,
+                      autofocus: false,
+                      decoration: InputDecoration(
+                        fillColor: Colors.white,
+                        filled: true,
+                        hintText: min,
+                        contentPadding:
+                            EdgeInsets.fromLTRB(10.0, 10.0, 20.0, 10.0),
+                      ),
+                      validator: (value) {
+                        if (value.isEmpty) {
+                          return ' min';
+                        }
+                      },
+                    )),
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(50, 20, 50, 15),
+                  child: GestureDetector(
+                    onTap: () {
+                      FocusScope.of(context).requestFocus(FocusNode());
+                      dosetparameter(idsensor);
+                      // print(idsensor);
+                      // print(maxvalue.text);
+                      // print(minvalue.text);
+                      listnama.clear();
+                      loadDevice2();
+                    },
+                    child: Container(
+                      height: 30,
+                      width: 100,
+                      decoration: BoxDecoration(
+                          color: Colors.green[900],
+                          borderRadius: BorderRadius.circular(5)),
+                      child: Center(
+                          child: Text("Terapkan",
+                              style: TextStyle(
+                                  color: Colors.white, fontFamily: 'Mont'))),
+                    ),
+                  ),
+                )
               ],
             ),
           ],

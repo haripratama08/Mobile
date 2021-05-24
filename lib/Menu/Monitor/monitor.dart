@@ -47,9 +47,10 @@ class _MonitorIndoorState extends State<MonitorIndoor> with Validation {
   final formKey = GlobalKey<FormState>();
   GantiAlias ganti = GantiAlias();
   Future loadDevice() async {
-    var jsonString = await http.get(
-        'https://ydtmch9j99.execute-api.us-east-1.amazonaws.com/dev/api/data?uuid=$uuid',
-        headers: {HttpHeaders.authorizationHeader: '$token'});
+    var url = Uri.parse(
+        'https://ydtmch9j99.execute-api.us-east-1.amazonaws.com/dev/api/data?uuid=$uuid');
+    var jsonString = await http
+        .get(url, headers: {HttpHeaders.authorizationHeader: '$token'});
     var jsonResponse = json.decode(jsonString.body);
     Data2 data2 = Data2.fromJson(jsonResponse);
     if (this.mounted) {
@@ -183,8 +184,8 @@ class _MonitorIndoorState extends State<MonitorIndoor> with Validation {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Container(
-                              height: MediaQuery.of(context).size.width / 5,
-                              width: MediaQuery.of(context).size.width / 5,
+                              height: MediaQuery.of(context).size.width / 20,
+                              width: MediaQuery.of(context).size.width / 20,
                               child: Image.asset("asset/img/loading-blog.gif")),
                         ],
                       )),
@@ -324,7 +325,7 @@ class _MonitorIndoorState extends State<MonitorIndoor> with Validation {
                         loading = true;
                         listnama.clear();
                       });
-                      // listnama.clear();
+                      listnama.clear();
                       loadDevice();
                     },
                     child: Container(

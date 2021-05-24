@@ -10,6 +10,7 @@ int _selectedIndex = 0;
 int count = 0;
 
 class Menu extends StatefulWidget {
+  final int count;
   final int index;
   final String nama;
   final String email;
@@ -30,6 +31,7 @@ class Menu extends StatefulWidget {
       this.idlokas,
       this.idhu,
       this.idala,
+      this.count,
       this.index})
       : super(key: key);
   @override
@@ -51,35 +53,68 @@ class _MenuState extends State<Menu> with SingleTickerProviderStateMixin {
   }
 
   void _onTabItem(int index) {
+    print("didalam index $index");
+    print("widget index ${widget.index}");
+
     setState(() {
-      print("index setelah dari kontrol : ${widget.index}");
-      if (widget.index != null && count != 1) {
-        index = widget.index;
-        count = 1;
+      print("count menu $count");
+      print(" index setelah dari kontrol : ${widget.index} ");
+      if (widget.index != null && count == null ||
+          widget.index != null && count == 0) {
+        setState(() {
+          index = widget.index;
+          count = 1;
+        });
+        index != 0
+            ? setState(() {
+                // Navigator.push(context,
+                //     new MaterialPageRoute(builder: (context) => new Menu()));
+                // count = 0;
+                print("index tidak sama dengan 1");
+              })
+            : setState(() {
+                // Navigator.push(context,
+                //     new MaterialPageRoute(builder: (context) => new Menu()));
+                // count = 0;
+                print("index sama dengan 1");
+              });
       } else {
-        _selectedIndex = index;
-        count = 0;
+        setState(() {
+          index = index;
+          _selectedIndex = index;
+          count = 0;
+        });
+        print("index $index");
       }
+
       _selectedIndex = index;
+
+      // if (widget.index == 0) {
+      //   route = Semua();
+      // } else if (widget.index == 1) {
+      //   route = KontrolUtama();
+      // } else if (widget.index == 2) {
+      //   route = Logout();
+      // }
+
       if (index == 0) {
         route = Semua();
-      }
-      if (index == 1) {
+        count = 0;
+      } else if (index == 1) {
+        count = 0;
         route = KontrolUtama();
+      } else if (index == 2) {
+        count = 0;
+        route = Logout();
       }
 
       // ketika sudah ready untuk kamera dan automasi
-
       // if (index == 2) {
       //   route = KameraUtama();
       // }
       // if (index == 3) {
       //   route = Automasi();
       // }
-      if (index == 2) {
-        route = Logout();
-      }
-      print(_selectedIndex);
     });
   }
 

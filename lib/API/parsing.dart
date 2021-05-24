@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 class Login {
   Login({
     this.status,
@@ -386,6 +388,39 @@ class Alat3 {
 
   Map<String, dynamic> toJson() => {
         "id": id,
+        "nama": nama,
+      };
+}
+
+List<Looping> loopingFromJson(String str) =>
+    List<Looping>.from(json.decode(str).map((x) => Looping.fromJson(x)));
+String loopingToJson(List<Looping> data) =>
+    json.encode(List<dynamic>.from(data.map((x) => x.toJson())));
+
+class Looping {
+  Looping({
+    this.idlokasi,
+    this.idhub,
+    this.idalat,
+    this.nama,
+  });
+
+  int idlokasi;
+  int idhub;
+  int idalat;
+  String nama;
+
+  factory Looping.fromJson(Map<String, dynamic> json) => Looping(
+        idlokasi: json["idlokasi"],
+        idhub: json["idhub"],
+        idalat: json["idalat"],
+        nama: json["nama"],
+      );
+
+  Map<String, dynamic> toJson() => {
+        "idlokasi": idlokasi,
+        "idhub": idhub,
+        "idalat": idalat,
         "nama": nama,
       };
 }

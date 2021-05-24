@@ -16,16 +16,16 @@ dependencies:
   cupertino_icons: ^1.0.0
   flare_flutter: ^1.5.5
   carousel_slider: ^2.3.1
-  toggle_switch: "^0.1.8"
+  toggle_switch: ^0.1.8
   flick_video_player: ^0.1.1
   custom_switch: ^0.0.1
   flutter_datetime_picker: ^1.2.5
-  http: ^0.12.0+2
-  image_picker: ^0.6.7+7
+  http: ^0.13.3
+  image_picker: ^0.7.5
   shared_preferences: ^0.5.7+3
   intl: ^0.15.7
   progress_dialog: ^1.2.1
-  firebase_messaging: ^7.0.3
+  firebase_messaging: ^9.1.4
   sqflite: any
   path_provider: any
 

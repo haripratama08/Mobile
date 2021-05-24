@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 import 'package:ch_v2_1/Menu/Kontrol/kontrol_utama.dart';
+import 'package:ch_v2_1/Menu/menu.dart';
 import 'package:ch_v2_1/Validator/validation.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
@@ -34,8 +35,9 @@ class _KontrolAutoState extends State<KontrolAuto> with Validation {
         loading = true;
       });
       print("$mode $atas $topic $bawah $state");
-      var jsonString = await http.get(
+      var url = Uri.parse(
           'http://ec2-18-139-101-44.ap-southeast-1.compute.amazonaws.com:2000/control?topic=$topic&message={"mode": "$mode","atas": "$atas","bawah": "$bawah","manual": "$state"}');
+      var jsonString = await http.get(url);
       final jsonResponse = json.decode(jsonString.body);
       if (this.mounted) {
         setState(() {
@@ -58,8 +60,13 @@ class _KontrolAutoState extends State<KontrolAuto> with Validation {
               ),
             );
             Timer(Duration(seconds: 1), () {
-              Navigator.pop(context);
-              Navigator.pop(context);
+              // FocusScope.of(context).requestFocus(FocusNode());
+              Navigator.push(
+                  context,
+                  new MaterialPageRoute(
+                      builder: (context) => new Menu(
+                            index: 1,
+                          )));
             });
           });
         }
@@ -85,12 +92,12 @@ class _KontrolAutoState extends State<KontrolAuto> with Validation {
                           children: <Widget>[
                             userField(
                               max,
-                              'Enter Max Value',
+                              'Masukan Nilai Maksimal',
                             ),
                             userField(
                               min,
-                              'Enter Min Value',
-                            )
+                              'Masukan Nilai Minimal',
+                            ),
                           ],
                         ),
                       ),
@@ -103,7 +110,14 @@ class _KontrolAutoState extends State<KontrolAuto> with Validation {
                             )
                           : GestureDetector(
                               onTap: () {
-                                publish("auto", max.text, min.text, statesend);
+                                int.tryParse(max.text) > int.tryParse(max.text)
+                                    ? publish(
+                                        "auto", max.text, min.text, statesend)
+                                    : Text("SALAH");
+                                print({
+                                  int.tryParse(max.text) >
+                                      int.tryParse(max.text)
+                                });
                               },
                               child: Container(
                                   child: Center(
@@ -121,8 +135,7 @@ class _KontrolAutoState extends State<KontrolAuto> with Validation {
                                           BorderRadius.circular(10)))),
                     ],
                   ),
-                )
-          ),
+                )),
     );
   }
 

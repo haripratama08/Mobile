@@ -52,9 +52,10 @@ class MonitorIndoorRouteState extends State<MonitorIndoorRoute>
   GantiAlias ganti = GantiAlias();
 
   Future loadDevice() async {
-    var jsonString = await http.get(
-        'https://ydtmch9j99.execute-api.us-east-1.amazonaws.com/dev/api/data?uuid=$uuid',
-        headers: {HttpHeaders.authorizationHeader: '$token'});
+    var url = Uri.parse(
+        'https://ydtmch9j99.execute-api.us-east-1.amazonaws.com/dev/api/data?uuid=$uuid');
+    var jsonString = await http
+        .get(url, headers: {HttpHeaders.authorizationHeader: '$token'});
     var jsonResponse = json.decode(jsonString.body);
     Data2 data2 = Data2.fromJson(jsonResponse);
     if (this.mounted) {

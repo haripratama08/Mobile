@@ -1,33 +1,33 @@
 {
   "project_info": {
-    "project_number": "643169197551",
-    "project_id": "cropherov2-67aed",
-    "storage_bucket": "cropherov2-67aed.appspot.com"
+    "project_number": "854551756920",
+    "project_id": "cropherov2",
+    "storage_bucket": "cropherov2.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:643169197551:android:55a0a9219e3ddcd8166a1a",
+        "mobilesdk_app_id": "1:854551756920:android:921e6531a37146d1ecad8d",
         "android_client_info": {
           "package_name": "com.example.ch_v2_1"
         }
       },
       "oauth_client": [
         {
-          "client_id": "643169197551-m8q37cselce1plt85jidn5r4iqg8rre7.apps.googleusercontent.com",
+          "client_id": "854551756920-6hkgr06oa8mtm9e8qgp3quc0j52nrs9s.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyAzc04o0H6o-D-i1ahajkx3av4TAK8H2s8"
+          "current_key": "AIzaSyBWoT5IzCzMLDktNzB_UvYXH_693_YmE14"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "643169197551-m8q37cselce1plt85jidn5r4iqg8rre7.apps.googleusercontent.com",
+              "client_id": "854551756920-6hkgr06oa8mtm9e8qgp3quc0j52nrs9s.apps.googleusercontent.com",
               "client_type": 3
             }
           ]

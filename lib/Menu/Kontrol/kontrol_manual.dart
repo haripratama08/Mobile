@@ -19,13 +19,12 @@ class _KontrolManualState extends State<KontrolManual> {
     Future publish(String mode, String atas, String bawah, String state) async {
       setState(() {
         loading = true;
-        // print(mode);
-        // print(state);
       });
       loading = false;
       print("$mode $atas $topic $bawah $state");
-      var jsonString = await http.get(
+      var url = Uri.parse(
           'http://ec2-18-139-101-44.ap-southeast-1.compute.amazonaws.com:2000/control?topic=$topic&message={"mode": "$mode","atas": "$atas","bawah": "$bawah","manual": "$state"}');
+      var jsonString = await http.get(url);
       final jsonResponse = json.decode(jsonString.body);
       if (this.mounted) {
         setState(() {
@@ -47,12 +46,13 @@ class _KontrolManualState extends State<KontrolManual> {
               ),
             );
             Timer(Duration(seconds: 1), () {
-              Navigator.push(
-                  context,
-                  new MaterialPageRoute(
-                      builder: (context) => new Menu(
-                            index: 1,
-                          )));
+              FocusScope.of(context).requestFocus(FocusNode());
+              // Navigator.push(
+              //     context,
+              //     new MaterialPageRoute(
+              //         builder: (context) => new Menu(
+              //               index: 1,
+              //             )));
               // Navigator.pop(context);
               // Navigator.pop(context);
             });
@@ -73,7 +73,6 @@ class _KontrolManualState extends State<KontrolManual> {
               )
             : GestureDetector(
                 onTap: () {
-                  // print("tap");
                   publish("manual", "0", "0", statesend);
                 },
                 child: Container(

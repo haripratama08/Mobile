@@ -25,9 +25,10 @@ class _LogoutState extends State<Logout> {
   }
 
   Future loadSensor() async {
-    var jsonString = await http.get(
-        'https://ydtmch9j99.execute-api.us-east-1.amazonaws.com/dev/api/profile',
-        headers: {HttpHeaders.authorizationHeader: '$token'});
+    var url = Uri.parse(
+        'https://ydtmch9j99.execute-api.us-east-1.amazonaws.com/dev/api/profile');
+    var jsonString = await http
+        .get(url, headers: {HttpHeaders.authorizationHeader: '$token'});
     var jsonResponse = json.decode(jsonString.body);
     print(jsonResponse);
     print(token);
