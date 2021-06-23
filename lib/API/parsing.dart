@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:ch_v2_1/Menu/Kontrol/kontrol_utama.dart';
 
 class Login {
   Login({
@@ -423,4 +424,66 @@ class Looping {
         "idalat": idalat,
         "nama": nama,
       };
+}
+
+class Loop {
+  Loop({
+    this.idsensor,
+    this.nama,
+  });
+
+  int idsensor;
+  String nama;
+
+  factory Loop.fromJson(Map<String, dynamic> json) => Loop(
+        idsensor: json["idsensor"],
+        nama: json["nama"],
+      );
+
+  Map<String, dynamic> toJson() => {
+        "idsensor": idsensor,
+        "nama": nama,
+      };
+}
+
+class Repository {
+  List<Map> getAll() => trial;
+
+  getidlokasibynama(String nama) => trial
+      .map((map) => Looping.fromJson(map))
+      .where((item) => item.nama == nama)
+      .map((item) => item.idlokasi)
+      .toList();
+
+  getidhubbynama(String nama) => trial
+      .map((map) => Looping.fromJson(map))
+      .where((item) => item.nama == nama)
+      .map((item) => item.idhub)
+      .toList();
+
+  getidalatbynama(String nama) => trial
+      .map((map) => Looping.fromJson(map))
+      .where((item) => item.nama == nama)
+      .map((item) => item.idalat)
+      .toList();
+
+  List<String> getnama() => trial
+      .map((map) => Looping.fromJson(map))
+      .map((item) => item.nama)
+      .toList();
+}
+
+class RepositorySensor {
+  List<Map> getAll() => listsensors;
+
+  getidsensorbynama(String nama) => listsensors
+      .map((map) => Loop.fromJson(map))
+      .where((item) => item.nama == nama)
+      .map((item) => item.idsensor)
+      .toList();
+
+  List<String> getnama() => listsensors
+      .map((map) => Loop.fromJson(map))
+      .map((item) => item.nama)
+      .toList();
 }

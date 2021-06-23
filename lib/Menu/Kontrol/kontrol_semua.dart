@@ -46,13 +46,13 @@ class _SemuaState extends State<Semua> with Validation {
     var jsonResponse = json.decode(jsonString.body);
     if (this.mounted) {
       setState(() {
+        print(jsonResponse);
         if ((jsonResponse['status']) == 'OK') {
           panjanglokasi = (((jsonResponse['data'])['lokasi']).length);
           for (int i = 0; i < panjanglokasi; i++) {
             String hub = (((jsonResponse['data'])['lokasi'])[i]['nama']);
             idlokasikontrol = (((jsonResponse['data'])['lokasi'])[i]['id']);
             listname.length == panjanglokasi ? print("") : listname.add(hub);
-            // print(listname);
             listidlokasi.length == panjanglokasi
                 ? print("")
                 : listidlokasi.add(idlokasikontrol);
@@ -87,18 +87,18 @@ class _SemuaState extends State<Semua> with Validation {
                   listkontrol.contains(kontrol)
                       ? print("")
                       : listkontrol.add(kontrol);
+                  namaalatkontrol == null
+                      ? namaalatkontrol = listkontrol[0]
+                      : namaalatkontrol = namaalatkontrol;
                   listidkontrol.contains(idkontrol)
                       ? print("")
                       : listidkontrol.add(idkontrol);
-                  // print("panjang kontrol ${listkontrol.length}");
                   topic = "$iDlokasi/$iDkontrol/crophero/control";
                 }
               }
             }
           }
-        } else {
-          print((jsonResponse['status']));
-        }
+        } else {}
       });
     }
     return loadKontrol();
@@ -114,41 +114,22 @@ class _SemuaState extends State<Semua> with Validation {
       setState(() {
         loadKontrol();
         print(jsonRes);
-        // loading = true;
       });
-      // if (listkontrol.contains(alias.text)) {
-      //   setState(() {
-      //     print("false");
-      //     loading = false;
-      //   });
-      // } else {
-      //   setState(() {
-      //     // Navigator.pop(context);
-      //     print("tidak mengandung alias.text");
-      //     doGantiAliasKontrol();
-      //     listkontrol.clear();
-      //   });
-      // }
       Timer(Duration(seconds: 1), () {
         Navigator.push(
             context,
             new MaterialPageRoute(
                 builder: (context) => new Menu(
-                    // index: 1,
+                      index: 1,
                     )));
       });
-      // Navigator.push(
-      //     context,
-      //     new MaterialPageRoute(
-      //         builder: (context) => new Menu(
-      //               index: 1,
-      //             )));
     } catch (e) {}
   }
 
   void change(int index) {
     status1 = index;
     iDkontrol = listidkontrol[index];
+    namaalatkontrol = listkontrol[index];
   }
 
   void data(int index) {
@@ -220,7 +201,7 @@ class _SemuaState extends State<Semua> with Validation {
                                 change(index);
                                 statusa(index);
                                 print("list id kontrol $listidkontrol");
-                                KontrolUtama(iDkontrol: listidkontrol[index]);
+                                print(namaalatkontrol);
                               });
                             },
                             child: Padding(
@@ -285,10 +266,9 @@ class _SemuaState extends State<Semua> with Validation {
                                     ],
                                   )),
                                   height:
-                                      MediaQuery.of(context).size.height / 11,
-                                  width: MediaQuery.of(context).size.width *
-                                      4.5 /
-                                      5,
+                                      MediaQuery.of(context).size.height / 11.5,
+                                  width:
+                                      MediaQuery.of(context).size.width * 4 / 5,
                                   padding: const EdgeInsets.all(10),
                                   decoration: BoxDecoration(
                                       color: warna,

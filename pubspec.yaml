@@ -25,8 +25,8 @@ dependencies:
   shared_preferences: ^0.5.7+3
   intl: ^0.15.7
   progress_dialog: ^1.2.1
-  firebase_messaging: ^9.1.4
-  sqflite: any
+  # firebase_messaging: ^9.1.4
+  # sqflite: any
   path_provider: any
 
 dev_dependencies:

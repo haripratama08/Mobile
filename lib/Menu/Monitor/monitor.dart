@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:ch_v2_1/Menu/Monitor/monitor_semua.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
@@ -61,7 +62,6 @@ class _MonitorIndoorState extends State<MonitorIndoor> with Validation {
             loading = false;
           });
         } else {
-          // listnama.clear();
           List<Widget> list = [];
           for (int i = 0; i < data2.data.lokasi.length; i++) {
             for (int j = 0; j < data2.data.lokasi[i].hub.length; j++) {
@@ -115,12 +115,19 @@ class _MonitorIndoorState extends State<MonitorIndoor> with Validation {
         loadDevice();
         print(jsonRes);
       });
-      Navigator.push(
-          context, new MaterialPageRoute(builder: (context) => new Menu()));
+      jsonRes['status'] == "OK"
+          ? Navigator.push(
+              context,
+              new MaterialPageRoute(
+                  builder: (context) => new Menu(
+                        index: 0,
+                      )))
+          : print("tidak ada");
     } catch (e) {}
   }
 
   void change(int index) {
+    print(index);
     items.clear();
     status1 = index;
     idlokas = idlokasi[index];
@@ -129,6 +136,7 @@ class _MonitorIndoorState extends State<MonitorIndoor> with Validation {
   }
 
   void data(int index) {
+    print(index);
     if (index == null) {
       change(0);
       items.clear();
@@ -146,6 +154,7 @@ class _MonitorIndoorState extends State<MonitorIndoor> with Validation {
 
   void initState() {
     loadDevice();
+    listnama.clear();
     super.initState();
   }
 
@@ -165,7 +174,7 @@ class _MonitorIndoorState extends State<MonitorIndoor> with Validation {
                 shrinkWrap: true,
                 physics: ScrollPhysics(),
                 scrollDirection: Axis.vertical,
-                itemCount: listnama.length == null ? 0 : listnama.length,
+                itemCount: listnama.length,
                 itemBuilder: (BuildContext context, int index) {
                   void status(int ins) {
                     if (status1 == ins) {
@@ -176,7 +185,7 @@ class _MonitorIndoorState extends State<MonitorIndoor> with Validation {
                   }
 
                   status(index);
-                  if (listnama.length == null) {
+                  if (listnama.length == 0) {
                     return Container(
                       height: MediaQuery.of(context).size.height / 3,
                       child: Center(
@@ -199,12 +208,6 @@ class _MonitorIndoorState extends State<MonitorIndoor> with Validation {
                             items.clear();
                             data(status1);
                             change(index);
-                            Semua(
-                                loading: true,
-                                idlokas: idlokas,
-                                idhu: idhu,
-                                idala: idala,
-                                items: []);
                             items = items;
                             itemsshadow = itemsshadow;
                           });
@@ -244,6 +247,8 @@ class _MonitorIndoorState extends State<MonitorIndoor> with Validation {
                                       setState(() {
                                         idalate = idala;
                                         nama = listnama[index];
+                                        print(
+                                            "pilihan nama monitor'${listnama[index]}'");
                                       });
                                       dialog();
                                     },
@@ -264,9 +269,8 @@ class _MonitorIndoorState extends State<MonitorIndoor> with Validation {
                                   )
                                 ],
                               )),
-                              height: MediaQuery.of(context).size.height / 11,
-                              width:
-                                  MediaQuery.of(context).size.width * 4.5 / 5,
+                              height: MediaQuery.of(context).size.height / 11.5,
+                              width: MediaQuery.of(context).size.width * 4 / 5,
                               padding: const EdgeInsets.all(10),
                               decoration: BoxDecoration(
                                   color: warna,

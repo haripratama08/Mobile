@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'dart:convert';
-import 'package:ch_v2_1/Menu/menu.dart';
 import 'package:flutter/material.dart';
 import 'package:ch_v2_1/Menu/Kontrol/kontrol_utama.dart';
 import 'package:http/http.dart' as http;
@@ -23,7 +22,7 @@ class _KontrolManualState extends State<KontrolManual> {
       loading = false;
       print("$mode $atas $topic $bawah $state");
       var url = Uri.parse(
-          'http://ec2-18-139-101-44.ap-southeast-1.compute.amazonaws.com:2000/control?topic=$topic&message={"mode": "$mode","atas": "$atas","bawah": "$bawah","manual": "$state"}');
+          'http://ec2-18-139-101-44.ap-southeast-1.compute.amazonaws.com:2000/control?topic=$topic&message={"mode": "$mode","atas": "$atas","bawah": "$bawah","manual": "$state","id_sensor": "$idsensor"}');
       var jsonString = await http.get(url);
       final jsonResponse = json.decode(jsonString.body);
       if (this.mounted) {
@@ -31,7 +30,10 @@ class _KontrolManualState extends State<KontrolManual> {
           msg = jsonResponse['success'];
           loading = false;
         });
+        liststate.clear();
         if (msg == "1") {
+          print(
+              "message: mode: $mode,atas: $atas,bawah: $bawah , manual: $state , id_sensor : $idsensor");
           print("Published to $topic");
           setState(() {
             loading = false;
@@ -45,24 +47,12 @@ class _KontrolManualState extends State<KontrolManual> {
                 ),
               ),
             );
-            Timer(Duration(seconds: 1), () {
-              FocusScope.of(context).requestFocus(FocusNode());
-              // Navigator.push(
-              //     context,
-              //     new MaterialPageRoute(
-              //         builder: (context) => new Menu(
-              //               index: 1,
-              //             )));
-              // Navigator.pop(context);
-              // Navigator.pop(context);
-            });
           });
         }
       }
     }
 
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(50, 10, 50, 10),
+    return Container(
       child: Container(
         child: loading == true
             ? Center(
@@ -73,6 +63,7 @@ class _KontrolManualState extends State<KontrolManual> {
               )
             : GestureDetector(
                 onTap: () {
+                  liststate.clear();
                   publish("manual", "0", "0", statesend);
                 },
                 child: Container(
@@ -83,8 +74,8 @@ class _KontrolManualState extends State<KontrolManual> {
                               fontFamily: 'Mont',
                               fontSize: 15)),
                     ),
-                    height: 40,
-                    width: 120,
+                    height: 30,
+                    width: 100,
                     decoration: BoxDecoration(
                         color: Colors.red[900],
                         borderRadius: BorderRadius.circular(10)))),

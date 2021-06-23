@@ -5,9 +5,9 @@ import 'package:ch_v2_1/Menu/Akun/logout.dart';
 import 'package:ch_v2_1/Menu/tambahan/stringcap.dart';
 import 'package:ch_v2_1/Menu/Monitor/monitor_semua.dart';
 
-int index = 0;
-int _selectedIndex = 0;
+int _selectedIndex;
 int count = 0;
+int index = 0;
 
 class Menu extends StatefulWidget {
   final int count;
@@ -39,73 +39,72 @@ class Menu extends StatefulWidget {
 }
 
 class _MenuState extends State<Menu> with SingleTickerProviderStateMixin {
-  Widget route = Semua();
+  Widget route;
   void initState() {
-    Menu();
     _onTabItem(index);
     super.initState();
   }
 
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    setState(() {
+      Menu(
+        index: index,
+      );
+    });
+  }
+
   void dispose() {
-    Menu();
     _onTabItem(index);
     super.dispose();
   }
 
+  void change(int index) {
+    _onTabItem(index);
+  }
+
   void _onTabItem(int index) {
-    print("didalam index $index");
-    print("widget index ${widget.index}");
-
     setState(() {
-      print("count menu $count");
-      print(" index setelah dari kontrol : ${widget.index} ");
-      if (widget.index != null && count == null ||
-          widget.index != null && count == 0) {
-        setState(() {
-          index = widget.index;
-          count = 1;
-        });
-        index != 0
-            ? setState(() {
-                // Navigator.push(context,
-                //     new MaterialPageRoute(builder: (context) => new Menu()));
-                // count = 0;
-                print("index tidak sama dengan 1");
-              })
-            : setState(() {
-                // Navigator.push(context,
-                //     new MaterialPageRoute(builder: (context) => new Menu()));
-                // count = 0;
-                print("index sama dengan 1");
-              });
-      } else {
-        setState(() {
-          index = index;
-          _selectedIndex = index;
-          count = 0;
-        });
-        print("index $index");
-      }
-
+      print("index $index");
+      print("widget index ${widget.index}");
       _selectedIndex = index;
-
-      // if (widget.index == 0) {
-      //   route = Semua();
-      // } else if (widget.index == 1) {
-      //   route = KontrolUtama();
-      // } else if (widget.index == 2) {
-      //   route = Logout();
-      // }
-
-      if (index == 0) {
-        route = Semua();
-        count = 0;
+    });
+    setState(() {
+      if (index == 0 && widget.index == null ||
+          index == 0 && widget.index == 0 ||
+          index == null && widget.index == null ||
+          index == null && widget.index == 0) {
+        print("index = $index dan widget = ${widget.index}");
+        setState(() {
+          route = Semua();
+        });
+      } else if (index == 0 && widget.index != null ||
+          index == 0 && widget.index != 0) {
+        _selectedIndex = widget.index;
+        print("index = $index dan widget = ${widget.index}");
+        print("---------------------------------------");
+        if (widget.index == 0) {
+          setState(() {
+            route = Semua();
+          });
+        } else if (widget.index == 1) {
+          setState(() {
+            route = KontrolUtama();
+          });
+        } else if (widget.index == 2) {
+          setState(() {
+            route = Logout();
+          });
+        }
       } else if (index == 1) {
-        count = 0;
-        route = KontrolUtama();
+        setState(() {
+          route = KontrolUtama();
+        });
       } else if (index == 2) {
-        count = 0;
-        route = Logout();
+        setState(() {
+          route = Logout();
+        });
       }
 
       // ketika sudah ready untuk kamera dan automasi
@@ -120,6 +119,7 @@ class _MenuState extends State<Menu> with SingleTickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
+    print("selected index yang dipilih $_selectedIndex");
     return DefaultTabController(
         length: 4,
         child: Scaffold(
@@ -164,72 +164,71 @@ class _MenuState extends State<Menu> with SingleTickerProviderStateMixin {
               ],
             ),
             child: BottomNavigationBar(
-              showSelectedLabels: true,
-              unselectedItemColor: Colors.green[900],
-              selectedItemColor: Color(0xFFF7931E),
-              items: <BottomNavigationBarItem>[
-                BottomNavigationBarItem(
-                  icon: Icon(Icons.desktop_windows),
-                  title: new Text(
-                    "Monitor",
-                    style: new TextStyle(
-                      fontSize: MediaQuery.of(context).size.height / 65,
-                      fontFamily: "Mont",
-                      fontWeight: FontWeight.bold,
+                showSelectedLabels: true,
+                unselectedItemColor: Colors.green[900],
+                selectedItemColor: Color(0xFFF7931E),
+                items: <BottomNavigationBarItem>[
+                  BottomNavigationBarItem(
+                    icon: Icon(Icons.desktop_windows),
+                    title: new Text(
+                      "Monitor",
+                      style: new TextStyle(
+                        fontSize: MediaQuery.of(context).size.height / 65,
+                        fontFamily: "Mont",
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                   ),
-                ),
-                BottomNavigationBarItem(
-                  icon: Icon(Icons.settings_remote_rounded),
-                  title: new Text(
-                    "Kontrol",
-                    style: new TextStyle(
-                      fontSize: MediaQuery.of(context).size.height / 65,
-                      fontFamily: "Mont",
-                      fontWeight: FontWeight.bold,
+                  BottomNavigationBarItem(
+                    icon: Icon(Icons.settings_remote_rounded),
+                    title: new Text(
+                      "Kontrol",
+                      style: new TextStyle(
+                        fontSize: MediaQuery.of(context).size.height / 65,
+                        fontFamily: "Mont",
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                   ),
-                ),
-                // ketika sudah ready untuk menu kamera dan automasi
+                  // ketika sudah ready untuk menu kamera dan automasi
 
-                // BottomNavigationBarItem(
-                //   icon: Icon(Icons.video_library),
-                //   title: new Text(
-                //     "Kamera",
-                //     style: new TextStyle(
-                //       fontSize: MediaQuery.of(context).size.height / 65,
-                //       fontFamily: "Mont",
-                //       fontWeight: FontWeight.bold,
-                //     ),
-                //   ),
-                // ),
-                // BottomNavigationBarItem(
-                //   icon: Icon(Icons.smart_button_rounded),
-                //   title: new Text(
-                //     "Automasi",
-                //     style: new TextStyle(
-                //       fontSize: MediaQuery.of(context).size.height / 65,
-                //       fontFamily: "Mont",
-                //       fontWeight: FontWeight.bold,
-                //     ),
-                //   ),
-                // ),
-                BottomNavigationBarItem(
-                  icon: Icon(Icons.account_circle),
-                  title: new Text(
-                    "Akun",
-                    style: new TextStyle(
-                      fontSize: MediaQuery.of(context).size.height / 65,
-                      fontFamily: "Mont",
-                      fontWeight: FontWeight.bold,
+                  // BottomNavigationBarItem(
+                  //   icon: Icon(Icons.video_library),
+                  //   title: new Text(
+                  //     "Kamera",
+                  //     style: new TextStyle(
+                  //       fontSize: MediaQuery.of(context).size.height / 65,
+                  //       fontFamily: "Mont",
+                  //       fontWeight: FontWeight.bold,
+                  //     ),
+                  //   ),
+                  // ),
+                  // BottomNavigationBarItem(
+                  //   icon: Icon(Icons.smart_button_rounded),
+                  //   title: new Text(
+                  //     "Automasi",
+                  //     style: new TextStyle(
+                  //       fontSize: MediaQuery.of(context).size.height / 65,
+                  //       fontFamily: "Mont",
+                  //       fontWeight: FontWeight.bold,
+                  //     ),
+                  //   ),
+                  // ),
+                  BottomNavigationBarItem(
+                    icon: Icon(Icons.account_circle),
+                    title: new Text(
+                      "Akun",
+                      style: new TextStyle(
+                        fontSize: MediaQuery.of(context).size.height / 65,
+                        fontFamily: "Mont",
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                   ),
-                ),
-              ],
-              type: BottomNavigationBarType.fixed,
-              currentIndex: _selectedIndex,
-              onTap: _onTabItem,
-            ),
+                ],
+                type: BottomNavigationBarType.fixed,
+                currentIndex: _selectedIndex,
+                onTap: (change)),
           ),
         ));
   }
