@@ -1562,7 +1562,7 @@ bool loading = false;
 int idsensor;
 int jum = 1;
 bool notifikasitoogle;
-String namaalat;
+// String namaalat;
 String img;
 int idsens;
 int kucing;
@@ -1665,9 +1665,7 @@ class _SemuaState extends State<Semua> {
   }
 
   Future loadDevice2() async {
-    var jsonString = await http.get(
-        Uri.parse(
-            'https://ydtmch9j99.execute-api.us-east-1.amazonaws.com/dev/api/data?uuid=$uuid'),
+    var jsonString = await http.get(Uri.parse('$endPoint/data?uuid=$uuid'),
         headers: {HttpHeaders.authorizationHeader: '$token'});
     var jsonResponse = json.decode(jsonString.body);
     Data2 data2 = Data2.fromJson(jsonResponse);
@@ -2168,120 +2166,136 @@ class _SemuaState extends State<Semua> {
                                 )
                               : GestureDetector(
                                   child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
                                       Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
                                         children: [
                                           Container(
+                                            width: MediaQuery.of(context)
+                                                    .size
+                                                    .width /
+                                                2,
                                             padding: EdgeInsets.fromLTRB(
                                                 20, 10, 0, 0),
                                             height: MediaQuery.of(context)
                                                     .size
                                                     .height *
                                                 0.045,
-                                            child: Text(
-                                              "$namaalat",
-                                              style: TextStyle(
-                                                  // fontFamily: 'Mont',
-                                                  fontSize:
-                                                      MediaQuery.of(context)
-                                                              .size
-                                                              .width /
-                                                          25),
-                                            ),
+                                            child: Text("$namaalat",
+                                                style: TextStyle(
+                                                    fontSize:
+                                                        MediaQuery.of(context)
+                                                                .size
+                                                                .height /
+                                                            40)),
                                           ),
                                           Container(
+                                            width: MediaQuery.of(context)
+                                                    .size
+                                                    .width /
+                                                2,
+
+                                            // padding: EdgeInsets.fromLTRB(
+                                            //     20, 10, 0, 0),
                                             height: MediaQuery.of(context)
                                                     .size
                                                     .height *
                                                 0.045,
-                                            // child: Text(
-                                            //   "$namaalat",
-                                            //   textAlign: TextAlign.left,
-                                            //   style: TextStyle(
-                                            //       // fontFamily: 'Mont',
-                                            //       fontSize:
-                                            //           MediaQuery.of(context)
-                                            //                   .size
-                                            //                   .width /
-                                            //               20),
-                                            // ),
+                                            // child: Text("$namaalat",
+                                            //     style: TextStyle(
+                                            //         fontSize:
+                                            //             MediaQuery.of(context)
+                                            //                     .size
+                                            //                     .height /
+                                            //                 40)),
                                           ),
                                         ],
                                       ),
-                                      Container(
-                                        height:
-                                            MediaQuery.of(context).size.height *
+                                      Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          Container(
+                                            height: MediaQuery.of(context)
+                                                    .size
+                                                    .height *
                                                 0.475,
-                                        child: Column(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.center,
-                                          children: [
-                                            CarouselSlider(
-                                              items: items,
-                                              options: CarouselOptions(
-                                                  height: MediaQuery.of(context)
-                                                          .size
-                                                          .width *
-                                                      7 /
-                                                      9,
-                                                  aspectRatio: 7 / 9,
-                                                  viewportFraction: 0.8,
-                                                  initialPage: 0,
-                                                  enableInfiniteScroll: true,
-                                                  reverse: false,
-                                                  autoPlay: true,
-                                                  autoPlayInterval:
-                                                      Duration(seconds: 8),
-                                                  autoPlayAnimationDuration:
-                                                      Duration(
-                                                          milliseconds: 800),
-                                                  autoPlayCurve:
-                                                      Curves.fastOutSlowIn,
-                                                  enlargeCenterPage: true,
-                                                  scrollDirection:
-                                                      Axis.horizontal,
-                                                  onPageChanged:
-                                                      (index, reason) {
-                                                    if (mounted)
-                                                      setState(() {
-                                                        bot = MediaQuery.of(
-                                                                    context)
-                                                                .size
-                                                                .width /
-                                                            9;
-                                                        _current = index;
-                                                      });
-                                                  }),
-                                            ),
-                                            SizedBox(
-                                                height: MediaQuery.of(context)
-                                                        .size
-                                                        .height /
-                                                    300),
-                                            Row(
+                                            child: Column(
                                               mainAxisAlignment:
                                                   MainAxisAlignment.center,
-                                              children: items.map((url) {
-                                                int index = items.indexOf(url);
-                                                return Container(
-                                                  width: 8.0,
-                                                  height: 8.0,
-                                                  margin: EdgeInsets.symmetric(
-                                                      vertical: 10.0,
-                                                      horizontal: 2.0),
-                                                  decoration: BoxDecoration(
-                                                    shape: BoxShape.circle,
-                                                    color: _current == index
-                                                        ? Colors.green[900]
-                                                        : Color.fromRGBO(
-                                                            0, 0, 0, 0.4),
-                                                  ),
-                                                );
-                                              }).toList(),
+                                              children: [
+                                                CarouselSlider(
+                                                  items: items,
+                                                  options: CarouselOptions(
+                                                      height:
+                                                          MediaQuery.of(context)
+                                                                  .size
+                                                                  .width *
+                                                              7 /
+                                                              9,
+                                                      aspectRatio: 7 / 9,
+                                                      viewportFraction: 0.8,
+                                                      initialPage: 0,
+                                                      enableInfiniteScroll:
+                                                          true,
+                                                      reverse: false,
+                                                      autoPlay: true,
+                                                      autoPlayInterval:
+                                                          Duration(seconds: 8),
+                                                      autoPlayAnimationDuration: Duration(
+                                                          milliseconds: 800),
+                                                      autoPlayCurve:
+                                                          Curves.fastOutSlowIn,
+                                                      enlargeCenterPage: true,
+                                                      scrollDirection:
+                                                          Axis.horizontal,
+                                                      onPageChanged:
+                                                          (index, reason) {
+                                                        if (mounted)
+                                                          setState(() {
+                                                            bot = MediaQuery.of(
+                                                                        context)
+                                                                    .size
+                                                                    .width /
+                                                                9;
+                                                            _current = index;
+                                                          });
+                                                      }),
+                                                ),
+                                                SizedBox(
+                                                    height:
+                                                        MediaQuery.of(context)
+                                                                .size
+                                                                .height /
+                                                            300),
+                                                Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment.center,
+                                                  children: items.map((url) {
+                                                    int index =
+                                                        items.indexOf(url);
+                                                    return Container(
+                                                      width: 8.0,
+                                                      height: 8.0,
+                                                      margin:
+                                                          EdgeInsets.symmetric(
+                                                              vertical: 10.0,
+                                                              horizontal: 2.0),
+                                                      decoration: BoxDecoration(
+                                                        shape: BoxShape.circle,
+                                                        color: _current == index
+                                                            ? Colors.green[900]
+                                                            : Color.fromRGBO(
+                                                                0, 0, 0, 0.4),
+                                                      ),
+                                                    );
+                                                  }).toList(),
+                                                ),
+                                              ],
                                             ),
-                                          ],
-                                        ),
+                                          ),
+                                        ],
                                       ),
                                     ],
                                   ),

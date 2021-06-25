@@ -1,3 +1,4 @@
+import 'package:ch_v2_1/API/api.dart';
 import 'package:ch_v2_1/dialogbox/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -27,8 +28,7 @@ class _LogoutState extends State<Logout> {
   }
 
   Future loadSensor() async {
-    var url = Uri.parse(
-        'https://ydtmch9j99.execute-api.us-east-1.amazonaws.com/dev/api/profile');
+    var url = Uri.parse('$endPoint/profile');
     var jsonString = await http
         .get(url, headers: {HttpHeaders.authorizationHeader: '$token'});
     var jsonResponse = json.decode(jsonString.body);

@@ -1,6 +1,6 @@
+import 'package:ch_v2_1/LoginPage/loginpage.dart';
 import 'package:ch_v2_1/Menu/Kontrol/kontrol_utama.dart';
 import 'package:flutter/material.dart';
-import 'package:ch_v2_1/LoginPage/loginpage.dart';
 import 'package:ch_v2_1/Menu/Akun/logout.dart';
 import 'package:ch_v2_1/Menu/tambahan/stringcap.dart';
 import 'package:ch_v2_1/Menu/Monitor/monitor_semua.dart';
@@ -8,8 +8,10 @@ import 'package:ch_v2_1/Menu/Monitor/monitor_semua.dart';
 int _selectedIndex;
 int count = 0;
 int index = 0;
+String namaalat;
 
 class Menu extends StatefulWidget {
+  final namaalat;
   final int count;
   final int index;
   final String nama;
@@ -24,6 +26,7 @@ class Menu extends StatefulWidget {
   const Menu(
       {Key key,
       this.nama,
+      this.namaalat,
       this.email,
       this.user,
       this.uuid,
@@ -48,11 +51,7 @@ class _MenuState extends State<Menu> with SingleTickerProviderStateMixin {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    setState(() {
-      Menu(
-        index: index,
-      );
-    });
+    setState(() {});
   }
 
   void dispose() {
@@ -120,6 +119,8 @@ class _MenuState extends State<Menu> with SingleTickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     print("selected index yang dipilih $_selectedIndex");
+    print(namaalat);
+    print(widget.namaalat);
     return DefaultTabController(
         length: 4,
         child: Scaffold(

@@ -3,7 +3,8 @@ import 'dart:async';
 import 'dart:io';
 
 String endPoint =
-    'https://ydtmch9j99.execute-api.us-east-1.amazonaws.com/dev/api';
+    // 'https://ydtmch9j99.execute-api.us-east-1.amazonaws.com/dev/api';
+    'https://ep5iozludi.execute-api.ap-southeast-1.amazonaws.com/dev/api';
 
 class ApiLogin {
   Future<http.Response> doLogin(String username, String password) async {
@@ -66,8 +67,7 @@ class GantiAliasKontrol {
 class PostSetParameter {
   Future<http.Response> dosetparameter(String uuid, String idsensor, String min,
       String max, String token) async {
-    var url = Uri.parse(
-        'https://ydtmch9j99.execute-api.us-east-1.amazonaws.com/dev/api/notifikasi/create');
+    var url = Uri.parse('$endPoint/notifikasi/create');
     var body = {
       "uuid_user": uuid,
       "id_sensor": idsensor,
@@ -82,8 +82,7 @@ class PostSetParameter {
 class PutSetParameter {
   Future<http.Response> putsetparameter(
       String idsensor, String min, String max, String token) async {
-    var url = Uri.parse(
-        'https://ydtmch9j99.execute-api.us-east-1.amazonaws.com/dev/api/notifikasi/update?id=$idsensor');
+    var url = Uri.parse('$endPoint/notifikasi/update?id=$idsensor');
     var body = {"terkirim": "100", "min": min, "max": max};
     return http.put(url,
         body: body, headers: {HttpHeaders.authorizationHeader: '$token'});

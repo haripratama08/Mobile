@@ -48,8 +48,7 @@ class _MonitorIndoorState extends State<MonitorIndoor> with Validation {
   final formKey = GlobalKey<FormState>();
   GantiAlias ganti = GantiAlias();
   Future loadDevice() async {
-    var url = Uri.parse(
-        'https://ydtmch9j99.execute-api.us-east-1.amazonaws.com/dev/api/data?uuid=$uuid');
+    var url = Uri.parse('$endPoint/data?uuid=$uuid');
     var jsonString = await http
         .get(url, headers: {HttpHeaders.authorizationHeader: '$token'});
     var jsonResponse = json.decode(jsonString.body);
@@ -210,6 +209,9 @@ class _MonitorIndoorState extends State<MonitorIndoor> with Validation {
                             change(index);
                             items = items;
                             itemsshadow = itemsshadow;
+                            Menu(
+                              namaalat: namaalat,
+                            );
                           });
                         },
                         child: Padding(
