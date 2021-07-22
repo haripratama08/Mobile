@@ -172,21 +172,6 @@ class MonitorIndoorRouteState extends State<MonitorIndoorRoute>
   Widget build(BuildContext context) {
     return Scaffold(
       body:
-          // body: msg == "Tidak Ada Alat"
-          //     ? Container(
-          //         height: MediaQuery.of(context).size.height / 3,
-          //         child: Center(
-          //             child: Column(
-          //           mainAxisAlignment: MainAxisAlignment.center,
-          //           children: [
-          //             Padding(
-          //               padding: const EdgeInsets.all(10.0),
-          //               child: Text('Tidak Ada Alat',
-          //                   style: TextStyle(fontFamily: 'Mont', fontSize: 12)),
-          //             ),
-          //           ],
-          //         )),
-          //       )
           Container(
         height: MediaQuery.of(context).size.height / 4.5,
         child: ListView(

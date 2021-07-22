@@ -11,6 +11,7 @@ import 'package:flutter/material.dart';
 import 'package:toggle_switch/toggle_switch.dart';
 import 'package:ch_v2_1/API/parsing.dart';
 
+String selectedkondisi;
 String namaalatkontrol;
 List<String> liststate = [];
 String pilihsensor;
@@ -54,6 +55,7 @@ String success;
 String nama1;
 String nama2;
 List<String> tempatlist = [];
+List<String> kondisi = ['>', '<'];
 int panjangtempat;
 int i;
 int j;
@@ -150,14 +152,12 @@ class _KontrolUtamaState extends State<KontrolUtama>
                 listidalat.length == panjangalat
                     ? print("")
                     : listidalat.add(idalatkontrol);
-                // print("panjangkontrol $panjangkontrol");
                 //---------------------------------------------------------------------//
                 for (int l = 0; l < panjangkontrol; l++) {
                   String kontrol = ((((jsonResponse['data'])['lokasi'])[i]
                       ['hub'][j]['alat'][k]['kontrol'][l])['alias']);
                   String statusaaaa = ((((jsonResponse['data'])['lokasi'])[i]
                       ['hub'][j]['alat'][k]['kontrol'][l])['state']);
-                  // print("status $l $statusaaaa");
                   int idkontrol = ((((jsonResponse['data'])['lokasi'])[i]['hub']
                       [j]['alat'][k]['kontrol'][l])['id']);
                   listkontrol.contains(kontrol)
@@ -181,7 +181,16 @@ class _KontrolUtamaState extends State<KontrolUtama>
                   iDkontrol == null
                       ? iDkontrol = listidkontrol[0]
                       : iDkontrol = iDkontrol;
-                  topic = "$iDlokasi/$iDkontrol/crophero/control";
+
+//                       {
+//   "mode":"auto",
+//   "threshold":"1-1000",
+//   "status":"OFF:bawah",
+//   "manual":"OFF",
+//   "id_sensor":"1-1000"
+// }
+
+                  topic = "200/10/crophero/control/testing";
                 }
               }
             }
@@ -233,7 +242,6 @@ class _KontrolUtamaState extends State<KontrolUtama>
               if (dev.length == number) {
               } else {
                 dev.add(data4);
-                // print("devname $dev");
               }
               if (namaalat.length == number) {
               } else {
@@ -268,8 +276,6 @@ class _KontrolUtamaState extends State<KontrolUtama>
         panjang = ((jsonResponse["data"])["data"].length);
         for (var i = 0; i < panjang; i++) {
           if (listsensors.length == panjang) {
-            // print(listsensors.length);
-            // print(listsensors);
           } else if (listsensors.length > panjang && listed.length > panjang) {
             listsensors.clear();
             listed.clear();
@@ -297,7 +303,6 @@ class _KontrolUtamaState extends State<KontrolUtama>
   }
 
   Future loadState() async {
-    // print("IDkontrol $iDkontrol");
     var url2 = Uri.parse(
         'https://ydtmch9j99.execute-api.us-east-1.amazonaws.com/dev/api/kontrol/state?id=$iDkontrol');
     var jsonString = await http
@@ -359,14 +364,10 @@ class _KontrolUtamaState extends State<KontrolUtama>
       }
     }
 
-    double pjg = MediaQuery.of(context).size.height;
-    double lbr = MediaQuery.of(context).size.width;
-    print(pjg / lbr);
     state(status);
-    print("-----------------------------");
-    print(namaalatkontrol);
-    print(iDkontrol);
-    print("-----------------------------");
+    print("-------");
+    print(statesend);
+    print("-------");
     return DefaultTabController(
         initialIndex: 0,
         length: panjanglokasi + 1,
@@ -926,6 +927,81 @@ class _KontrolUtamaState extends State<KontrolUtama>
                                                   ],
                                                 )
                                               : SizedBox(height: 5),
+                                          new Text(
+                                            "Kondisi",
+                                            style: TextStyle(
+                                              fontFamily: 'Mont',
+                                              color: Colors.red,
+                                              fontSize: MediaQuery.of(context)
+                                                      .size
+                                                      .width /
+                                                  23,
+                                            ),
+                                          ),
+                                          Padding(
+                                            padding: const EdgeInsets.fromLTRB(
+                                                100.0, 10.0, 100.0, 5.0),
+                                            child: Container(
+                                              height: 32,
+                                              width: 170,
+                                              decoration: myBoxDecoration(),
+                                              child: DropdownButton(
+                                                  value: selectedkondisi,
+                                                  isExpanded: true,
+                                                  icon: Padding(
+                                                    padding:
+                                                        const EdgeInsets.only(
+                                                            left: 15.0),
+                                                    child: Icon(
+                                                      Icons.arrow_drop_down,
+                                                      color: Color(0xff186962),
+                                                    ),
+                                                  ),
+                                                  iconSize: 13,
+                                                  underline: SizedBox(),
+                                                  onChanged: (newValue) {
+                                                    print(newValue);
+                                                    if (mounted)
+                                                      setState(() {
+                                                        pilihsensor = null;
+                                                        listsensors.clear();
+                                                        selectedkondisi =
+                                                            newValue;
+                                                      });
+                                                  },
+                                                  hint: Padding(
+                                                    padding:
+                                                        const EdgeInsets.all(
+                                                            8.0),
+                                                    child: Text(
+                                                      'Pilih Kondisi',
+                                                      style: TextStyle(
+                                                          fontSize: 13),
+                                                    ),
+                                                  ),
+                                                  items: kondisi
+                                                      .map((kondisiterkini) {
+                                                    return DropdownMenuItem(
+                                                      value: kondisiterkini,
+                                                      child: Padding(
+                                                        padding:
+                                                            const EdgeInsets
+                                                                    .only(
+                                                                left: 10.0),
+                                                        child: Text(
+                                                          "$kondisiterkini",
+                                                          style: TextStyle(
+                                                            fontSize: 13,
+                                                            fontFamily:
+                                                                "Verdana",
+                                                            color: Colors.black,
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    );
+                                                  }).toList()),
+                                            ),
+                                          ),
                                           new Text(
                                             "Mode",
                                             style: TextStyle(

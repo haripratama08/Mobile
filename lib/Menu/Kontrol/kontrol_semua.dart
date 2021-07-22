@@ -93,7 +93,8 @@ class _SemuaState extends State<Semua> with Validation {
                   listidkontrol.contains(idkontrol)
                       ? print("")
                       : listidkontrol.add(idkontrol);
-                  topic = "$iDlokasi/$iDkontrol/crophero/control";
+                  // topic = "$iDlokasi/$iDkontrol/crophero/control";
+                  topic = "200/1/crophero/control/testing";
                 }
               }
             }

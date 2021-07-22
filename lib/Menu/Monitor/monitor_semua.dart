@@ -1625,6 +1625,7 @@ String tempat;
 int i;
 int panjangtempat;
 bool refresh = false;
+bool front = true;
 
 class Semua extends StatefulWidget {
   final bool loading;
@@ -1669,7 +1670,7 @@ class _SemuaState extends State<Semua> {
         headers: {HttpHeaders.authorizationHeader: '$token'});
     var jsonResponse = json.decode(jsonString.body);
     Data2 data2 = Data2.fromJson(jsonResponse);
-    print(jsonResponse);
+    print("device $jsonResponse");
     if (this.mounted) {
       setState(() {
         List<Widget> list = [];
@@ -1798,13 +1799,17 @@ class _SemuaState extends State<Semua> {
   }
 
   Future loadSensor() async {
+    print(token);
+    print("lokasi ${loc[0]}");
+    print(huc[0]);
+    print(dev[0]);
     if (idlokas == null) {
       var jsonString = await http.get(
           Uri.parse(
               '$endPoint/mobile/sensor?lokasi=${loc[0]}&hub=${huc[0]}&alat=${dev[0]}'),
           headers: {HttpHeaders.authorizationHeader: '$token'});
       var jsonResponse = json.decode(jsonString.body);
-      print(jsonResponse);
+      print("sensor $jsonResponse");
       if (this.mounted) {
         setState(() {
           panjang = ((jsonResponse["data"])["data"].length);
@@ -1887,6 +1892,9 @@ class _SemuaState extends State<Semua> {
         return loadSensor();
       }
     } else {
+      print(idlokas);
+      print(idhu);
+      print(idala);
       var jsonString = await http.get(
           Uri.parse(
               '$endPoint/mobile/sensor?lokasi=$idlokas&hub=$idhu&alat=$idala'),
@@ -2041,6 +2049,12 @@ class _SemuaState extends State<Semua> {
     }
   }
 
+  void flip() {
+    setState(() {
+      front = true;
+    });
+  }
+
   void change(int index) {
     setState(() {
       status1 = index;
@@ -2191,17 +2205,28 @@ class _SemuaState extends State<Semua> {
                                                             40)),
                                           ),
                                           Container(
+                                            padding: EdgeInsets.fromLTRB(
+                                                30, 5, 0, 0),
                                             width: MediaQuery.of(context)
                                                     .size
                                                     .width /
-                                                2,
+                                                4,
 
                                             // padding: EdgeInsets.fromLTRB(
                                             //     20, 10, 0, 0),
                                             height: MediaQuery.of(context)
                                                     .size
                                                     .height *
-                                                0.045,
+                                                0.035,
+                                            // child: InkWell(
+                                            //   onTap: () {
+                                            //     print("flip clicked");
+                                            //   },
+                                            //   child: Container(
+                                            //     child: Image.asset(
+                                            //         "asset/img/flip.png"),
+                                            //   ),
+                                            // )
                                             // child: Text("$namaalat",
                                             //     style: TextStyle(
                                             //         fontSize:
