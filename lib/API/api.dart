@@ -3,8 +3,15 @@ import 'dart:async';
 import 'dart:io';
 
 String endPoint =
-    // 'https://ydtmch9j99.execute-api.us-east-1.amazonaws.com/dev/api';
+
+    //development
     'https://ep5iozludi.execute-api.ap-southeast-1.amazonaws.com/dev/api';
+
+//production
+// 'https://hx7jt0d4pd.execute-api.ap-southeast-1.amazonaws.com/v1/api';
+
+//download
+// 'https://1a47p0lyxl.execute-api.ap-southeast-1.amazonaws.com/v1';
 
 class ApiLogin {
   Future<http.Response> doLogin(String username, String password) async {
