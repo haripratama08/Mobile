@@ -39,8 +39,7 @@ class _SemuaState extends State<Semua> with Validation {
   bool loading = false;
 
   Future loadKontrol() async {
-    var url = Uri.parse(
-        'https://ydtmch9j99.execute-api.us-east-1.amazonaws.com/dev/api/kontrol?uuid=$uuid');
+    var url = Uri.parse('$endPoint/kontrol?uuid=$uuid');
     var jsonString = await http
         .get(url, headers: {HttpHeaders.authorizationHeader: '$token'});
     var jsonResponse = json.decode(jsonString.body);

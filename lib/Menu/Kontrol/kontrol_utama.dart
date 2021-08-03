@@ -114,8 +114,7 @@ class _KontrolUtamaState extends State<KontrolUtama>
   }
 
   Future loadKontrol() async {
-    var url = Uri.parse(
-        'https://ydtmch9j99.execute-api.us-east-1.amazonaws.com/dev/api/kontrol?uuid=$uuid');
+    var url = Uri.parse('$endPoint/kontrol?uuid=$uuid');
     var jsonString = await http
         .get(url, headers: {HttpHeaders.authorizationHeader: '$token'});
     var jsonResponse = json.decode(jsonString.body);
@@ -202,8 +201,7 @@ class _KontrolUtamaState extends State<KontrolUtama>
   }
 
   Future loadMonitor() async {
-    var url = Uri.parse(
-        'https://ydtmch9j99.execute-api.us-east-1.amazonaws.com/dev/api/data?uuid=$uuid');
+    var url = Uri.parse('$endPoint/data?uuid=$uuid');
     var jsonString = await http
         .get(url, headers: {HttpHeaders.authorizationHeader: '$token'});
     var jsonResponse = json.decode(jsonString.body);
@@ -303,8 +301,7 @@ class _KontrolUtamaState extends State<KontrolUtama>
   }
 
   Future loadState() async {
-    var url2 = Uri.parse(
-        'https://ydtmch9j99.execute-api.us-east-1.amazonaws.com/dev/api/kontrol/state?id=$iDkontrol');
+    var url2 = Uri.parse('$endPoint/kontrol/state?id=$iDkontrol');
     var jsonString = await http
         .get(url2, headers: {HttpHeaders.authorizationHeader: '$token'});
     var jsonResponse = json.decode(jsonString.body);
