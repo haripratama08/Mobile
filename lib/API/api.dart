@@ -26,7 +26,7 @@ class Gantinotif {
 
 class ApiRegister {
   Future<http.Response> doRegis(String username, String password, String nama,
-      String email, String telp, String alamat, String foto) async {
+      String email, String telp, String alamat) async {
     String url = '$endPoint/user/register';
     var body = {
       "username": username,
@@ -35,7 +35,7 @@ class ApiRegister {
       "email": email,
       "telp": telp,
       "alamat": alamat,
-      "foto": foto,
+      // "foto": foto,
     };
     return http.post(url, body: body);
   }
