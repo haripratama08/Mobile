@@ -1,5 +1,4 @@
 import 'dart:async';
-
 import 'package:ch_v2_1/Menu/Monitor/monitor_semua.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
@@ -171,8 +170,7 @@ class MonitorIndoorRouteState extends State<MonitorIndoorRoute>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body:
-          Container(
+      body: Container(
         height: MediaQuery.of(context).size.height / 4.5,
         child: ListView(
           children: [

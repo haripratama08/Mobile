@@ -22,7 +22,7 @@ class _KontrolManualState extends State<KontrolManual> {
       loading = false;
       print("$mode $atas $topic $bawah $state");
       var url = Uri.parse(
-          'http://ec2-18-139-101-44.ap-southeast-1.compute.amazonaws.com:2000/control?topic=$topic&message={"mode": "$mode","atas": "$atas","bawah": "$bawah","manual": "$state","id_sensor": "$idsensor"}');
+          'http://ec2-18-139-101-44.ap-southeast-1.compute.amazonaws.com:2000/control?topic=$topic&message={"mode": "$mode","threshold": "0","status": "$state","manual": "$state","id_sensor": "$idsensor"}');
       var jsonString = await http.get(url);
       final jsonResponse = json.decode(jsonString.body);
       if (this.mounted) {

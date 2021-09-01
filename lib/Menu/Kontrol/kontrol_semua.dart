@@ -25,6 +25,7 @@ class _SemuaState extends State<Semua> with Validation {
     super.initState();
   }
 
+  String kontrolname;
   String state;
   int idkontrol;
   List<String> listname = [];
@@ -81,6 +82,8 @@ class _SemuaState extends State<Semua> with Validation {
                 for (int l = 0; l < panjangkontrol; l++) {
                   String kontrol = ((((jsonResponse['data'])['lokasi'])[i]
                       ['hub'][j]['alat'][k]['kontrol'][l])['alias']);
+                  String kontrolname = ((((jsonResponse['data'])['lokasi'])[i]
+                      ['hub'][j]['alat'][k]['kontrol'][l])['nama']);
                   int idkontrol = ((((jsonResponse['data'])['lokasi'])[i]['hub']
                       [j]['alat'][k]['kontrol'][l])['id']);
                   listkontrol.contains(kontrol)
@@ -89,11 +92,14 @@ class _SemuaState extends State<Semua> with Validation {
                   namaalatkontrol == null
                       ? namaalatkontrol = listkontrol[0]
                       : namaalatkontrol = namaalatkontrol;
+                  print('nama alat $namaalatkontrol');
                   listidkontrol.contains(idkontrol)
                       ? print("")
                       : listidkontrol.add(idkontrol);
-                  // topic = "$iDlokasi/$iDkontrol/crophero/control";
-                  topic = "200/1/crophero/control/testing";
+                  print("kontrol nama $kontrolname");
+                  topic = "$kontrolname/crophero/control/testing";
+                  print(topic);
+                  // topic = "200/1/crophero/control/testing";
                 }
               }
             }

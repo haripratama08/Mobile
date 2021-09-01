@@ -1555,6 +1555,7 @@ import 'package:ch_v2_1/Menu/menu.dart';
 // import 'package:ch_v2_1/Menu/tambahan/stringcap.dart';
 // import 'package:ch_v2_1/Menu/menu.dart';
 String nilailast;
+String event;
 List<String> nil = [];
 String status;
 String alias;
@@ -1812,9 +1813,11 @@ class _SemuaState extends State<Semua> {
       print("sensor $jsonResponse");
       if (this.mounted) {
         setState(() {
+          event = ((((jsonResponse["data"])["info"])["alat"])["event"]);
           panjang = ((jsonResponse["data"])["data"].length);
           namaalat = ((((jsonResponse["data"])["info"])["alat"])["alias"]);
-          print("nama alat montitoring $namaalat");
+          // print("nama alat montitoring $namaalat");
+          print("Status $event");
           for (var i = 0; i < panjang; i++) {
             if (items.length == panjang) {
             } else if (items.length > panjang) {
@@ -1841,9 +1844,13 @@ class _SemuaState extends State<Semua> {
                   .toStringAsFixed(1);
               max = ((((jsonResponse["data"])["data"])[i])["max"])
                   .toStringAsFixed(1);
+              // nilai1 = ((((jsonResponse["data"])["data"])[i])["data"])
+              //     .toStringAsFixed(1);
               min = ((((jsonResponse["data"])["data"])[i])["min"])
                   .toStringAsFixed(1);
               jnssensor = (((jsonResponse["data"])["data"])[i])["jenis"];
+              //
+              print(satuan);
               if (itemsshadow.contains(jnssensor) &&
                   itemsbefore == items.length) {
                 items.clear();
@@ -1900,7 +1907,6 @@ class _SemuaState extends State<Semua> {
               '$endPoint/mobile/sensor?lokasi=$idlokas&hub=$idhu&alat=$idala'),
           headers: {HttpHeaders.authorizationHeader: '$token'});
       var jsonResponse = json.decode(jsonString.body);
-
       if (this.mounted) {
         setState(() {
           loading = false;

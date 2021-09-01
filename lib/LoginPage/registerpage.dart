@@ -84,6 +84,7 @@ class _RegisterPageState extends State<RegisterPage> with Validation {
   }
 
 // untuk mendapat gambar dari Device
+
   Future uploadFoto(ImageSource media) async {
     final pickedFile = await picker.getImage(source: media);
     setState(() {
@@ -101,79 +102,80 @@ class _RegisterPageState extends State<RegisterPage> with Validation {
         new Padding(
           padding: EdgeInsets.only(top: 80.0),
         ),
-        _image == null
-            ? GestureDetector(
-                onTap: () {
-                  pilihFoto();
-                },
-                child: CircleAvatar(
-                    backgroundColor: Colors.green[900],
-                    foregroundColor: Color(0XFFFFFF),
-                    radius: 48.0,
-                    child: CircleAvatar(
-                      foregroundColor: Colors.transparent,
-                      backgroundColor: Colors.white,
-                      radius: 47,
-                      backgroundImage: AssetImage('asset/img/pngwing.com.png'),
-                    )),
-              )
-            : GestureDetector(
-                onTap: () {
-                  pilihFoto();
-                },
-                child: CircleAvatar(
-                    backgroundColor: Colors.green[900],
-                    foregroundColor: Color(0XFFFFFF),
-                    radius: 48.0,
-                    child: CircleAvatar(
-                      foregroundColor: Colors.transparent,
-                      backgroundColor: Colors.white,
-                      radius: 47,
-                      backgroundImage: FileImage(_image),
-                    )),
-              ),
-        GestureDetector(
-          onTap: () {
-            FocusScope.of(context).requestFocus(FocusNode());
-          },
-          child: new Container(
-            child: Form(
-                key: formKey,
-                child: Column(
-                  children: [
-                    SizedBox(height: 15),
-                    userField(),
-                    SizedBox(height: 10),
-                    passwordField(),
-                    SizedBox(height: 10),
-                    retypeField(),
-                    SizedBox(height: 10),
-                    nameField(),
-                    SizedBox(height: 10),
-                    emailField(),
-                    SizedBox(height: 10),
-                    telpField(),
-                    SizedBox(height: 10),
-                    addressField(),
-                    SizedBox(height: 5),
-                    loading == true
-                        ? Padding(
-                            padding: const EdgeInsets.all(10.0),
-                            child: Center(
-                              child: CircularProgressIndicator(
-                                valueColor: new AlwaysStoppedAnimation<Color>(
-                                    Color((0xff186962))),
-                              ),
+        // _image == null
+        //     ? GestureDetector(
+        //         onTap: () {
+        //           pilihFoto();
+        //         },
+        //         child: CircleAvatar(
+        //             backgroundColor: Colors.green[900],
+        //             foregroundColor: Color(0XFFFFFF),
+        //             radius: 48.0,
+        //             child: CircleAvatar(
+        //               foregroundColor: Colors.transparent,
+        //               backgroundColor: Colors.white,
+        //               radius: 47,
+        //               backgroundImage: AssetImage('asset/img/pngwing.com.png'),
+        //             )),
+        //       )
+        //     : GestureDetector(
+        //         onTap: () {
+        //           pilihFoto();
+        //         },
+        //         child: CircleAvatar(
+        //             backgroundColor: Colors.green[900],
+        //             foregroundColor: Color(0XFFFFFF),
+        //             radius: 48.0,
+        //             child: CircleAvatar(
+        //               foregroundColor: Colors.transparent,
+        //               backgroundColor: Colors.white,
+        //               radius: 47,
+        //               backgroundImage: FileImage(_image),
+        //             )),
+        //       ),
+        // GestureDetector(
+        //   onTap: () {
+        //     FocusScope.of(context).requestFocus(FocusNode());
+        // },
+        // child: new
+        Container(
+          child: Form(
+              key: formKey,
+              child: Column(
+                children: [
+                  SizedBox(height: 15),
+                  userField(),
+                  SizedBox(height: 10),
+                  passwordField(),
+                  SizedBox(height: 10),
+                  retypeField(),
+                  SizedBox(height: 10),
+                  nameField(),
+                  SizedBox(height: 10),
+                  emailField(),
+                  SizedBox(height: 10),
+                  telpField(),
+                  SizedBox(height: 10),
+                  addressField(),
+                  SizedBox(height: 5),
+                  loading == true
+                      ? Padding(
+                          padding: const EdgeInsets.all(10.0),
+                          child: Center(
+                            child: CircularProgressIndicator(
+                              valueColor: new AlwaysStoppedAnimation<Color>(
+                                  Color((0xff186962))),
                             ),
-                          )
-                        : registerButton(),
-                    SizedBox(
-                      height: 50,
-                    )
-                  ],
-                )),
-          ),
-        )
+                          ),
+                        )
+                      : registerButton(),
+                  SizedBox(
+                    height: 50,
+                  )
+                ],
+              )),
+        ),
+        // )
       ],
     ));
   }

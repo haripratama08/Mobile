@@ -189,7 +189,7 @@ class _KontrolUtamaState extends State<KontrolUtama>
 //   "id_sensor":"1-1000"
 // }
 
-                  topic = "200/10/crophero/control/testing";
+                  // topic = "200/10/crophero/control/testing";
                 }
               }
             }

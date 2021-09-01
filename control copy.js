@@ -19,10 +19,10 @@ app.use(function(req, res, next) {
     res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
     next();
   });
-  
+
 var http = require('http').Server(app);
 var path = require('path');
-// deprecated
+
 // var bodyParser = require('body-parser');
 var public = path.join(__dirname, 'public');
 port = 2000
@@ -34,7 +34,7 @@ app.use(express.urlencoded({
 
 app.get('/', function (req, res) {
     res.json({
-        message: "Control API Crophero"
+        message: "Welcome to Backend System CropHero"
     });
 });
 
@@ -45,16 +45,16 @@ app.get('/control', function (req, res) {
     });
     device.publish(topic, message);
     console.log('Published');
-console.log(topic);
-console.log(message);
+    console.log(message);
+    console.log(topic);
     res.json({
         success: "1",
     });
 });
 
+
 http.listen(port, function () {
     console.log('listening on *:', port);
 });
-
 
 module.exports.handler = serverless(app);
