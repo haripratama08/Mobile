@@ -27,6 +27,7 @@ class _KontrolAutoState extends State<KontrolAuto> with Validation {
       new TextEditingController(text: thresholdvalue);
   final formKey = GlobalKey<FormState>();
   @override
+  
   void initState() {
     super.initState();
   }
@@ -47,6 +48,8 @@ class _KontrolAutoState extends State<KontrolAuto> with Validation {
         thresholdvalue = threshold;
         print(namakondisi);
       });
+      // var url = Uri.parse(
+      //     'http://ec2-18-139-101-44.ap-southeast-1.compute.amazonaws.com:2000/control?topic=$topic&message={"mode": "$mode","threshold": "$threshold","status": "$state:$namakondisi","manual": "$state","id_sensor": "$idsensor"}');
       var url = Uri.parse(
           'http://ec2-18-139-101-44.ap-southeast-1.compute.amazonaws.com:2000/control?topic=$topic&message={"mode": "$mode","threshold": "$threshold","status": "$state:$namakondisi","manual": "$state","id_sensor": "$idsensor"}');
       var jsonString = await http.get(url);

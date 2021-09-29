@@ -227,7 +227,7 @@ class _MonitorIndoorState extends State<MonitorIndoor> with Validation {
                                   ),
                                   SizedBox(
                                     width:
-                                        MediaQuery.of(context).size.width / 12,
+                                        MediaQuery.of(context).size.width / 7,
                                   ),
                                   Column(
                                     mainAxisAlignment: MainAxisAlignment.center,
@@ -242,7 +242,7 @@ class _MonitorIndoorState extends State<MonitorIndoor> with Validation {
                                   ),
                                   SizedBox(
                                     width:
-                                        MediaQuery.of(context).size.width / 12,
+                                        MediaQuery.of(context).size.width / 7,
                                   ),
                                   GestureDetector(
                                     onTap: () {
@@ -256,12 +256,15 @@ class _MonitorIndoorState extends State<MonitorIndoor> with Validation {
                                     },
                                     child: Container(
                                       child: Center(
-                                          child: Icon(Icons.border_color)),
+                                          child: Icon(
+                                        Icons.border_color,
+                                        size: 10,
+                                      )),
                                       height:
                                           MediaQuery.of(context).size.width /
-                                              10,
+                                              15,
                                       width: MediaQuery.of(context).size.width /
-                                          10,
+                                          15,
                                       decoration: BoxDecoration(
                                           border: Border.all(
                                               width: 1.5, color: Colors.black),

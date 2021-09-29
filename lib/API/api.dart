@@ -2,13 +2,15 @@ import 'package:http/http.dart' as http;
 import 'dart:async';
 import 'dart:io';
 
+String kontrol =
+    'https://cohkc2p9jb.execute-api.ap-southeast-1.amazonaws.com/v1/control';
 String endPoint =
 
 // development
-    'https://ep5iozludi.execute-api.ap-southeast-1.amazonaws.com/dev/api';
+    // 'https://ep5iozludi.execute-api.ap-southeast-1.amazonaws.com/dev/api';
 
 //production
-// 'https://hx7jt0d4pd.execute-api.ap-southeast-1.amazonaws.com/v1/api';
+    'https://hx7jt0d4pd.execute-api.ap-southeast-1.amazonaws.com/v1/api';
 
 //download
 // 'https://1a47p0lyxl.execute-api.ap-southeast-1.amazonaws.com/v1';
@@ -31,7 +33,7 @@ class Gantinotif {
 
 class ApiRegister {
   Future<http.Response> doRegis(String username, String password, String nama,
-      String email, String telp, String alamat, String foto) async {
+      String email, String telp, String alamat) async {
     var url = Uri.parse('$endPoint/user/register');
     var body = {
       "username": username,
@@ -40,7 +42,6 @@ class ApiRegister {
       "email": email,
       "telp": telp,
       "alamat": alamat,
-      "foto": foto,
     };
     return http.post(url, body: body);
   }

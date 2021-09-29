@@ -28,7 +28,7 @@ dependencies:
   progress_dialog: ^1.2.1
   page_flip_builder: ^0.1.3
   # firebase_messaging: ^9.1.4
-  # sqflite: any
+  sqflite: any
   path_provider: any
 
 dev_dependencies:

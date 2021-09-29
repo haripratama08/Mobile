@@ -154,7 +154,7 @@ class _LoginPageState extends State<LoginPage> {
       tag: 'hero',
       child: CircleAvatar(
         backgroundColor: Colors.transparent,
-        radius: 48.0,
+        radius: 55.0,
         child: Image.asset('asset/img/ch.png'),
       ),
     );
@@ -271,6 +271,9 @@ class _LoginPageState extends State<LoginPage> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
                 logo,
+                SizedBox(
+                  height: 25,
+                ),
                 usernameForm,
                 SizedBox(height: 24.0),
                 passwordForm,

@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
+import 'package:carousel_slider/carousel_slider.dart';
 import 'package:ch_v2_1/API/api.dart';
 import 'package:ch_v2_1/Menu/Kontrol/kontrol_semua.dart';
 import 'package:http/http.dart' as http;
@@ -86,6 +87,7 @@ class _KontrolUtamaState extends State<KontrolUtama>
   String status;
   List<int> listidlokasi = [];
   List<int> listidhub = [];
+  List<String> listhub = [];
   List<int> listidalat = [];
   List<int> listidkontrol = [];
   List<dynamic> idl = [];
@@ -125,8 +127,10 @@ class _KontrolUtamaState extends State<KontrolUtama>
           for (int i = 0; i < panjanglokasi; i++) {
             String hub = (((jsonResponse['data'])['lokasi'])[i]['nama']);
             idlokasikontrol = (((jsonResponse['data'])['lokasi'])[i]['id']);
+
             listname.length == panjanglokasi ? print("") : listname.add(hub);
             print(listname);
+
             listidlokasi.length == panjanglokasi
                 ? print("")
                 : listidlokasi.add(idlokasikontrol);
@@ -180,16 +184,6 @@ class _KontrolUtamaState extends State<KontrolUtama>
                   iDkontrol == null
                       ? iDkontrol = listidkontrol[0]
                       : iDkontrol = iDkontrol;
-
-//                       {
-//   "mode":"auto",
-//   "threshold":"1-1000",
-//   "status":"OFF:bawah",
-//   "manual":"OFF",
-//   "id_sensor":"1-1000"
-// }
-
-                  // topic = "200/10/crophero/control/testing";
                 }
               }
             }
@@ -362,12 +356,13 @@ class _KontrolUtamaState extends State<KontrolUtama>
     }
 
     state(status);
+    print("listname $listname");
     print("-------");
     print(statesend);
     print("-------");
     return DefaultTabController(
         initialIndex: 0,
-        length: panjanglokasi + 1,
+        length: 2,
         child: Scaffold(
             body: (panjanglokasi == null && _counter != 0 ||
                     panjanglokasi == 0 && _counter != 0 ||
@@ -433,6 +428,8 @@ class _KontrolUtamaState extends State<KontrolUtama>
                                     ? Column(
                                         children: [
                                           Column(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
                                             children: [
                                               Padding(
                                                 padding:
@@ -447,6 +444,9 @@ class _KontrolUtamaState extends State<KontrolUtama>
                                                                 .width /
                                                             20)),
                                               ),
+                                              SizedBox(
+                                                height: 10,
+                                              ),
                                               Image.network(
                                                 'https://crophero.s3-ap-southeast-1.amazonaws.com/img/pump.png',
                                                 height: MediaQuery.of(context)
@@ -456,14 +456,17 @@ class _KontrolUtamaState extends State<KontrolUtama>
                                               ),
                                             ],
                                           ),
+                                          SizedBox(
+                                            height: 10,
+                                          ),
                                           Column(
                                             children: [
-                                              SizedBox(
-                                                height: MediaQuery.of(context)
-                                                        .size
-                                                        .height /
-                                                    200,
-                                              ),
+                                              // SizedBox(
+                                              //   height: MediaQuery.of(context)
+                                              //           .size
+                                              //           .height /
+                                              //       200,
+                                              // ),
                                               new Text(
                                                 "Status",
                                                 style: TextStyle(
@@ -475,6 +478,12 @@ class _KontrolUtamaState extends State<KontrolUtama>
                                                               .width /
                                                           23,
                                                 ),
+                                              ),
+                                              SizedBox(
+                                                height: MediaQuery.of(context)
+                                                        .size
+                                                        .height /
+                                                    200,
                                               ),
                                               status == null
                                                   ? Container(
@@ -705,6 +714,9 @@ class _KontrolUtamaState extends State<KontrolUtama>
                                                           23,
                                                 ),
                                               ),
+                                              SizedBox(
+                                                height: 5,
+                                              ),
                                               Center(
                                                 child: ToggleSwitch(
                                                   fontSize:
@@ -734,7 +746,7 @@ class _KontrolUtamaState extends State<KontrolUtama>
                                                   },
                                                 ),
                                               ),
-                                              SizedBox(height: 5),
+                                              SizedBox(height: 15),
                                               value == 0
                                                   ? KontrolManual()
                                                   : KontrolAuto(),
@@ -844,6 +856,9 @@ class _KontrolUtamaState extends State<KontrolUtama>
                                                               );
                                                             }).toList()),
                                                       ),
+                                                    ),
+                                                    SizedBox(
+                                                      height: 5,
                                                     ),
                                                     (selectedalat == null &&
                                                             _counter != 0)
@@ -960,8 +975,6 @@ class _KontrolUtamaState extends State<KontrolUtama>
                                                     print(newValue);
                                                     if (mounted)
                                                       setState(() {
-                                                        pilihsensor = null;
-                                                        listsensors.clear();
                                                         selectedkondisi =
                                                             newValue;
                                                       });
@@ -999,6 +1012,9 @@ class _KontrolUtamaState extends State<KontrolUtama>
                                                   }).toList()),
                                             ),
                                           ),
+                                          SizedBox(
+                                            height: 5,
+                                          ),
                                           new Text(
                                             "Mode",
                                             style: TextStyle(
@@ -1009,6 +1025,9 @@ class _KontrolUtamaState extends State<KontrolUtama>
                                                       .width /
                                                   23,
                                             ),
+                                          ),
+                                          SizedBox(
+                                            height: 10,
                                           ),
                                           Center(
                                             child: ToggleSwitch(
@@ -1060,35 +1079,151 @@ class _KontrolUtamaState extends State<KontrolUtama>
                                   ),
                                 ],
                               ),
-                              child: AppBar(
-                                backgroundColor: Colors.white,
-                                bottom: TabBar(
-                                  labelStyle: TextStyle(
-                                      fontFamily: "Mont",
-                                      fontSize:
-                                          MediaQuery.of(context).size.height /
-                                              67),
-                                  labelColor: Color(0xFFF7931E),
-                                  unselectedLabelColor: Colors.green[900],
-                                  indicatorColor: Colors.green[900],
-                                  tabs: [
-                                    Tab(
-                                      text: "Semua",
-                                    ),
-                                    for (i = 0; i < panjanglokasi; i++)
-                                      (listname[i].length == 0 ||
-                                              listname[i].length == null)
-                                          ? Container(
-                                              child: Image.asset(
-                                                  "asset/img/loading-blog.gif"))
-                                          : (listname[i].length > 12)
-                                              ? Tab(
-                                                  text:
-                                                      "${listname[i].substring(0, 12)}")
-                                              : Tab(text: "${listname[i]}")
-                                  ],
+                              child: ListView.builder(
+                                padding: const EdgeInsets.symmetric(
+                                  vertical: 10.0,
+                                  horizontal: 8.0,
                                 ),
+                                scrollDirection: Axis.horizontal,
+                                itemCount: 1 + listname.length,
+                                itemBuilder: (BuildContext context, int index) {
+                                  if (index == 0) {
+                                    return Tab(
+                                      child: Row(
+                                        children: [
+                                          SizedBox(
+                                              width: MediaQuery.of(context)
+                                                      .size
+                                                      .width *
+                                                  0.1),
+                                          GestureDetector(
+                                              onTap: () {
+                                                print(index);
+                                              },
+                                              child: Container(
+                                                  decoration: BoxDecoration(
+                                                      border: Border.all(
+                                                        width: 1.5,
+                                                        color:
+                                                            Colors.green[900],
+                                                      ),
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              10) // use instead of BorderRadius.all(Radius.circular(20))
+                                                      ),
+                                                  width: MediaQuery.of(context)
+                                                          .size
+                                                          .width *
+                                                      0.3,
+                                                  child: Center(
+                                                      child: Text("Semua",
+                                                          style: TextStyle(
+                                                              fontFamily:
+                                                                  'Mont',
+                                                              fontSize: 13))))),
+                                          SizedBox(
+                                              width: MediaQuery.of(context)
+                                                      .size
+                                                      .width *
+                                                  0.1),
+                                        ],
+                                      ),
+                                    );
+                                  }
+                                  return Tab(
+                                    child: Row(
+                                      children: [
+                                        SizedBox(
+                                            width: MediaQuery.of(context)
+                                                    .size
+                                                    .width *
+                                                0.095),
+                                        GestureDetector(
+                                            onTap: () {
+                                              print(index);
+                                            },
+                                            child: Container(
+                                                decoration: BoxDecoration(
+                                                    border: Border.all(
+                                                      width: 1.5,
+                                                      color: Colors.green[900],
+                                                    ),
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            10) // use instead of BorderRadius.all(Radius.circular(20))
+                                                    ),
+                                                width: MediaQuery.of(context)
+                                                        .size
+                                                        .width *
+                                                    0.3,
+                                                child: Padding(
+                                                    padding: EdgeInsets.all(1),
+                                                    child: Text(
+                                                        " ${listname[index - 1]}",
+                                                        style: TextStyle(
+                                                            fontFamily: 'Mont',
+                                                            fontSize: 13))))),
+                                        SizedBox(
+                                            width: MediaQuery.of(context)
+                                                    .size
+                                                    .width *
+                                                0.095),
+                                      ],
+                                    ),
+                                  );
+                                },
                               ),
+                              // child: AppBar(
+                              //   backgroundColor: Colors.white,
+                              //   bottom:
+                              // TabBar(
+                              //   labelStyle: TextStyle(
+                              //       fontFamily: "Mont",
+                              //       fontSize:
+                              //           MediaQuery.of(context).size.height /
+                              //               67),
+                              //   labelColor: Color(0xFFF7931E),
+                              //   unselectedLabelColor: Colors.green[900],
+                              //   indicatorColor: Colors.green[900],
+                              //   tabs: [
+                              //     Tab(
+                              //       text: "Semua",
+                              //     ),
+                              //     Tab(
+                              //       child: CarouselSlider(
+                              //         items: listname,
+                              //         options: CarouselOptions(
+                              //             // height: MediaQuery.of(context)
+                              //             //         .size
+                              //             //         .height /
+                              //             //     12,
+                              //             // aspectRatio: 10 / 33,
+                              //             initialPage: 0,
+                              //             enableInfiniteScroll: true,
+                              //             reverse: false,
+                              //             autoPlay: false,
+                              //             autoPlayCurve: Curves.fastOutSlowIn,
+                              //             enlargeCenterPage: true,
+                              //             scrollDirection: Axis.horizontal,
+                              //             onPageChanged: (index, reason) {
+                              //               if (mounted) setState(() {});
+                              //             }),
+                              //       ),
+                              //     ),
+                              //     // for (i = 0; i < panjanglokasi; i++)
+                              //     //   (listname[i].length == 0 ||
+                              //     //           listname[i].length == null)
+                              //     //       ? Container(
+                              //     //           child: Image.asset(
+                              //     //               "asset/img/loading-blog.gif"))
+                              //     //       : (listname[i].length > 12)
+                              //     //           ? Tab(
+                              //     //               text:
+                              //     //                   "${listname[i].substring(0, 12)}")
+                              //     //           : Tab(text: "${listname[i]}")
+                              //   ],
+                              // ),
+                              // ),
                             ),
                           ),
                           SizedBox(
@@ -1133,5 +1268,58 @@ class _KontrolUtamaState extends State<KontrolUtama>
         var prin = rep.getidsensorbynama(value);
         idsensor = prin[0];
       });
+  }
+
+  Widget slider(String hub) {
+    return Center(child: Text(hub.substring(0, 12)));
+  }
+
+  Widget tryslider(String hub) {
+    return AppBar(
+      backgroundColor: Colors.white,
+      bottom: TabBar(
+        labelStyle: TextStyle(
+            fontFamily: "Mont",
+            fontSize: MediaQuery.of(context).size.height / 67),
+        labelColor: Color(0xFFF7931E),
+        unselectedLabelColor: Colors.green[900],
+        indicatorColor: Colors.green[900],
+        tabs: [
+          Tab(),
+          // Tab(
+          //   child: CarouselSlider(
+          //     items: listname,
+          //     options: CarouselOptions(
+          //         // height: MediaQuery.of(context)
+          //         //         .size
+          //         //         .height /
+          //         //     12,
+          //         // aspectRatio: 10 / 33,
+          //         initialPage: 0,
+          //         enableInfiniteScroll: true,
+          //         reverse: false,
+          //         autoPlay: false,
+          //         autoPlayCurve: Curves.fastOutSlowIn,
+          //         enlargeCenterPage: true,
+          //         scrollDirection: Axis.horizontal,
+          //         onPageChanged: (index, reason) {
+          //           if (mounted) setState(() {});
+          //         }),
+          //   ),
+          // ),
+          // for (i = 0; i < panjanglokasi; i++)
+          //   (listname[i].length == 0 ||
+          //           listname[i].length == null)
+          //       ? Container(
+          //           child: Image.asset(
+          //               "asset/img/loading-blog.gif"))
+          //       : (listname[i].length > 12)
+          //           ? Tab(
+          //               text:
+          //                   "${listname[i].substring(0, 12)}")
+          //           : Tab(text: "${listname[i]}")
+        ],
+      ),
+    );
   }
 }

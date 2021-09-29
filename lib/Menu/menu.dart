@@ -105,14 +105,6 @@ class _MenuState extends State<Menu> with SingleTickerProviderStateMixin {
           route = Logout();
         });
       }
-
-      // ketika sudah ready untuk kamera dan automasi
-      // if (index == 2) {
-      //   route = KameraUtama();
-      // }
-      // if (index == 3) {
-      //   route = Automasi();
-      // }
     });
   }
 
@@ -180,6 +172,7 @@ class _MenuState extends State<Menu> with SingleTickerProviderStateMixin {
                       ),
                     ),
                   ),
+
                   BottomNavigationBarItem(
                     icon: Icon(Icons.settings_remote_rounded),
                     title: new Text(
@@ -191,30 +184,7 @@ class _MenuState extends State<Menu> with SingleTickerProviderStateMixin {
                       ),
                     ),
                   ),
-                  // ketika sudah ready untuk menu kamera dan automasi
 
-                  // BottomNavigationBarItem(
-                  //   icon: Icon(Icons.video_library),
-                  //   title: new Text(
-                  //     "Kamera",
-                  //     style: new TextStyle(
-                  //       fontSize: MediaQuery.of(context).size.height / 65,
-                  //       fontFamily: "Mont",
-                  //       fontWeight: FontWeight.bold,
-                  //     ),
-                  //   ),
-                  // ),
-                  // BottomNavigationBarItem(
-                  //   icon: Icon(Icons.smart_button_rounded),
-                  //   title: new Text(
-                  //     "Automasi",
-                  //     style: new TextStyle(
-                  //       fontSize: MediaQuery.of(context).size.height / 65,
-                  //       fontFamily: "Mont",
-                  //       fontWeight: FontWeight.bold,
-                  //     ),
-                  //   ),
-                  // ),
                   BottomNavigationBarItem(
                     icon: Icon(Icons.account_circle),
                     title: new Text(
@@ -227,6 +197,8 @@ class _MenuState extends State<Menu> with SingleTickerProviderStateMixin {
                     ),
                   ),
                 ],
+                
+
                 type: BottomNavigationBarType.fixed,
                 currentIndex: _selectedIndex,
                 onTap: (change)),

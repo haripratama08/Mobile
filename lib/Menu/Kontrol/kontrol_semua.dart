@@ -28,6 +28,8 @@ class _SemuaState extends State<Semua> with Validation {
   String kontrolname;
   String state;
   int idkontrol;
+  String kontrolnamechoosen;
+  List<String> kontrolnamelist = [];
   List<String> listname = [];
   List<String> listkontrol = [];
   int idlokasikontrol;
@@ -46,7 +48,6 @@ class _SemuaState extends State<Semua> with Validation {
     var jsonResponse = json.decode(jsonString.body);
     if (this.mounted) {
       setState(() {
-        print(jsonResponse);
         if ((jsonResponse['status']) == 'OK') {
           panjanglokasi = (((jsonResponse['data'])['lokasi']).length);
           for (int i = 0; i < panjanglokasi; i++) {
@@ -89,6 +90,11 @@ class _SemuaState extends State<Semua> with Validation {
                   listkontrol.contains(kontrol)
                       ? print("")
                       : listkontrol.add(kontrol);
+
+                  kontrolnamelist.contains(kontrolname)
+                      ? print("")
+                      : kontrolnamelist.add(kontrolname);
+
                   namaalatkontrol == null
                       ? namaalatkontrol = listkontrol[0]
                       : namaalatkontrol = namaalatkontrol;
@@ -96,10 +102,14 @@ class _SemuaState extends State<Semua> with Validation {
                   listidkontrol.contains(idkontrol)
                       ? print("")
                       : listidkontrol.add(idkontrol);
-                  print("kontrol nama $kontrolname");
-                  topic = "$kontrolname/crophero/control/testing";
+
+                  kontrolnamechoosen == null
+                      ? kontrolnamechoosen = kontrolnamelist[0]
+                      : kontrolnamechoosen = kontrolnamechoosen;
+
+                  print("kontrol nama $kontrolnamechoosen");
+                  topic = "$kontrolnamechoosen/crophero/control";
                   print(topic);
-                  // topic = "200/1/crophero/control/testing";
                 }
               }
             }
@@ -136,6 +146,7 @@ class _SemuaState extends State<Semua> with Validation {
     status1 = index;
     iDkontrol = listidkontrol[index];
     namaalatkontrol = listkontrol[index];
+    kontrolnamechoosen = kontrolnamelist[index];
   }
 
   void data(int index) {
@@ -224,7 +235,7 @@ class _SemuaState extends State<Semua> with Validation {
                                       SizedBox(
                                         width:
                                             MediaQuery.of(context).size.width /
-                                                12,
+                                                7,
                                       ),
                                       Column(
                                         mainAxisAlignment:
@@ -242,7 +253,7 @@ class _SemuaState extends State<Semua> with Validation {
                                       SizedBox(
                                         width:
                                             MediaQuery.of(context).size.width /
-                                                12,
+                                                7,
                                       ),
                                       GestureDetector(
                                         onTap: () {
@@ -252,15 +263,18 @@ class _SemuaState extends State<Semua> with Validation {
                                         },
                                         child: Container(
                                           child: Center(
-                                              child: Icon(Icons.border_color)),
+                                              child: Icon(
+                                            Icons.border_color,
+                                            size: 10,
+                                          )),
                                           height: MediaQuery.of(context)
                                                   .size
                                                   .width /
-                                              10,
+                                              15,
                                           width: MediaQuery.of(context)
                                                   .size
                                                   .width /
-                                              10,
+                                              15,
                                           decoration: BoxDecoration(
                                               border: Border.all(
                                                   width: 1.5,

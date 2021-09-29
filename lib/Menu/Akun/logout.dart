@@ -104,7 +104,7 @@ class _LogoutState extends State<Logout> {
                                 style: new TextStyle(
                                   fontSize: 15,
                                   color: Colors.black,
-                                  fontFamily: "Mont",
+                                  // fontFamily: "Mont",
                                 ),
                               ),
                             ],
@@ -125,7 +125,7 @@ class _LogoutState extends State<Logout> {
                                 style: new TextStyle(
                                   fontSize: 15,
                                   color: Colors.black,
-                                  fontFamily: "Mont",
+                                  // fontFamily: "Mont",
                                 ),
                               ),
                             ],
@@ -146,7 +146,7 @@ class _LogoutState extends State<Logout> {
                                 style: new TextStyle(
                                   fontSize: 15,
                                   color: Colors.black,
-                                  fontFamily: "Mont",
+                                  // fontFamily: "Mont",
                                 ),
                               ),
                             ],
@@ -167,7 +167,7 @@ class _LogoutState extends State<Logout> {
                                 style: new TextStyle(
                                   fontSize: 15,
                                   color: Colors.black,
-                                  fontFamily: "Mont",
+                                  // fontFamily: "Mont",
                                 ),
                               ),
                             ],
@@ -220,7 +220,7 @@ class _LogoutState extends State<Logout> {
                 "Keluar",
                 style: new TextStyle(
                   color: Colors.black,
-                  fontFamily: "Mont",
+                  // fontFamily: "Mont",
                   fontWeight: FontWeight.bold,
                 ),
               ),
