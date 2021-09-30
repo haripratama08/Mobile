@@ -14,3 +14,6 @@ flutter run
 ```
 flutter build apk/appbundle
 ```
+### clean package and upgrade
+flutter clean
+flutter pub upgrade --major-versions

@@ -287,6 +287,7 @@ class MonitorIndoorRouteState extends State<MonitorIndoorRoute>
                                   borderRadius: BorderRadius.circular(10))),
                         ));
                   }
+                  return CircularProgressIndicator();
                 }),
           ],
         ),

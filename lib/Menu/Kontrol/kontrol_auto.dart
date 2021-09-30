@@ -27,7 +27,6 @@ class _KontrolAutoState extends State<KontrolAuto> with Validation {
       new TextEditingController(text: thresholdvalue);
   final formKey = GlobalKey<FormState>();
   @override
-  
   void initState() {
     super.initState();
   }
@@ -209,6 +208,7 @@ class _KontrolAutoState extends State<KontrolAuto> with Validation {
                                                 if (value.isEmpty) {
                                                   return 'isikan batas';
                                                 }
+                                                return null;
                                               },
                                               controller: threshold,
                                               keyboardType:
@@ -299,6 +299,7 @@ class _KontrolAutoState extends State<KontrolAuto> with Validation {
             if (value.isEmpty) {
               return ' please enter value';
             }
+            return null;
           },
         ));
   }

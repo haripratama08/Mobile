@@ -163,42 +163,46 @@ class _MenuState extends State<Menu> with SingleTickerProviderStateMixin {
                 items: <BottomNavigationBarItem>[
                   BottomNavigationBarItem(
                     icon: Icon(Icons.desktop_windows),
-                    title: new Text(
-                      "Monitor",
-                      style: new TextStyle(
-                        fontSize: MediaQuery.of(context).size.height / 65,
-                        fontFamily: "Mont",
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
+                    label: "Monitor",
 
-                  BottomNavigationBarItem(
-                    icon: Icon(Icons.settings_remote_rounded),
-                    title: new Text(
-                      "Kontrol",
-                      style: new TextStyle(
-                        fontSize: MediaQuery.of(context).size.height / 65,
-                        fontFamily: "Mont",
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
+                    // label: new Text(
+                    //   "Monitor",
+                    //   style: new TextStyle(
+                    //     fontSize: MediaQuery.of(context).size.height / 65,
+                    //     fontFamily: "Mont",
+                    //     fontWeight: FontWeight.bold,
+                    //   ),
+                    // ),
                   ),
-
                   BottomNavigationBarItem(
-                    icon: Icon(Icons.account_circle),
-                    title: new Text(
-                      "Akun",
-                      style: new TextStyle(
-                        fontSize: MediaQuery.of(context).size.height / 65,
-                        fontFamily: "Mont",
-                        fontWeight: FontWeight.bold,
+                      icon: Icon(Icons.settings_remote_rounded),
+                      label: "Kontrol"
+                      // label: new Text(
+                      //   "Kontrol",
+                      //   style: new TextStyle(
+                      //     fontSize: MediaQuery.of(context).size.height / 65,
+                      //     fontFamily: "Mont",
+                      //     fontWeight: FontWeight.bold,
+                      //   ),
+                      // ),
                       ),
-                    ),
-                  ),
+                  BottomNavigationBarItem(
+                      icon: Icon(Icons.account_circle), label: "Akun"
+                      // title: new Text(
+                      //   "Akun",
+                      //   style: new TextStyle(
+                      //     fontSize: MediaQuery.of(context).size.height / 65,
+                      //     fontFamily: "Mont",
+                      //     fontWeight: FontWeight.bold,
+                      //   ),
+                      // ),
+                      ),
                 ],
-                
-
+                selectedLabelStyle: TextStyle(
+                  fontSize: MediaQuery.of(context).size.height / 65,
+                  fontFamily: "Mont",
+                  fontWeight: FontWeight.bold,
+                ),
                 type: BottomNavigationBarType.fixed,
                 currentIndex: _selectedIndex,
                 onTap: (change)),

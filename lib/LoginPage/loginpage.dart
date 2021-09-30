@@ -165,6 +165,7 @@ class _LoginPageState extends State<LoginPage> {
             if (value.isEmpty) {
               return ' please enter username';
             }
+            return null;
           },
           controller: username,
           keyboardType: TextInputType.text,
@@ -188,6 +189,7 @@ class _LoginPageState extends State<LoginPage> {
             if (value.isEmpty) {
               return ' please enter password';
             }
+            return null;
           },
           controller: password,
           autofocus: false,

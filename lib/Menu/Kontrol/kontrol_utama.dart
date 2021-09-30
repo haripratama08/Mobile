@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
-import 'package:carousel_slider/carousel_slider.dart';
+// import 'package:carousel_slider/carousel_slider.dart';
 import 'package:ch_v2_1/API/api.dart';
 import 'package:ch_v2_1/Menu/Kontrol/kontrol_semua.dart';
 import 'package:http/http.dart' as http;
@@ -719,6 +719,7 @@ class _KontrolUtamaState extends State<KontrolUtama>
                                               ),
                                               Center(
                                                 child: ToggleSwitch(
+                                                  totalSwitches: 2,
                                                   fontSize:
                                                       MediaQuery.of(context)
                                                               .size
@@ -729,8 +730,9 @@ class _KontrolUtamaState extends State<KontrolUtama>
                                                   changeOnTap: true,
                                                   minWidth: 85.0,
                                                   cornerRadius: 25.0,
-                                                  activeBgColor:
-                                                      Colors.green[900],
+                                                  activeBgColor: [
+                                                    Colors.green[900]
+                                                  ],
                                                   activeFgColor: Colors.white,
                                                   inactiveBgColor: Colors.grey,
                                                   inactiveFgColor: Colors.white,
@@ -1031,6 +1033,7 @@ class _KontrolUtamaState extends State<KontrolUtama>
                                           ),
                                           Center(
                                             child: ToggleSwitch(
+                                              totalSwitches: 2,
                                               fontSize: MediaQuery.of(context)
                                                       .size
                                                       .width /
@@ -1040,7 +1043,9 @@ class _KontrolUtamaState extends State<KontrolUtama>
                                               changeOnTap: true,
                                               minWidth: 85.0,
                                               cornerRadius: 25.0,
-                                              activeBgColor: Colors.green[900],
+                                              activeBgColor: [
+                                                Colors.green[900]
+                                              ],
                                               activeFgColor: Colors.white,
                                               inactiveBgColor: Colors.grey,
                                               inactiveFgColor: Colors.white,
