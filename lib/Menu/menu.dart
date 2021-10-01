@@ -112,7 +112,7 @@ class _MenuState extends State<Menu> with SingleTickerProviderStateMixin {
   Widget build(BuildContext context) {
     print("selected index yang dipilih $_selectedIndex");
     print(namaalat);
-    print(widget.namaalat);
+    // print(widget.namaalat);
     return DefaultTabController(
         length: 4,
         child: Scaffold(

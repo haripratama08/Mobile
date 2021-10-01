@@ -128,64 +128,70 @@ class _SemuaState extends State<Semua> {
   }
 
   Future loadDevice2() async {
-    var jsonString = await http.get(Uri.parse('$endPoint/data?uuid=$uuid'),
+    final jsonString = await http.get(Uri.parse('$endPoint/data?uuid=$uuid'),
         headers: {HttpHeaders.authorizationHeader: '$token'});
-    var jsonResponse = json.decode(jsonString.body);
-    Data2 data2 = Data2.fromJson(jsonResponse);
-    print("device $jsonResponse");
-    if (this.mounted) {
-      setState(() {
-        List<Widget> list = [];
-        for (int i = 0; i < data2.data.lokasi.length; i++) {
-          panjangtempat = data2.data.lokasi.length;
-          if (tempatlist.length == panjangtempat) {
-          } else {
-            tempat = data2.data.lokasi[i].nama;
-            id = data2.data.lokasi[i].id;
-            tempatlist.add(tempat);
-            idlist.add(id);
-          }
-          for (int j = 0; j < data2.data.lokasi[i].hub.length; j++) {
-            for (int k = 0; k < data2.data.lokasi[i].hub[j].alat.length; k++) {
-              alat = data2.data.lokasi[i].hub[j].alat.length;
-              data1 = data2.data.lokasi[i].id;
-              data3 = data2.data.lokasi[i].hub[j].id;
-              data4 = data2.data.lokasi[i].hub[j].alat[k].id;
-              data5 = data2.data.lokasi[i].hub[j].alat[k].nama;
+    if (jsonString.statusCode == 200) {
+      var jsonResponse = json.decode(jsonString.body);
+      Data2 data2 = Data2.fromJson(jsonResponse);
+      print("device $jsonResponse");
+      if (this.mounted) {
+        setState(() {
+          List<Widget> list = [];
+          for (int i = 0; i < data2.data.lokasi.length; i++) {
+            panjangtempat = data2.data.lokasi.length;
+            if (tempatlist.length == panjangtempat) {
+            } else {
+              tempat = data2.data.lokasi[i].nama;
+              id = data2.data.lokasi[i].id;
+              tempatlist.add(tempat);
+              idlist.add(id);
+            }
+            for (int j = 0; j < data2.data.lokasi[i].hub.length; j++) {
+              for (int k = 0;
+                  k < data2.data.lokasi[i].hub[j].alat.length;
+                  k++) {
+                alat = data2.data.lokasi[i].hub[j].alat.length;
+                data1 = data2.data.lokasi[i].id;
+                data3 = data2.data.lokasi[i].hub[j].id;
+                data4 = data2.data.lokasi[i].hub[j].alat[k].id;
+                data5 = data2.data.lokasi[i].hub[j].alat[k].nama;
 
-              if (name.contains(data5)) {
-              } else {
-                name.add('$data5');
+                if (name.contains(data5)) {
+                } else {
+                  name.add('$data5');
+                }
+                number = name.length;
+
+                if (loc.length == number) {
+                } else {
+                  loc.add(data1);
+                }
+
+                if (huc.length == number) {
+                } else {
+                  huc.add(data3);
+                }
+
+                if (dev.length == number) {
+                } else {
+                  dev.add(data4);
+                }
+
+                print(huc);
+                list2.add(
+                    ('{ "idlokasi" : $data1,  "idhub" : $data3,  "idalat" : $data4, "nama" : $data5}'));
               }
-              number = name.length;
-
-              if (loc.length == number) {
-              } else {
-                loc.add(data1);
-              }
-
-              if (huc.length == number) {
-              } else {
-                huc.add(data3);
-              }
-
-              if (dev.length == number) {
-              } else {
-                dev.add(data4);
-              }
-
-              print(huc);
-              list2.add(
-                  ('{ "idlokasi" : $data1,  "idhub" : $data3,  "idalat" : $data4, "nama" : $data5}'));
             }
           }
-        }
-        return new Row(
-          children: list,
-        );
-      });
+          return new Row(
+            children: list,
+          );
+        });
+      }
+      return loadSensor();
+    } else {
+      throw Exception('failed to loadDevice 2');
     }
-    return loadSensor();
   }
 
   void refreshData() {
@@ -198,7 +204,7 @@ class _SemuaState extends State<Semua> {
       Semua(idlokas: idlokas, idhu: idhu, idala: idala, items: []);
     });
     print("Refreshing");
-    Future.delayed(Duration(seconds: 2), () {
+    Future.delayed(Duration(seconds: 60), () {
       setState(() {
         refresh = false;
         print("Refreshed");
@@ -214,56 +220,60 @@ class _SemuaState extends State<Semua> {
     var jsonString = await http.put(
         Uri.parse('$endPoint/sensor/notifikasi?set=$sets&id_sensor=$idsensor'),
         headers: {HttpHeaders.authorizationHeader: '$token'});
-    var jsonResponse = json.decode(jsonString.body);
-    items.clear();
-    itemsshadow.clear();
-    iditems.clear();
-    if (this.mounted) {
-      setState(() {
-        success = jsonResponse['status'];
-        loadSensor();
-      });
-      if (success == "OK") {
+    if (jsonString.statusCode == 200) {
+      var jsonResponse = json.decode(jsonString.body);
+      items.clear();
+      itemsshadow.clear();
+      iditems.clear();
+      if (this.mounted) {
         setState(() {
-          loading = false;
+          success = jsonResponse['status'];
+          loadSensor();
         });
-        showDialog(
-          context: context,
-          builder: (ctxt) => new AlertDialog(
-            title: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                Container(
-                    width: MediaQuery.of(context).size.width / 3,
-                    height: MediaQuery.of(context).size.width / 3,
-                    child: Image.asset("asset/img/datasent1.png")),
-                Padding(
-                  padding: const EdgeInsets.all(10.0),
-                  child: Text("Telah terganti",
-                      style: TextStyle(fontFamily: 'Mont', fontSize: 20)),
-                ),
-                Align(
-                  alignment: Alignment.bottomRight,
-                  child: TextButton(
-                      onPressed: () {
-                        Navigator.push(
-                            context,
-                            new MaterialPageRoute(
-                                builder: (context) => new Menu()));
-                      },
-                      child: Text(
-                        'kembali',
-                        style: TextStyle(
-                            fontSize: 12,
-                            fontFamily: 'Mont',
-                            color: Colors.black),
-                      )),
-                ),
-              ],
+        if (success == "OK") {
+          setState(() {
+            loading = false;
+          });
+          showDialog(
+            context: context,
+            builder: (ctxt) => new AlertDialog(
+              title: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  Container(
+                      width: MediaQuery.of(context).size.width / 3,
+                      height: MediaQuery.of(context).size.width / 3,
+                      child: Image.asset("asset/img/datasent1.png")),
+                  Padding(
+                    padding: const EdgeInsets.all(10.0),
+                    child: Text("Telah terganti",
+                        style: TextStyle(fontFamily: 'Mont', fontSize: 20)),
+                  ),
+                  Align(
+                    alignment: Alignment.bottomRight,
+                    child: TextButton(
+                        onPressed: () {
+                          Navigator.push(
+                              context,
+                              new MaterialPageRoute(
+                                  builder: (context) => new Menu()));
+                        },
+                        child: Text(
+                          'kembali',
+                          style: TextStyle(
+                              fontSize: 12,
+                              fontFamily: 'Mont',
+                              color: Colors.black),
+                        )),
+                  ),
+                ],
+              ),
             ),
-          ),
-        );
+          );
+        }
       }
+    } else {
+      throw Exception('failed to ganti notif');
     }
   }
 
@@ -272,196 +282,222 @@ class _SemuaState extends State<Semua> {
     print(huc[0]);
     print(dev[0]);
     if (idlokas == null) {
-      var jsonString = await http.get(
+      final jsonString = await http.get(
           Uri.parse(
               '$endPoint/mobile/sensor?lokasi=${loc[0]}&hub=${huc[0]}&alat=${dev[0]}'),
           headers: {HttpHeaders.authorizationHeader: '$token'});
-      var jsonResponse = json.decode(jsonString.body);
-      print("sensor $jsonResponse");
-      if (this.mounted) {
-        setState(() {
-          event = ((((jsonResponse["data"])["info"])["alat"])["event"]);
-          panjang = ((jsonResponse["data"])["data"].length);
-          namaalat = ((((jsonResponse["data"])["info"])["alat"])["alias"]);
-          // print("nama alat montitoring $namaalat");
-          print("Status $event");
-          for (var i = 0; i < panjang; i++) {
-            if (items.length == panjang) {
-            } else if (items.length > panjang) {
-              items.clear();
-              iditems.clear();
-              itemsshadow.clear();
-            } else {
-              nilai1 = ((((jsonResponse["data"])["data"])[i])["data"])
-                  .toStringAsFixed(1);
-              nilailast = ((((jsonResponse["data"])["data"])[0])["data"])
-                  .toStringAsFixed(1);
-              nil.add(nilai1);
-              idjns = (((jsonResponse["data"])["data"])[i])["id"];
-              tanggal1 =
-                  ((((jsonResponse["data"])["data"])[i])["tanggal_sensor"]);
-              DateTime parseDate =
-                  new DateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
-                      .parse(tanggal1);
-              var inputDate = DateTime.parse(parseDate.toString());
-              var outputFormat = DateFormat('dd-MM-yyyy hh:mm a');
-              var outputDate = outputFormat.format(inputDate);
-              notif = ((((jsonResponse["data"])["data"])[i])["notifikasi"]);
-
-              mean = ((((jsonResponse["data"])["data"])[i])["mean"])
-                  .toStringAsFixed(1);
-              max = ((((jsonResponse["data"])["data"])[i])["max"])
-                  .toStringAsFixed(1);
-              min = ((((jsonResponse["data"])["data"])[i])["min"])
-                  .toStringAsFixed(1);
-
-              jnssensor = (((jsonResponse["data"])["data"])[i])["jenis"];
-              //
-              print(satuan);
-              if (itemsshadow.contains(jnssensor) &&
-                  itemsbefore == items.length) {
+      if (jsonString.statusCode == 200) {
+        var jsonResponse = json.decode(jsonString.body);
+        print("sensor $jsonResponse");
+        if (this.mounted) {
+          setState(() {
+            event = ((((jsonResponse["data"])["info"])["alat"])["event"]);
+            panjang = ((jsonResponse["data"])["data"].length);
+            namaalat = ((((jsonResponse["data"])["info"])["alat"])["alias"]);
+            // print("nama alat montitoring $namaalat");
+            print("Status $event");
+            for (var i = 0; i < panjang; i++) {
+              if (items.length == panjang) {
+              } else if (items.length > panjang) {
                 items.clear();
                 iditems.clear();
                 itemsshadow.clear();
               } else {
-                if (jnssensor == "Kelembapan Tanah") {
-                  img = "asset/img/soil.png";
-                  satuan = "%";
-                } else if (jnssensor == "Suhu Udara") {
-                  img = "asset/img/temp.png";
-                  satuan = "\u00B0C";
-                } else if (jnssensor == "Kelembapan Udara") {
-                  img = "asset/img/rh.png";
-                  satuan = "%";
-                } else if (jnssensor == "Ketinggian Air") {
-                  img = "asset/img/Tsuhu.png";
-                  satuan = "cm";
+                if (((((jsonResponse["data"])["data"])[i])["data"]) ==
+                    "Belum memiliki data") {
+                  throw Exception("belum memiliki data");
                 } else {
-                  img = "asset/img/light.png";
-                  satuan = "lux";
+                  nilai1 = ((((jsonResponse["data"])["data"])[i])["data"])
+                      .toStringAsFixed(1);
+                  nilailast = ((((jsonResponse["data"])["data"])[0])["data"])
+                      .toStringAsFixed(1);
+                  nil.add(nilai1);
+                  idjns = (((jsonResponse["data"])["data"])[i])["id"];
+                  tanggal1 =
+                      ((((jsonResponse["data"])["data"])[i])["tanggal_sensor"]);
+                  DateTime parseDate =
+                      new DateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
+                          .parse(tanggal1);
+                  var inputDate = DateTime.parse(parseDate.toString());
+                  var outputFormat = DateFormat('dd-MM-yyyy hh:mm a');
+                  var outputDate = outputFormat.format(inputDate);
+                  notif = ((((jsonResponse["data"])["data"])[i])["notifikasi"]);
+
+                  mean = ((((jsonResponse["data"])["data"])[i])["mean"])
+                      .toStringAsFixed(1);
+                  max = ((((jsonResponse["data"])["data"])[i])["max"])
+                      .toStringAsFixed(1);
+                  min = ((((jsonResponse["data"])["data"])[i])["min"])
+                      .toStringAsFixed(1);
+                  jnssensor = (((jsonResponse["data"])["data"])[i])["jenis"];
+                  //
+                  print(satuan);
+                  if (itemsshadow.contains(jnssensor) &&
+                      itemsbefore == items.length) {
+                    items.clear();
+                    iditems.clear();
+                    itemsshadow.clear();
+                  } else {
+                    if (jnssensor == "Kelembapan Tanah") {
+                      img = "asset/img/soil.png";
+                      satuan = "%";
+                    } else if (jnssensor == "Suhu Udara") {
+                      img = "asset/img/temp.png";
+                      satuan = "\u00B0C";
+                    } else if (jnssensor == "Kelembapan Udara") {
+                      img = "asset/img/rh.png";
+                      satuan = "%";
+                    } else if (jnssensor == "Ketinggian Air") {
+                      img = "asset/img/Tsuhu.png";
+                      satuan = "cm";
+                    } else {
+                      img = "asset/img/light.png";
+                      satuan = "lux";
+                    }
+                    //notif
+                    if (notif == 0) {
+                      notifikasitoogle = false;
+                    } else if (notif == 1) {
+                      notifikasitoogle = true;
+                    }
+                    setState(() {
+                      noty.add(notifikasitoogle);
+                      iditems.add(notif);
+                      itemsshadow.add(jnssensor);
+                      items.add(
+                        parameter(
+                            jnssensor,
+                            satuan,
+                            img,
+                            nilai1,
+                            min,
+                            max,
+                            mean,
+                            outputDate,
+                            notifikasitoogle,
+                            idjns,
+                            i,
+                            namaalat),
+                      );
+                    });
+                  }
                 }
-                //notif
-                if (notif == 0) {
-                  notifikasitoogle = false;
-                } else if (notif == 1) {
-                  notifikasitoogle = true;
-                }
-                setState(() {
-                  noty.add(notifikasitoogle);
-                  iditems.add(notif);
-                  itemsshadow.add(jnssensor);
-                  items.add(
-                    parameter(jnssensor, satuan, img, nilai1, min, max, mean,
-                        outputDate, notifikasitoogle, idjns, i, namaalat),
-                  );
-                });
               }
             }
-          }
-          itemsbefore = items.length;
-        });
-        Timer.periodic(Duration(minutes: 10), (Timer t) => items.clear());
-        Timer.periodic(Duration(minutes: 10), (Timer t) => iditems.clear());
-        Timer.periodic(Duration(minutes: 10), (Timer t) => itemsshadow.clear());
-        return loadSensor();
+            itemsbefore = items.length;
+          });
+          Timer.periodic(Duration(minutes: 10), (Timer t) => items.clear());
+          Timer.periodic(Duration(minutes: 10), (Timer t) => iditems.clear());
+          Timer.periodic(
+              Duration(minutes: 10), (Timer t) => itemsshadow.clear());
+          return loadSensor();
+        }
+      } else {
+        throw Exception('failed to load data');
       }
     } else {
       print(idlokas);
       print(idhu);
       print(idala);
-      var jsonString = await http.get(
+      final jsonString = await http.get(
           Uri.parse(
               '$endPoint/mobile/sensor?lokasi=$idlokas&hub=$idhu&alat=$idala'),
           headers: {HttpHeaders.authorizationHeader: '$token'});
-      var jsonResponse = json.decode(jsonString.body);
-      if (this.mounted) {
-        setState(() {
-          loading = false;
-          panjang = ((jsonResponse["data"])["data"].length);
-          namaalat = ((((jsonResponse["data"])["info"])["alat"])["alias"]);
-          print("nama alat montitoring $namaalat");
-          for (var i = 0; i < panjang; i++) {
-            if (items.length == panjang) {
-            } else if (items.length > panjang) {
-              loading = true;
-              items.clear();
-              iditems.clear();
-              itemsshadow.clear();
-            } else {
-              if (((((jsonResponse["data"])["data"])[i])["data"]).runtimeType ==
-                  int) print("---------------------------------");
-              print(nilai1);
-              nilai1 = ((((jsonResponse["data"])["data"])[i])["data"])
-                  .toStringAsFixed(1);
-              print(nilai1);
-              nilailast = ((((jsonResponse["data"])["data"])[0])["data"])
-                  .toStringAsFixed(1);
-              idjns = (((jsonResponse["data"])["data"])[i])["id"];
-              tanggal1 =
-                  ((((jsonResponse["data"])["data"])[i])["tanggal_sensor"]);
-              DateTime parseDate =
-                  new DateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
-                      .parse(tanggal1);
-              var inputDate = DateTime.parse(parseDate.toString());
-              var outputFormat = DateFormat('dd-MM-yyyy hh:mm a');
-              var outputDate = outputFormat.format(inputDate);
-              notif = ((((jsonResponse["data"])["data"])[i])["notifikasi"]);
-              mean = ((((jsonResponse["data"])["data"])[i])["mean"])
-                  .toStringAsFixed(1);
-              max = ((((jsonResponse["data"])["data"])[i])["max"])
-                  .toStringAsFixed(1);
-              min = ((((jsonResponse["data"])["data"])[i])["min"])
-                  .toStringAsFixed(1);
-              jnssensor = (((jsonResponse["data"])["data"])[i])["jenis"];
-              if (itemsshadow.contains(jnssensor) &&
-                  itemsbefore == items.length) {
+      if (jsonString.statusCode == 200) {
+        var jsonResponse = json.decode(jsonString.body);
+        if (this.mounted) {
+          setState(() {
+            loading = false;
+            panjang = ((jsonResponse["data"])["data"].length);
+            namaalat = ((((jsonResponse["data"])["info"])["alat"])["alias"]);
+            print("nama alat montitoring $namaalat");
+            for (var i = 0; i < panjang; i++) {
+              if (items.length == panjang) {
+              } else if (items.length > panjang) {
                 loading = true;
                 items.clear();
                 iditems.clear();
                 itemsshadow.clear();
               } else {
-                if (jnssensor == "Kelembapan Tanah") {
-                  img = "asset/img/soil.png";
-                  satuan = "%";
-                } else if (jnssensor == "Suhu Udara") {
-                  img = "asset/img/temp.png";
-                  satuan = "\u00B0C";
-                } else if (jnssensor == "Kelembapan Udara") {
-                  img = "asset/img/rh.png";
-                  satuan = "%";
-                } else if (jnssensor == "Ketinggian Air") {
-                  img = "asset/img/Tsuhu.png";
-                  satuan = "cm";
+                if (((((jsonResponse["data"])["data"])[i])["data"])
+                        .runtimeType ==
+                    int) print("---------------------------------");
+                print(nilai1);
+                nilai1 = ((((jsonResponse["data"])["data"])[i])["data"])
+                    .toStringAsFixed(1);
+                print(nilai1);
+                nilailast = ((((jsonResponse["data"])["data"])[0])["data"])
+                    .toStringAsFixed(1);
+                idjns = (((jsonResponse["data"])["data"])[i])["id"];
+                tanggal1 =
+                    ((((jsonResponse["data"])["data"])[i])["tanggal_sensor"]);
+                DateTime parseDate =
+                    new DateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
+                        .parse(tanggal1);
+                var inputDate = DateTime.parse(parseDate.toString());
+                var outputFormat = DateFormat('dd-MM-yyyy hh:mm a');
+                var outputDate = outputFormat.format(inputDate);
+                notif = ((((jsonResponse["data"])["data"])[i])["notifikasi"]);
+                mean = ((((jsonResponse["data"])["data"])[i])["mean"])
+                    .toStringAsFixed(1);
+                max = ((((jsonResponse["data"])["data"])[i])["max"])
+                    .toStringAsFixed(1);
+                min = ((((jsonResponse["data"])["data"])[i])["min"])
+                    .toStringAsFixed(1);
+                jnssensor = (((jsonResponse["data"])["data"])[i])["jenis"];
+                if (itemsshadow.contains(jnssensor) &&
+                    itemsbefore == items.length) {
+                  loading = true;
+                  items.clear();
+                  iditems.clear();
+                  itemsshadow.clear();
                 } else {
-                  img = "asset/img/light.png";
-                  satuan = "lux";
-                }
-                //notif
-                if (notif == 0) {
-                  notifikasitoogle = false;
-                } else if (notif == 1) {
-                  notifikasitoogle = true;
-                }
+                  if (jnssensor == "Kelembapan Tanah") {
+                    img = "asset/img/soil.png";
+                    satuan = "%";
+                  } else if (jnssensor == "Suhu Udara") {
+                    img = "asset/img/temp.png";
+                    satuan = "\u00B0C";
+                  } else if (jnssensor == "Kelembapan Udara") {
+                    img = "asset/img/rh.png";
+                    satuan = "%";
+                  } else if (jnssensor == "Ketinggian Air") {
+                    img = "asset/img/Tsuhu.png";
+                    satuan = "cm";
+                  } else {
+                    img = "asset/img/light.png";
+                    satuan = "lux";
+                  }
+                  //notif
+                  if (notif == 0) {
+                    notifikasitoogle = false;
+                  } else if (notif == 1) {
+                    notifikasitoogle = true;
+                  }
 
-                setState(() {
-                  noty.add(notifikasitoogle);
-                  iditems.add(notif);
-                  itemsshadow.add(jnssensor);
-                  items.add(
-                    parameter(jnssensor, satuan, img, nilai1, min, max, mean,
-                        outputDate, notifikasitoogle, idjns, i, namaalat),
-                  );
-                  print(items);
-                });
+                  setState(() {
+                    noty.add(notifikasitoogle);
+                    iditems.add(notif);
+                    itemsshadow.add(jnssensor);
+                    items.add(
+                      parameter(jnssensor, satuan, img, nilai1, min, max, mean,
+                          outputDate, notifikasitoogle, idjns, i, namaalat),
+                    );
+                    print(items);
+                  });
+                }
               }
             }
-          }
-          itemsbefore = items.length;
-        });
-        Timer.periodic(Duration(minutes: 10), (Timer t) => items.clear());
-        Timer.periodic(Duration(minutes: 10), (Timer t) => iditems.clear());
-        Timer.periodic(Duration(minutes: 10), (Timer t) => itemsshadow.clear());
-        return loadSensor();
+            itemsbefore = items.length;
+          });
+          Timer.periodic(Duration(minutes: 10), (Timer t) => items.clear());
+          Timer.periodic(Duration(minutes: 10), (Timer t) => iditems.clear());
+          Timer.periodic(
+              Duration(minutes: 10), (Timer t) => itemsshadow.clear());
+          return loadSensor();
+        }
+      } else {
+        throw Exception('failed to load data');
       }
     }
   }
@@ -904,7 +940,6 @@ class _SemuaState extends State<Semua> {
                                             MediaQuery.of(context).size.width *
                                                 0.1),
                                     GestureDetector(
-                                    
                                         onTap: () {
                                           print(index);
                                           MonitorIndoor();

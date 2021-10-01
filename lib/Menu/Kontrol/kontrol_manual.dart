@@ -23,30 +23,34 @@ class _KontrolManualState extends State<KontrolManual> {
       print("$mode $atas $topic $bawah $state");
       var url = Uri.parse(
           'http://ec2-18-139-101-44.ap-southeast-1.compute.amazonaws.com:2000/control?topic=$topic&message={"mode": "$mode","threshold": "0","status": "null","manual": "$state","id_sensor": "null"}');
-      var jsonString = await http.get(url);
-      final jsonResponse = json.decode(jsonString.body);
-      if (this.mounted) {
-        setState(() {
-          msg = jsonResponse['success'];
-          loading = false;
-        });
-        liststate.clear();
-        if (msg == "1") {
-          print("Published to $topic");
+      final jsonString = await http.get(url);
+      if (jsonString.statusCode == 200) {
+        final jsonResponse = json.decode(jsonString.body);
+        if (this.mounted) {
           setState(() {
+            msg = jsonResponse['success'];
             loading = false;
-            showDialog(
-              context: context,
-              builder: (ctxt) => new AlertDialog(
-                title: Column(
-                  children: <Widget>[
-                    Center(child: Image.asset("asset/img/datasent.png")),
-                  ],
-                ),
-              ),
-            );
           });
+          liststate.clear();
+          if (msg == "1") {
+            print("Published to $topic");
+            setState(() {
+              loading = false;
+              showDialog(
+                context: context,
+                builder: (ctxt) => new AlertDialog(
+                  title: Column(
+                    children: <Widget>[
+                      Center(child: Image.asset("asset/img/datasent.png")),
+                    ],
+                  ),
+                ),
+              );
+            });
+          }
         }
+      } else {
+        throw Exception('failed to load state manual kontrol');
       }
     }
 
