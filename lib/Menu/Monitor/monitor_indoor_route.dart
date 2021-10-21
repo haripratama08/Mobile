@@ -35,6 +35,7 @@ int idala2;
 int idlokas2;
 int idalate;
 int ind;
+int panjanglistnama;
 
 class MonitorIndoorRoute extends StatefulWidget {
   final int ind;
@@ -60,8 +61,8 @@ class MonitorIndoorRouteState extends State<MonitorIndoorRoute>
     Data2 data2 = Data2.fromJson(jsonResponse);
     if (this.mounted) {
       setState(() {
-        print("nilai i ${widget.ind}");
         List<Widget> list = [];
+        panjanglistnama = data2.data.lokasi[widget.ind].hub.length;
         if (data2.data.lokasi[widget.ind].hub.length == 0) {
           msg = "Tidak Ada Alat";
         } else {
@@ -78,9 +79,6 @@ class MonitorIndoorRouteState extends State<MonitorIndoorRoute>
               } else {
                 listnama.add('$data5');
               }
-              print('listnama length ${listnama.length}');
-              print("number $number");
-              print("listnama $listnama");
               number = listnama.length;
               if (idlokasi.length == number) {
               } else {
@@ -104,7 +102,6 @@ class MonitorIndoorRouteState extends State<MonitorIndoorRoute>
         }
       });
     }
-    return loadDevice();
   }
 
   Future doGanti() async {
@@ -169,129 +166,167 @@ class MonitorIndoorRouteState extends State<MonitorIndoorRoute>
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Container(
-        height: MediaQuery.of(context).size.height / 4.5,
-        child: ListView(
-          children: [
-            ListView.builder(
-                shrinkWrap: true,
-                physics: ScrollPhysics(),
-                scrollDirection: Axis.vertical,
-                itemCount: listnama.length,
-                itemBuilder: (BuildContext context, int index) {
-                  void status(int ins) {
-                    if (status1 == ins) {
-                      warna = Colors.green[100];
-                    } else {
-                      warna = Color(0x098765);
-                    }
-                  }
+    print("panjang $panjanglistnama");
 
-                  status(index);
-                  if (listnama.length == 0) {
-                    if (msg == "Tidak Ada Alat") {
-                      return Container(
-                        height: MediaQuery.of(context).size.height / 3,
-                        child: Center(
-                            child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.all(10.0),
-                              child: Text('Tidak Ada Alat',
-                                  style: TextStyle(
-                                      fontFamily: 'Mont', fontSize: 12)),
-                            ),
-                          ],
-                        )),
-                      );
-                    }
-                  } else {
-                    return GestureDetector(
-                        onTap: () {
-                          setState(() {
-                            loading = true;
-                            itemsshadow.clear();
-                            items.clear();
-                            data(status1);
-                            change(index);
-                            items = items;
-                            itemsshadow = itemsshadow;
-                          });
-                        },
-                        child: Padding(
-                          padding: const EdgeInsets.all(10),
-                          child: Container(
-                              child: Center(
-                                  child: Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: <Widget>[
-                                  Image.asset(
-                                    'asset/img/ghico.png',
-                                    height: 40,
-                                  ),
-                                  SizedBox(
-                                    width:
-                                        MediaQuery.of(context).size.width / 12,
-                                  ),
-                                  Column(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: <Widget>[
-                                      new Text(
-                                        '${listnama[index]}',
-                                        textDirection: TextDirection.ltr,
-                                        style: TextStyle(
-                                            fontFamily: 'Mont', fontSize: 14),
-                                      ),
-                                    ],
-                                  ),
-                                  SizedBox(
-                                    width:
-                                        MediaQuery.of(context).size.width / 12,
-                                  ),
-                                  GestureDetector(
-                                    onTap: () {
-                                      setState(() {
-                                        idalate = idala2;
-                                        nama = listnama[index];
-                                      });
-                                      dialog();
-                                    },
-                                    child: Container(
-                                      child: Center(
-                                          child: Icon(Icons.border_color)),
-                                      height:
-                                          MediaQuery.of(context).size.width /
-                                              10,
-                                      width: MediaQuery.of(context).size.width /
-                                          10,
-                                      decoration: BoxDecoration(
-                                          border: Border.all(
-                                              width: 1.5, color: Colors.black),
-                                          borderRadius:
-                                              BorderRadius.circular(5)),
-                                    ),
-                                  )
-                                ],
-                              )),
-                              height: MediaQuery.of(context).size.height / 11.5,
-                              width: MediaQuery.of(context).size.width * 4 / 5,
-                              padding: const EdgeInsets.all(10),
-                              decoration: BoxDecoration(
-                                  color: warna,
-                                  border: Border.all(
-                                    width: 2.0,
-                                    color: Colors.black,
-                                  ),
-                                  borderRadius: BorderRadius.circular(10))),
-                        ));
-                  }
-                }),
-          ],
-        ),
-      ),
-    );
+    return panjanglistnama == 0
+        ? Container(
+            height: MediaQuery.of(context).size.height / 3,
+            child: Center(
+                child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(10.0),
+                  child: Text('Tidak Ada Alat',
+                      style: TextStyle(fontFamily: 'Mont', fontSize: 13)),
+                ),
+              ],
+            )),
+          )
+        : Scaffold(
+            body: Container(
+              height: MediaQuery.of(context).size.height / 4.5,
+              child: ListView(
+                children: [
+                  ListView.builder(
+                      shrinkWrap: true,
+                      physics: ScrollPhysics(),
+                      scrollDirection: Axis.vertical,
+                      itemCount: listnama.length,
+                      itemBuilder: (BuildContext context, int index) {
+                        void status(int ins) {
+                          if (status1 == ins) {
+                            warna = Colors.green[100];
+                          } else {
+                            warna = Color(0x098765);
+                          }
+                        }
+
+                        status(index);
+                        print("panjang listnama $panjanglistnama");
+
+                        if (panjanglistnama == 0) {
+                          return Container(
+                            height: MediaQuery.of(context).size.height / 3,
+                            child: Center(
+                                child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Padding(
+                                  padding: const EdgeInsets.all(10.0),
+                                  child: Text('Tidak Ada Alat',
+                                      style: TextStyle(
+                                          fontFamily: 'Mont', fontSize: 12)),
+                                ),
+                              ],
+                            )),
+                          );
+                        } else {
+                          return GestureDetector(
+                              onTap: () {
+                                setState(() {
+                                  loadDevice();
+                                  listnama.clear();
+                                  idlokasi.clear();
+                                  idhub.clear();
+                                  idalat.clear();
+                                  loading = true;
+                                  itemsshadow.clear();
+                                  items.clear();
+                                  data(status1);
+                                  change(index);
+                                  items = items;
+                                  itemsshadow = itemsshadow;
+                                });
+                              },
+                              child: Padding(
+                                padding: const EdgeInsets.all(10),
+                                child: Container(
+                                    child: Center(
+                                        child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: <Widget>[
+                                        Image.asset(
+                                          'asset/img/ghico.png',
+                                          height: 40,
+                                        ),
+                                        SizedBox(
+                                          width: MediaQuery.of(context)
+                                                  .size
+                                                  .width /
+                                              12,
+                                        ),
+                                        Column(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: <Widget>[
+                                            new Text(
+                                              '${listnama[index]}',
+                                              textDirection: TextDirection.ltr,
+                                              style: TextStyle(
+                                                  fontFamily: 'Mont',
+                                                  fontSize: 14),
+                                            ),
+                                          ],
+                                        ),
+                                        SizedBox(
+                                          width: MediaQuery.of(context)
+                                                  .size
+                                                  .width /
+                                              12,
+                                        ),
+                                        GestureDetector(
+                                          onTap: () {
+                                            setState(() {
+                                              idalate = idala2;
+                                              nama = listnama[index];
+                                            });
+                                            dialog();
+                                          },
+                                          child: Container(
+                                            child: Center(
+                                                child:
+                                                    Icon(Icons.border_color)),
+                                            height: MediaQuery.of(context)
+                                                    .size
+                                                    .width /
+                                                10,
+                                            width: MediaQuery.of(context)
+                                                    .size
+                                                    .width /
+                                                10,
+                                            decoration: BoxDecoration(
+                                                border: Border.all(
+                                                    width: 1.5,
+                                                    color: Colors.black),
+                                                borderRadius:
+                                                    BorderRadius.circular(5)),
+                                          ),
+                                        )
+                                      ],
+                                    )),
+                                    height: MediaQuery.of(context).size.height /
+                                        11.5,
+                                    width: MediaQuery.of(context).size.width *
+                                        4 /
+                                        5,
+                                    padding: const EdgeInsets.all(10),
+                                    decoration: BoxDecoration(
+                                        color: warna,
+                                        border: Border.all(
+                                          width: 2.0,
+                                          color: Colors.black,
+                                        ),
+                                        borderRadius:
+                                            BorderRadius.circular(10))),
+                              ));
+                        }
+                      }),
+                ],
+              ),
+            ),
+          );
   }
 
   void dialog() {

@@ -20,6 +20,7 @@ class _SemuaState extends State<Semua> with Validation {
   String msg = '';
   final formKey = GlobalKey<FormState>();
   GantiAliasKontrol gantikontrol = GantiAliasKontrol();
+
   void initState() {
     loadKontrol();
     super.initState();
@@ -90,26 +91,19 @@ class _SemuaState extends State<Semua> with Validation {
                   listkontrol.contains(kontrol)
                       ? print("")
                       : listkontrol.add(kontrol);
-
                   kontrolnamelist.contains(kontrolname)
                       ? print("")
                       : kontrolnamelist.add(kontrolname);
-
                   namaalatkontrol == null
                       ? namaalatkontrol = listkontrol[0]
                       : namaalatkontrol = namaalatkontrol;
-                  print('nama alat $namaalatkontrol');
                   listidkontrol.contains(idkontrol)
                       ? print("")
                       : listidkontrol.add(idkontrol);
-
                   kontrolnamechoosen == null
                       ? kontrolnamechoosen = kontrolnamelist[0]
                       : kontrolnamechoosen = kontrolnamechoosen;
-
-                  print("kontrol nama $kontrolnamechoosen");
                   topic = "$kontrolnamechoosen/crophero/control";
-                  print(topic);
                 }
               }
             }
@@ -117,7 +111,7 @@ class _SemuaState extends State<Semua> with Validation {
         } else {}
       });
     }
-    return loadKontrol();
+    // return loadKontrol();
   }
 
   Future doGantiAliasKontrol() async {
@@ -217,8 +211,6 @@ class _SemuaState extends State<Semua> with Validation {
                                 data(status1);
                                 change(index);
                                 statusa(index);
-                                print("list id kontrol $listidkontrol");
-                                print(namaalatkontrol);
                               });
                             },
                             child: Padding(

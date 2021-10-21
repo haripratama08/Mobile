@@ -172,7 +172,6 @@ class _MenuState extends State<Menu> with SingleTickerProviderStateMixin {
                       ),
                     ),
                   ),
-
                   BottomNavigationBarItem(
                     icon: Icon(Icons.settings_remote_rounded),
                     title: new Text(
@@ -184,7 +183,6 @@ class _MenuState extends State<Menu> with SingleTickerProviderStateMixin {
                       ),
                     ),
                   ),
-
                   BottomNavigationBarItem(
                     icon: Icon(Icons.account_circle),
                     title: new Text(
@@ -197,8 +195,6 @@ class _MenuState extends State<Menu> with SingleTickerProviderStateMixin {
                     ),
                   ),
                 ],
-                
-
                 type: BottomNavigationBarType.fixed,
                 currentIndex: _selectedIndex,
                 onTap: (change)),

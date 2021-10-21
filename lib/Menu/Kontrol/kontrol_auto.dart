@@ -25,17 +25,18 @@ class _KontrolAutoState extends State<KontrolAuto> with Validation {
   TextEditingController min = new TextEditingController(text: minvalue);
   TextEditingController threshold =
       new TextEditingController(text: thresholdvalue);
+
   final formKey = GlobalKey<FormState>();
+
   @override
-  
   void initState() {
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    print("kondisi $selectedkondisi");
-    Future publish(String mode, String threshold, String state) async {
+    Future<http.Response> publish(
+        String mode, String threshold, String state) async {
       print(state);
       setState(() {
         if (selectedkondisi == '>') {
@@ -43,43 +44,42 @@ class _KontrolAutoState extends State<KontrolAuto> with Validation {
         } else {
           namakondisi = 'bawah';
         }
-        // maxvalue = max.text;
-        // minvalue = min.text;
         thresholdvalue = threshold;
         print(namakondisi);
       });
-      // var url = Uri.parse(
-      //     'http://ec2-18-139-101-44.ap-southeast-1.compute.amazonaws.com:2000/control?topic=$topic&message={"mode": "$mode","threshold": "$threshold","status": "$state:$namakondisi","manual": "$state","id_sensor": "$idsensor"}');
-      var url = Uri.parse(
-          'http://ec2-18-139-101-44.ap-southeast-1.compute.amazonaws.com:2000/control?topic=$topic&message={"mode": "$mode","threshold": "$threshold","status": "$state:$namakondisi","manual": "$state","id_sensor": "$idsensor"}');
-      var jsonString = await http.get(url);
-      final jsonResponse = json.decode(jsonString.body);
-      if (this.mounted) {
-        setState(() {
-          msg = jsonResponse['success'];
-          loading = false;
-        });
-        liststate.clear();
-        if (msg == "1") {
-          print("Published to $topic");
-          setState(() {
-            loading = false;
-            // maxvalue = max.text;
-            // minvalue = min.text;
-            thresholdvalue = threshold;
-            showDialog(
-              context: context,
-              builder: (ctxt) => new AlertDialog(
-                title: Column(
-                  children: <Widget>[
-                    Center(child: Image.asset("asset/img/datasent.png")),
-                  ],
-                ),
-              ),
-            );
-          });
+      var message = jsonEncode({
+        'message': {
+          "mode": "$mode",
+          "threshold": "$threshold",
+          "status": "$state:$namakondisi",
+          "manual": "$state",
+          "id_sensor": "$idsensor"
         }
+      });
+      var url = Uri.parse(
+          'https://cohkc2p9jb.execute-api.ap-southeast-1.amazonaws.com/v1/control');
+      var body = {"topic": topic, "message": message};
+      var response = await http.post(url, body: body);
+      print("${response.statusCode}");
+      print("${response.body}");
+      if (response.statusCode == 200) {
+        liststate.clear();
+        print("Published to $topic");
+        setState(() {
+          loading = false;
+          showDialog(
+            context: context,
+            builder: (ctxt) => new AlertDialog(
+              title: Column(
+                children: <Widget>[
+                  Center(child: Image.asset("asset/img/datasent.png")),
+                ],
+              ),
+            ),
+          );
+        });
       }
+      return response;
     }
 
     return Container(
@@ -120,6 +120,9 @@ class _KontrolAutoState extends State<KontrolAuto> with Validation {
                                                   .width /
                                               30,
                                         ),
+                                      ),
+                                      SizedBox(
+                                        height: 5,
                                       ),
                                       Padding(
                                         padding: const EdgeInsets.fromLTRB(
@@ -181,7 +184,11 @@ class _KontrolAutoState extends State<KontrolAuto> with Validation {
                                       ),
                                     ],
                                   ),
+                                  SizedBox(
+                                    height: 5,
+                                  ),
                                   Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
                                       Text(
                                         "Batas",
@@ -194,6 +201,9 @@ class _KontrolAutoState extends State<KontrolAuto> with Validation {
                                               30,
                                         ),
                                       ),
+                                      // SizedBox(
+                                      //   height: 5,
+                                      // ),
                                       Container(
                                         width:
                                             MediaQuery.of(context).size.width /
@@ -250,6 +260,8 @@ class _KontrolAutoState extends State<KontrolAuto> with Validation {
                               )
                             : GestureDetector(
                                 onTap: () {
+                                  FocusScope.of(context)
+                                      .requestFocus(FocusNode());
                                   publish(
                                       "auto", threshold.text, selectedstate);
                                 },

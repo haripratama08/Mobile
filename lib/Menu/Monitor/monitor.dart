@@ -126,7 +126,6 @@ class _MonitorIndoorState extends State<MonitorIndoor> with Validation {
   }
 
   void change(int index) {
-    print(index);
     items.clear();
     status1 = index;
     idlokas = idlokasi[index];
@@ -135,10 +134,10 @@ class _MonitorIndoorState extends State<MonitorIndoor> with Validation {
   }
 
   void data(int index) {
-    print(index);
     if (index == null) {
       change(0);
       items.clear();
+
       idlokas = idlokasi[0];
       idhu = idhub[0];
       idala = idalat[0];
@@ -162,6 +161,7 @@ class _MonitorIndoorState extends State<MonitorIndoor> with Validation {
     super.dispose();
   }
 
+  Semua all = Semua();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -184,108 +184,90 @@ class _MonitorIndoorState extends State<MonitorIndoor> with Validation {
                   }
 
                   status(index);
-                  if (listnama.length == 0) {
-                    return Container(
-                      height: MediaQuery.of(context).size.height / 3,
-                      child: Center(
-                          child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Container(
-                              height: MediaQuery.of(context).size.width / 20,
-                              width: MediaQuery.of(context).size.width / 20,
-                              child: Image.asset("asset/img/loading-blog.gif")),
-                        ],
-                      )),
-                    );
-                  } else {
-                    return GestureDetector(
-                        onTap: () {
-                          setState(() {
-                            loading = true;
-                            itemsshadow.clear();
-                            items.clear();
-                            data(status1);
-                            change(index);
-                            items = items;
-                            itemsshadow = itemsshadow;
-                            Menu(
-                              namaalat: namaalat,
-                            );
-                          });
-                        },
-                        child: Padding(
-                          padding: const EdgeInsets.all(10),
-                          child: Container(
-                              child: Center(
-                                  child: Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: <Widget>[
-                                  Image.asset(
-                                    'asset/img/ghico.png',
-                                    height: 40,
-                                  ),
-                                  SizedBox(
-                                    width:
-                                        MediaQuery.of(context).size.width / 7,
-                                  ),
-                                  Column(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: <Widget>[
-                                      new Text(
-                                        '${listnama[index]}',
-                                        textDirection: TextDirection.ltr,
-                                        style: TextStyle(
-                                            fontFamily: 'Mont', fontSize: 14),
-                                      ),
-                                    ],
-                                  ),
-                                  SizedBox(
-                                    width:
-                                        MediaQuery.of(context).size.width / 7,
-                                  ),
-                                  GestureDetector(
-                                    onTap: () {
-                                      setState(() {
-                                        idalate = idala;
-                                        nama = listnama[index];
-                                        print(
-                                            "pilihan nama monitor'${listnama[index]}'");
-                                      });
-                                      dialog();
-                                    },
-                                    child: Container(
-                                      child: Center(
-                                          child: Icon(
-                                        Icons.border_color,
-                                        size: 10,
-                                      )),
-                                      height:
-                                          MediaQuery.of(context).size.width /
-                                              15,
-                                      width: MediaQuery.of(context).size.width /
-                                          15,
-                                      decoration: BoxDecoration(
-                                          border: Border.all(
-                                              width: 1.5, color: Colors.black),
-                                          borderRadius:
-                                              BorderRadius.circular(5)),
+                  return GestureDetector(
+                      onTap: () {
+                        setState(() {
+                          nama = listnama[index];
+                          loading = true;
+                          itemsshadow.clear();
+                          items.clear();
+                          zerodata = false;
+                          data(status1);
+                          change(index);
+                          items = items;
+                          itemsshadow = itemsshadow;
+                          // Menu(
+                          //   namaalat: namaalat,
+                          // );
+                        });
+                      },
+                      child: Padding(
+                        padding: const EdgeInsets.all(10),
+                        child: Container(
+                            child: Center(
+                                child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: <Widget>[
+                                Image.asset(
+                                  'asset/img/ghico.png',
+                                  height: 40,
+                                ),
+                                SizedBox(
+                                  width: MediaQuery.of(context).size.width / 7,
+                                ),
+                                Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: <Widget>[
+                                    new Text(
+                                      '${listnama[index]}',
+                                      textDirection: TextDirection.ltr,
+                                      style: TextStyle(
+                                          fontFamily: 'Mont', fontSize: 14),
                                     ),
-                                  )
-                                ],
-                              )),
-                              height: MediaQuery.of(context).size.height / 11.5,
-                              width: MediaQuery.of(context).size.width * 4 / 5,
-                              padding: const EdgeInsets.all(10),
-                              decoration: BoxDecoration(
-                                  color: warna,
-                                  border: Border.all(
-                                    width: 2.0,
-                                    color: Colors.black,
+                                  ],
+                                ),
+                                SizedBox(
+                                  width: MediaQuery.of(context).size.width / 7,
+                                ),
+                                GestureDetector(
+                                  onTap: () {
+                                    setState(() {
+                                      idalate = idala;
+                                      nama = listnama[index];
+                                      print(
+                                          "pilihan nama monitor'${listnama[index]}'");
+                                    });
+                                    dialog();
+                                  },
+                                  child: Container(
+                                    child: Center(
+                                        child: Icon(
+                                      Icons.border_color,
+                                      size: 10,
+                                    )),
+                                    height:
+                                        MediaQuery.of(context).size.width / 15,
+                                    width:
+                                        MediaQuery.of(context).size.width / 15,
+                                    decoration: BoxDecoration(
+                                        border: Border.all(
+                                            width: 1.5, color: Colors.black),
+                                        borderRadius: BorderRadius.circular(5)),
                                   ),
-                                  borderRadius: BorderRadius.circular(10))),
-                        ));
-                  }
+                                )
+                              ],
+                            )),
+                            height: MediaQuery.of(context).size.height / 11.5,
+                            width: MediaQuery.of(context).size.width * 4 / 5,
+                            padding: const EdgeInsets.all(10),
+                            decoration: BoxDecoration(
+                                color: warna,
+                                border: Border.all(
+                                  width: 2.0,
+                                  color: Colors.black,
+                                ),
+                                borderRadius: BorderRadius.circular(10))),
+                      ));
                 }),
           ],
         ),

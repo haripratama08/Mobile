@@ -88,16 +88,10 @@ int i;
 int panjangtempat;
 bool refresh = false;
 bool front = true;
+bool loadingdata = true;
+bool zerodata = false;
 
 class Semua extends StatefulWidget {
-  final bool loading;
-  final List items;
-  final int idlokas;
-  final int idhu;
-  final int idala;
-  const Semua(
-      {Key key, this.idlokas, this.idhu, this.idala, this.items, this.loading});
-
   @override
   _SemuaState createState() => _SemuaState();
 }
@@ -111,6 +105,7 @@ class _SemuaState extends State<Semua> {
 
   @override
   void initState() {
+    _startTimer();
     loadDevice2();
     super.initState();
   }
@@ -122,7 +117,6 @@ class _SemuaState extends State<Semua> {
       items.clear();
       itemsshadow.clear();
       iditems.clear();
-      Semua(idlokas: idlokas, idhu: idhu, idala: idala, items: []);
       loadSensor();
     });
   }
@@ -152,29 +146,23 @@ class _SemuaState extends State<Semua> {
               data3 = data2.data.lokasi[i].hub[j].id;
               data4 = data2.data.lokasi[i].hub[j].alat[k].id;
               data5 = data2.data.lokasi[i].hub[j].alat[k].nama;
-
               if (name.contains(data5)) {
               } else {
                 name.add('$data5');
               }
               number = name.length;
-
               if (loc.length == number) {
               } else {
                 loc.add(data1);
               }
-
               if (huc.length == number) {
               } else {
                 huc.add(data3);
               }
-
               if (dev.length == number) {
               } else {
                 dev.add(data4);
               }
-
-              print(huc);
               list2.add(
                   ('{ "idlokasi" : $data1,  "idhub" : $data3,  "idalat" : $data4, "nama" : $data5}'));
             }
@@ -185,6 +173,7 @@ class _SemuaState extends State<Semua> {
         );
       });
     }
+
     return loadSensor();
   }
 
@@ -195,7 +184,6 @@ class _SemuaState extends State<Semua> {
       iditems.clear();
       itemsshadow.clear();
       FocusScope.of(context).requestFocus(FocusNode());
-      Semua(idlokas: idlokas, idhu: idhu, idala: idala, items: []);
     });
     print("Refreshing");
     Future.delayed(Duration(seconds: 2), () {
@@ -267,108 +255,118 @@ class _SemuaState extends State<Semua> {
     }
   }
 
+  bool isNumeric(String s) {
+    if (s == null) {
+      return false;
+    }
+    return double.tryParse(s) != null;
+  }
+
   Future loadSensor() async {
-    print(token);
-    print(huc[0]);
-    print(dev[0]);
     if (idlokas == null) {
       var jsonString = await http.get(
           Uri.parse(
               '$endPoint/mobile/sensor?lokasi=${loc[0]}&hub=${huc[0]}&alat=${dev[0]}'),
           headers: {HttpHeaders.authorizationHeader: '$token'});
       var jsonResponse = json.decode(jsonString.body);
-      print("sensor $jsonResponse");
       if (this.mounted) {
-        setState(() {
-          event = ((((jsonResponse["data"])["info"])["alat"])["event"]);
-          panjang = ((jsonResponse["data"])["data"].length);
-          namaalat = ((((jsonResponse["data"])["info"])["alat"])["alias"]);
-          // print("nama alat montitoring $namaalat");
-          print("Status $event");
-          for (var i = 0; i < panjang; i++) {
-            if (items.length == panjang) {
-            } else if (items.length > panjang) {
-              items.clear();
-              iditems.clear();
-              itemsshadow.clear();
-            } else {
-              nilai1 = ((((jsonResponse["data"])["data"])[i])["data"])
-                  .toStringAsFixed(1);
-              nilailast = ((((jsonResponse["data"])["data"])[0])["data"])
-                  .toStringAsFixed(1);
-              nil.add(nilai1);
-              idjns = (((jsonResponse["data"])["data"])[i])["id"];
-              tanggal1 =
-                  ((((jsonResponse["data"])["data"])[i])["tanggal_sensor"]);
-              DateTime parseDate =
-                  new DateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
-                      .parse(tanggal1);
-              var inputDate = DateTime.parse(parseDate.toString());
-              var outputFormat = DateFormat('dd-MM-yyyy hh:mm a');
-              var outputDate = outputFormat.format(inputDate);
-              notif = ((((jsonResponse["data"])["data"])[i])["notifikasi"]);
-
-              mean = ((((jsonResponse["data"])["data"])[i])["mean"])
-                  .toStringAsFixed(1);
-              max = ((((jsonResponse["data"])["data"])[i])["max"])
-                  .toStringAsFixed(1);
-              min = ((((jsonResponse["data"])["data"])[i])["min"])
-                  .toStringAsFixed(1);
-
-              jnssensor = (((jsonResponse["data"])["data"])[i])["jenis"];
-              //
-              print(satuan);
-              if (itemsshadow.contains(jnssensor) &&
-                  itemsbefore == items.length) {
-                items.clear();
-                iditems.clear();
-                itemsshadow.clear();
-              } else {
-                if (jnssensor == "Kelembapan Tanah") {
-                  img = "asset/img/soil.png";
-                  satuan = "%";
-                } else if (jnssensor == "Suhu Udara") {
-                  img = "asset/img/temp.png";
-                  satuan = "\u00B0C";
-                } else if (jnssensor == "Kelembapan Udara") {
-                  img = "asset/img/rh.png";
-                  satuan = "%";
-                } else if (jnssensor == "Ketinggian Air") {
-                  img = "asset/img/Tsuhu.png";
-                  satuan = "cm";
-                } else {
-                  img = "asset/img/light.png";
-                  satuan = "lux";
+        (isNumeric("${((((jsonResponse["data"])["data"])[0])["data"])}") ==
+                false)
+            ? setState(() {
+                zerodata = true;
+              })
+            : setState(() {
+                panjang = ((jsonResponse["data"])["data"].length);
+                namaalat =
+                    ((((jsonResponse["data"])["info"])["alat"])["alias"]);
+                for (var i = 0; i < panjang; i++) {
+                  if (items.length == panjang) {
+                  } else if (items.length > panjang) {
+                    items.clear();
+                    iditems.clear();
+                    itemsshadow.clear();
+                  } else {
+                    nilai1 = ((((jsonResponse["data"])["data"])[i])["data"])
+                        .toStringAsFixed(1);
+                    nilailast = ((((jsonResponse["data"])["data"])[0])["data"])
+                        .toStringAsFixed(1);
+                    nil.add(nilai1);
+                    idjns = (((jsonResponse["data"])["data"])[i])["id"];
+                    tanggal1 = ((((jsonResponse["data"])["data"])[i])[
+                        "tanggal_sensor"]);
+                    DateTime parseDate =
+                        new DateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
+                            .parse(tanggal1);
+                    var inputDate = DateTime.parse(parseDate.toString());
+                    var outputFormat = DateFormat('dd-MM-yyyy hh:mm a');
+                    var outputDate = outputFormat.format(inputDate);
+                    notif =
+                        ((((jsonResponse["data"])["data"])[i])["notifikasi"]);
+                    mean = ((((jsonResponse["data"])["data"])[i])["mean"])
+                        .toStringAsFixed(1);
+                    max = ((((jsonResponse["data"])["data"])[i])["max"])
+                        .toStringAsFixed(1);
+                    min = ((((jsonResponse["data"])["data"])[i])["min"])
+                        .toStringAsFixed(1);
+                    jnssensor = (((jsonResponse["data"])["data"])[i])["jenis"];
+                    if (itemsshadow.contains(jnssensor) &&
+                        itemsbefore == items.length) {
+                      items.clear();
+                      iditems.clear();
+                      itemsshadow.clear();
+                    } else {
+                      if (jnssensor == "Kelembapan Tanah") {
+                        img = "asset/img/soil.png";
+                        satuan = "%";
+                      } else if (jnssensor == "Suhu Udara") {
+                        img = "asset/img/temp.png";
+                        satuan = "\u00B0C";
+                      } else if (jnssensor == "Kelembapan Udara") {
+                        img = "asset/img/rh.png";
+                        satuan = "%";
+                      } else if (jnssensor == "Ketinggian Air") {
+                        img = "asset/img/Tsuhu.png";
+                        satuan = "cm";
+                      } else {
+                        img = "asset/img/light.png";
+                        satuan = "lux";
+                      }
+                      if (notif == 0) {
+                        notifikasitoogle = false;
+                      } else if (notif == 1) {
+                        notifikasitoogle = true;
+                      }
+                      setState(() {
+                        zerodata = false;
+                        noty.add(notifikasitoogle);
+                        iditems.add(notif);
+                        itemsshadow.add(jnssensor);
+                        items.add(
+                          parameter(
+                              jnssensor,
+                              satuan,
+                              img,
+                              nilai1,
+                              min,
+                              max,
+                              mean,
+                              outputDate,
+                              notifikasitoogle,
+                              idjns,
+                              i,
+                              namaalat),
+                        );
+                      });
+                    }
+                  }
                 }
-                //notif
-                if (notif == 0) {
-                  notifikasitoogle = false;
-                } else if (notif == 1) {
-                  notifikasitoogle = true;
-                }
-                setState(() {
-                  noty.add(notifikasitoogle);
-                  iditems.add(notif);
-                  itemsshadow.add(jnssensor);
-                  items.add(
-                    parameter(jnssensor, satuan, img, nilai1, min, max, mean,
-                        outputDate, notifikasitoogle, idjns, i, namaalat),
-                  );
-                });
-              }
-            }
-          }
-          itemsbefore = items.length;
+                itemsbefore = items.length;
+              });
+        Future.delayed(const Duration(minutes: 1), () {
+          return loadSensor();
         });
-        Timer.periodic(Duration(minutes: 10), (Timer t) => items.clear());
-        Timer.periodic(Duration(minutes: 10), (Timer t) => iditems.clear());
-        Timer.periodic(Duration(minutes: 10), (Timer t) => itemsshadow.clear());
-        return loadSensor();
       }
     } else {
-      print(idlokas);
-      print(idhu);
-      print(idala);
       var jsonString = await http.get(
           Uri.parse(
               '$endPoint/mobile/sensor?lokasi=$idlokas&hub=$idhu&alat=$idala'),
@@ -376,24 +374,22 @@ class _SemuaState extends State<Semua> {
       var jsonResponse = json.decode(jsonString.body);
       if (this.mounted) {
         setState(() {
-          loading = false;
-          panjang = ((jsonResponse["data"])["data"].length);
+          (isNumeric("${((((jsonResponse["data"])["data"])[0])["data"])}") ==
+                  false)
+              ? setState(() {
+                  zerodata = true;
+                })
+              : panjang = ((jsonResponse["data"])["data"].length);
           namaalat = ((((jsonResponse["data"])["info"])["alat"])["alias"]);
-          print("nama alat montitoring $namaalat");
           for (var i = 0; i < panjang; i++) {
             if (items.length == panjang) {
             } else if (items.length > panjang) {
-              loading = true;
               items.clear();
               iditems.clear();
               itemsshadow.clear();
             } else {
-              if (((((jsonResponse["data"])["data"])[i])["data"]).runtimeType ==
-                  int) print("---------------------------------");
-              print(nilai1);
               nilai1 = ((((jsonResponse["data"])["data"])[i])["data"])
                   .toStringAsFixed(1);
-              print(nilai1);
               nilailast = ((((jsonResponse["data"])["data"])[0])["data"])
                   .toStringAsFixed(1);
               idjns = (((jsonResponse["data"])["data"])[i])["id"];
@@ -415,7 +411,6 @@ class _SemuaState extends State<Semua> {
               jnssensor = (((jsonResponse["data"])["data"])[i])["jenis"];
               if (itemsshadow.contains(jnssensor) &&
                   itemsbefore == items.length) {
-                loading = true;
                 items.clear();
                 iditems.clear();
                 itemsshadow.clear();
@@ -444,6 +439,7 @@ class _SemuaState extends State<Semua> {
                 }
 
                 setState(() {
+                  zerodata = false;
                   noty.add(notifikasitoogle);
                   iditems.add(notif);
                   itemsshadow.add(jnssensor);
@@ -451,17 +447,15 @@ class _SemuaState extends State<Semua> {
                     parameter(jnssensor, satuan, img, nilai1, min, max, mean,
                         outputDate, notifikasitoogle, idjns, i, namaalat),
                   );
-                  print(items);
                 });
               }
             }
           }
           itemsbefore = items.length;
         });
-        Timer.periodic(Duration(minutes: 10), (Timer t) => items.clear());
-        Timer.periodic(Duration(minutes: 10), (Timer t) => iditems.clear());
-        Timer.periodic(Duration(minutes: 10), (Timer t) => itemsshadow.clear());
-        return loadSensor();
+        Future.delayed(const Duration(minutes: 1), () {
+          return loadSensor();
+        });
       }
     }
   }
@@ -585,12 +579,27 @@ class _SemuaState extends State<Semua> {
     }
   }
 
+  int _counter;
+  Timer _timer;
+  void _startTimer() {
+    _counter = 20;
+    if (_timer != null) {
+      _timer.cancel();
+    }
+    _timer = Timer.periodic(Duration(seconds: 1), (timer) {
+      if (this.mounted)
+        setState(() {
+          if (_counter > 0) {
+            _counter--;
+          } else {
+            _timer.cancel();
+          }
+        });
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
-    double pjg = MediaQuery.of(context).size.height;
-    double lbr = MediaQuery.of(context).size.width;
-    print(pjg / lbr);
-    print("nil $nil");
     statusname(index);
     if (panjangtempat == null ||
         panjangtempat == 0 ||
@@ -615,10 +624,10 @@ class _SemuaState extends State<Semua> {
             )),
       );
     } else {
-      return Scaffold(
-        // initialIndex: 0,
-        // length: panjangtempat + 1,
-        body: Scaffold(
+      return DefaultTabController(
+        initialIndex: 0,
+        length: panjangtempat + 1,
+        child: Scaffold(
           key: formKey,
           body: Container(
             child: RefreshIndicator(
@@ -638,219 +647,287 @@ class _SemuaState extends State<Semua> {
                 children: <Widget>[
                   Column(
                     children: [
-                      (loading == true)
-                          ? Container(
-                              height: (MediaQuery.of(context).size.width *
-                                      7.5 /
-                                      9) +
-                                  30,
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Container(
-                                      height:
-                                          MediaQuery.of(context).size.width / 5,
-                                      width:
-                                          MediaQuery.of(context).size.width / 5,
-                                      child: Image.asset(
-                                          "asset/img/loading-blog.gif")),
-                                ],
-                              ))
-                          : panjang == null
-                              ? GestureDetector(
-                                  child: Center(
-                                    child: Column(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: [
-                                        Container(
+                      items.length != panjang && zerodata == false
+                          ? Center(
+                              child: Container(
+                                  height: (MediaQuery.of(context).size.height *
+                                      0.525),
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Container(
                                           height: MediaQuery.of(context)
                                                   .size
-                                                  .height *
-                                              0.52,
-                                          width:
-                                              MediaQuery.of(context).size.width,
-                                        )
-                                      ],
-                                    ),
-                                  ),
-                                  onVerticalDragUpdate:
-                                      (DragUpdateDetails details) {
-                                    if (details.globalPosition.direction < 1 &&
-                                        (details.globalPosition.dy > 100 &&
-                                            details.globalPosition.dy < 500)) {
-                                      refreshData();
-                                    }
-                                  },
-                                )
-                              : items.length == null
-                                  ? Container(
-                                      child: Center(child: Text("kosong")),
-                                    )
-                                  : GestureDetector(
+                                                  .width /
+                                              5,
+                                          width: MediaQuery.of(context)
+                                                  .size
+                                                  .width /
+                                              5,
+                                          child: Image.asset(
+                                              "asset/img/loading.gif")),
+                                      Padding(
+                                        padding: const EdgeInsets.all(25),
+                                        child: Text("Silahkan Menunggu",
+                                            style:
+                                                TextStyle(fontFamily: 'Mont')),
+                                      ),
+                                    ],
+                                  )),
+                            )
+                          : items.length != panjang &&
+                                  zerodata == false &&
+                                  nama != namaalat
+                              ? Center(
+                                  child: Container(
+                                      height:
+                                          (MediaQuery.of(context).size.height *
+                                              0.525),
                                       child: Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
                                         children: [
-                                          Column(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.center,
+                                          Container(
+                                              height: MediaQuery.of(context)
+                                                      .size
+                                                      .width /
+                                                  5,
+                                              width: MediaQuery.of(context)
+                                                      .size
+                                                      .width /
+                                                  5,
+                                              child: Image.asset(
+                                                  "asset/img/loading.gif")),
+                                          Padding(
+                                            padding: const EdgeInsets.all(25),
+                                            child: Text("Silahkan Menunggu",
+                                                style: TextStyle(
+                                                    fontFamily: 'Mont')),
+                                          ),
+                                        ],
+                                      )),
+                                )
+                              : items.length == 0 && zerodata == true
+                                  ? Center(
+                                      child: Container(
+                                          height: (MediaQuery.of(context)
+                                                  .size
+                                                  .height *
+                                              0.525),
+                                          child: Center(
+                                            child: Text("Tidak Ada data",
+                                                style: TextStyle(
+                                                    fontFamily: 'Mont')),
+                                          )),
+                                    )
+                                  : panjang == null
+                                      ? GestureDetector(
+                                          child: Center(
+                                            child: Column(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.center,
+                                              children: [
+                                                Container(
+                                                  height: MediaQuery.of(context)
+                                                          .size
+                                                          .height *
+                                                      0.52,
+                                                  width: MediaQuery.of(context)
+                                                      .size
+                                                      .width,
+                                                )
+                                              ],
+                                            ),
+                                          ),
+                                          onVerticalDragUpdate:
+                                              (DragUpdateDetails details) {
+                                            if (details.globalPosition
+                                                        .direction <
+                                                    1 &&
+                                                (details.globalPosition.dy >
+                                                        100 &&
+                                                    details.globalPosition.dy <
+                                                        500)) {
+                                              refreshData();
+                                            }
+                                          },
+                                        )
+                                      : GestureDetector(
+                                          child: Column(
                                             children: [
-                                              Row(
+                                              Column(
                                                 mainAxisAlignment:
                                                     MainAxisAlignment.center,
                                                 children: [
                                                   Container(
-                                                    width:
-                                                        MediaQuery.of(context)
-                                                                .size
-                                                                .width /
-                                                            2,
-                                                    padding:
-                                                        EdgeInsets.fromLTRB(
-                                                            20, 30, 0, 0),
                                                     height:
                                                         MediaQuery.of(context)
                                                                 .size
                                                                 .height *
-                                                            0.055,
-                                                    child: nil.length == null
-                                                        ? Text("")
-                                                        : Text("$namaalat",
-                                                            style: TextStyle(
-                                                                fontSize: MediaQuery.of(
-                                                                            context)
-                                                                        .size
-                                                                        .height /
-                                                                    50)),
-                                                  ),
-                                                  Container(
-                                                    padding:
-                                                        EdgeInsets.fromLTRB(
-                                                            30, 5, 0, 0),
-                                                    width:
-                                                        MediaQuery.of(context)
-                                                                .size
-                                                                .width /
-                                                            4,
-                                                    height:
-                                                        MediaQuery.of(context)
-                                                                .size
-                                                                .height *
-                                                            0.035,
-                                                  ),
-                                                ],
-                                              ),
-                                              Container(
-                                                height: MediaQuery.of(context)
-                                                        .size
-                                                        .height *
-                                                    0.475,
-                                                child: Column(
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment.center,
-                                                  children: [
-                                                    CarouselSlider(
-                                                      items: items,
-                                                      options: CarouselOptions(
-                                                          height: MediaQuery
-                                                                      .of(
-                                                                          context)
-                                                                  .size
-                                                                  .width *
-                                                              7 /
-                                                              9,
-                                                          aspectRatio: 7 / 9,
-                                                          viewportFraction: 0.8,
-                                                          initialPage: 0,
-                                                          enableInfiniteScroll:
-                                                              true,
-                                                          reverse: false,
-                                                          autoPlay: true,
-                                                          autoPlayInterval:
-                                                              Duration(
-                                                                  seconds: 8),
-                                                          autoPlayAnimationDuration:
-                                                              Duration(
-                                                                  milliseconds:
-                                                                      800),
-                                                          autoPlayCurve: Curves
-                                                              .fastOutSlowIn,
-                                                          enlargeCenterPage:
-                                                              true,
-                                                          scrollDirection:
-                                                              Axis.horizontal,
-                                                          onPageChanged:
-                                                              (index, reason) {
-                                                            if (mounted)
-                                                              setState(() {
-                                                                bot = MediaQuery.of(
-                                                                            context)
-                                                                        .size
-                                                                        .width /
-                                                                    9;
-                                                                _current =
-                                                                    index;
-                                                              });
-                                                          }),
-                                                    ),
-                                                    SizedBox(
-                                                        height: MediaQuery.of(
-                                                                    context)
-                                                                .size
-                                                                .height /
-                                                            300),
-                                                    Row(
+                                                            0.55,
+                                                    child: Column(
                                                       mainAxisAlignment:
                                                           MainAxisAlignment
                                                               .center,
-                                                      children:
-                                                          items.map((url) {
-                                                        int index =
-                                                            items.indexOf(url);
-                                                        return Container(
-                                                          width: 8.0,
-                                                          height: 8.0,
-                                                          margin: EdgeInsets
-                                                              .symmetric(
-                                                                  vertical:
-                                                                      10.0,
-                                                                  horizontal:
-                                                                      2.0),
-                                                          decoration:
-                                                              BoxDecoration(
-                                                            shape:
-                                                                BoxShape.circle,
-                                                            color: _current ==
-                                                                    index
-                                                                ? Colors
-                                                                    .green[900]
-                                                                : Color
-                                                                    .fromRGBO(
-                                                                        0,
-                                                                        0,
-                                                                        0,
-                                                                        0.4),
-                                                          ),
-                                                        );
-                                                      }).toList(),
+                                                      children: [
+                                                        Row(
+                                                          mainAxisAlignment:
+                                                              MainAxisAlignment
+                                                                  .center,
+                                                          children: [
+                                                            Container(
+                                                              width: MediaQuery.of(
+                                                                          context)
+                                                                      .size
+                                                                      .width /
+                                                                  2,
+                                                              padding:
+                                                                  EdgeInsets
+                                                                      .fromLTRB(
+                                                                          20,
+                                                                          30,
+                                                                          0,
+                                                                          0),
+                                                              height: MediaQuery.of(
+                                                                          context)
+                                                                      .size
+                                                                      .height *
+                                                                  0.055,
+                                                              child: nil.length ==
+                                                                      null
+                                                                  ? Text("")
+                                                                  : Text(
+                                                                      "$namaalat",
+                                                                      style: TextStyle(
+                                                                          fontSize:
+                                                                              MediaQuery.of(context).size.height / 50)),
+                                                            ),
+                                                            Container(
+                                                              padding:
+                                                                  EdgeInsets
+                                                                      .fromLTRB(
+                                                                          30,
+                                                                          5,
+                                                                          0,
+                                                                          0),
+                                                              width: MediaQuery.of(
+                                                                          context)
+                                                                      .size
+                                                                      .width /
+                                                                  4,
+                                                              height: MediaQuery.of(
+                                                                          context)
+                                                                      .size
+                                                                      .height *
+                                                                  0.035,
+                                                            ),
+                                                          ],
+                                                        ),
+                                                        CarouselSlider(
+                                                          items: items,
+                                                          options:
+                                                              CarouselOptions(
+                                                                  height: MediaQuery.of(context)
+                                                                          .size
+                                                                          .width *
+                                                                      7 /
+                                                                      9,
+                                                                  aspectRatio: 7 /
+                                                                      9,
+                                                                  viewportFraction:
+                                                                      0.8,
+                                                                  initialPage:
+                                                                      0,
+                                                                  enableInfiniteScroll:
+                                                                      true,
+                                                                  reverse:
+                                                                      false,
+                                                                  autoPlay:
+                                                                      true,
+                                                                  autoPlayInterval:
+                                                                      Duration(
+                                                                          seconds:
+                                                                              8),
+                                                                  autoPlayAnimationDuration:
+                                                                      Duration(
+                                                                          milliseconds:
+                                                                              800),
+                                                                  autoPlayCurve:
+                                                                      Curves
+                                                                          .fastOutSlowIn,
+                                                                  enlargeCenterPage:
+                                                                      true,
+                                                                  scrollDirection:
+                                                                      Axis
+                                                                          .horizontal,
+                                                                  onPageChanged:
+                                                                      (index,
+                                                                          reason) {
+                                                                    if (mounted)
+                                                                      setState(
+                                                                          () {
+                                                                        bot = MediaQuery.of(context).size.width /
+                                                                            9;
+                                                                        _current =
+                                                                            index;
+                                                                      });
+                                                                  }),
+                                                        ),
+                                                        Row(
+                                                          mainAxisAlignment:
+                                                              MainAxisAlignment
+                                                                  .center,
+                                                          children:
+                                                              items.map((url) {
+                                                            int index = items
+                                                                .indexOf(url);
+                                                            return Container(
+                                                              width: 8.0,
+                                                              height: 8.0,
+                                                              margin: EdgeInsets
+                                                                  .symmetric(
+                                                                      vertical:
+                                                                          10.0,
+                                                                      horizontal:
+                                                                          2.0),
+                                                              decoration:
+                                                                  BoxDecoration(
+                                                                shape: BoxShape
+                                                                    .circle,
+                                                                color: _current ==
+                                                                        index
+                                                                    ? Colors.green[
+                                                                        900]
+                                                                    : Color
+                                                                        .fromRGBO(
+                                                                            0,
+                                                                            0,
+                                                                            0,
+                                                                            0.4),
+                                                              ),
+                                                            );
+                                                          }).toList(),
+                                                        ),
+                                                      ],
                                                     ),
-                                                  ],
-                                                ),
+                                                  ),
+                                                ],
                                               ),
                                             ],
                                           ),
-                                        ],
-                                      ),
-                                      onVerticalDragUpdate:
-                                          (DragUpdateDetails details) {
-                                        if (details.globalPosition.direction <
-                                                1 &&
-                                            (details.globalPosition.dy > 100 &&
-                                                details.globalPosition.dy <
-                                                    500)) {
-                                          refreshData();
-                                        }
-                                      },
-                                    )
+                                          onVerticalDragUpdate:
+                                              (DragUpdateDetails details) {
+                                            if (details.globalPosition
+                                                        .direction <
+                                                    1 &&
+                                                (details.globalPosition.dy >
+                                                        100 &&
+                                                    details.globalPosition.dy <
+                                                        500)) {
+                                              refreshData();
+                                            }
+                                          },
+                                        )
                     ],
                   ),
                   SizedBox(
@@ -866,143 +943,69 @@ class _SemuaState extends State<Semua> {
                         ],
                       ),
                       child: Container(
-                        height: 20,
-                        decoration: BoxDecoration(
-                          color: Colors.lightGreen[50],
-                          boxShadow: [
-                            BoxShadow(
-                              spreadRadius: 1.5,
-                              color: Colors.green[900],
-                            ),
-                          ],
-                        ),
-                        child: ListView.builder(
-                          padding: const EdgeInsets.symmetric(
-                            vertical: 10.0,
-                            horizontal: 8.0,
+                          height: 20,
+                          decoration: BoxDecoration(
+                            color: Colors.lightGreen[50],
+                            boxShadow: [
+                              BoxShadow(
+                                spreadRadius: 1.5,
+                                color: Colors.green[900],
+                              ),
+                            ],
                           ),
-                          scrollDirection: Axis.horizontal,
-                          itemCount: 1 + tempatlist.length,
-                          itemBuilder: (BuildContext context, int index) {
-                            void statusname(int ins) {
-                              if (status2 == ins) {
-                                warna = Colors.green[100];
-                              } else {
-                                warna = Color(0x098765);
-                              }
-                            }
-
-                            statusname(index);
-
-                            if (index == 0) {
-                              return Tab(
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    SizedBox(
+                          child: TabBar(
+                              physics: ScrollPhysics(),
+                              labelColor: Colors.green[900],
+                              isScrollable: true,
+                              unselectedLabelColor: Colors.white,
+                              indicatorColor: Colors.green[900],
+                              tabs: [
+                                Tab(
+                                    child: Container(
                                         width:
                                             MediaQuery.of(context).size.width *
-                                                0.1),
-                                    GestureDetector(
-                                    
-                                        onTap: () {
-                                          print(index);
-                                          MonitorIndoor();
-                                          dataname(index);
-                                          changename(index);
-                                        },
-                                        child: Container(
-                                            decoration: BoxDecoration(
-                                                color: warna,
-                                                border: Border.all(
-                                                  width: 1.5,
-                                                  color: Colors.green[900],
-                                                ),
-                                                borderRadius:
-                                                    BorderRadius.circular(10)),
-                                            width: MediaQuery.of(context)
-                                                    .size
-                                                    .width *
-                                                0.3,
-                                            height: MediaQuery.of(context)
-                                                    .size
-                                                    .height *
+                                                0.435,
+                                        height:
+                                            MediaQuery.of(context).size.height *
                                                 0.05,
-                                            child: Center(
-                                                child: Text("Semua",
-                                                    style: TextStyle(
-                                                        fontFamily: 'Mont',
-                                                        fontSize: 13))))),
-                                    SizedBox(
-                                        width:
-                                            MediaQuery.of(context).size.width *
-                                                0.1),
-                                  ],
-                                ),
-                              );
-                            }
-                            return Tab(
-                              child: Row(
-                                children: [
-                                  SizedBox(
-                                      width: MediaQuery.of(context).size.width *
-                                          0.095),
-                                  GestureDetector(
-                                      onTap: () {
-                                        print("index $index");
-                                        MonitorIndoorRoute(
-                                          ind: index,
-                                        );
-                                        print(index);
-                                        dataname(index);
-                                        changename(index);
-                                        print(idlist[index - 1]);
-                                      },
+                                        child: Center(
+                                            child: Text("Semua",
+                                                style: TextStyle(
+                                                    color: Colors.black,
+                                                    fontFamily: 'Mont',
+                                                    fontSize: 13))))),
+                                for (i = 0; i < panjangtempat; i++)
+                                  Tab(
                                       child: Container(
-                                          decoration: BoxDecoration(
-                                              color: warna,
-                                              border: Border.all(
-                                                width: 1.5,
-                                                color: Colors.green[900],
-                                              ),
-                                              borderRadius:
-                                                  BorderRadius.circular(10)),
                                           width: MediaQuery.of(context)
                                                   .size
                                                   .width *
-                                              0.3,
+                                              0.435,
                                           height: MediaQuery.of(context)
                                                   .size
                                                   .height *
                                               0.05,
                                           child: Center(
-                                              child: Text(
-                                                  " ${tempatlist[index - 1]}",
+                                              child: Text("${tempatlist[i]}",
                                                   style: TextStyle(
+                                                      color: Colors.black,
                                                       fontFamily: 'Mont',
                                                       fontSize: 13))))),
-                                  SizedBox(
-                                      width: MediaQuery.of(context).size.width *
-                                          0.095),
-                                ],
-                              ),
-                            );
-                          },
-                        ),
-                      ),
+                              ])),
                     ),
                   ),
                   SizedBox(height: MediaQuery.of(context).size.height / 100),
-                  // index == 0
-                  //     ? Expanded(child: MonitorIndoor())
-                  //     : Expanded(child: MonitorIndoorRoute(ind: index))
-                  index == 0 || index == null
-                      ? Expanded(child: MonitorIndoor())
-                      : Expanded(
-                          child: MonitorIndoorRoute(
+                  Expanded(
+                    child: TabBarView(
+                      children: [
+                        MonitorIndoor(),
+                        for (i = 0; i < panjangtempat; i++)
+                          MonitorIndoorRoute(
                             ind: i,
                           ),
-                        ),
+                      ],
+                    ),
+                  ),
                 ],
               ),
             ),

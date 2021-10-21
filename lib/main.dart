@@ -22,6 +22,7 @@ class MyApp extends StatelessWidget {
       DeviceOrientation.portraitUp,
       DeviceOrientation.portraitDown,
     ]);
+
     return MaterialApp(
       title: 'Crop Hero',
       theme: ThemeData(
@@ -42,5 +43,6 @@ class MyApp extends StatelessWidget {
       home: BeforeLogin(),
       debugShowCheckedModeBanner: false,
     );
+    
   }
 }

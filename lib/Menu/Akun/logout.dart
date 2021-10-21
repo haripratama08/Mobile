@@ -104,7 +104,6 @@ class _LogoutState extends State<Logout> {
                                 style: new TextStyle(
                                   fontSize: 15,
                                   color: Colors.black,
-                                  // fontFamily: "Mont",
                                 ),
                               ),
                             ],
@@ -125,7 +124,6 @@ class _LogoutState extends State<Logout> {
                                 style: new TextStyle(
                                   fontSize: 15,
                                   color: Colors.black,
-                                  // fontFamily: "Mont",
                                 ),
                               ),
                             ],
@@ -146,7 +144,6 @@ class _LogoutState extends State<Logout> {
                                 style: new TextStyle(
                                   fontSize: 15,
                                   color: Colors.black,
-                                  // fontFamily: "Mont",
                                 ),
                               ),
                             ],
@@ -167,7 +164,6 @@ class _LogoutState extends State<Logout> {
                                 style: new TextStyle(
                                   fontSize: 15,
                                   color: Colors.black,
-                                  // fontFamily: "Mont",
                                 ),
                               ),
                             ],
