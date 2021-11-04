@@ -23,16 +23,20 @@ class _KontrolManualState extends State<KontrolManual> {
       });
       loading = false;
       var message = jsonEncode({
-        'message': {
-          "mode": "$mode",
-          "threshold": "0",
-          "status": "null",
-          "manual": "$state",
-          "id_sensor": "null"
-        }
+        // 'message': {
+        "mode": "$mode",
+        "threshold": "0",
+        "status": "null",
+        "manual": "$state",
+        "id_sensor": "null"
+        // }
       });
       var url = Uri.parse('$kontrol');
-      var body = {"topic": topic, "message": message};
+      var body = {
+        "topic": topic,
+        // "topic": "hackathonControllingBNI/chOA/h/c/d",
+        "message": message
+      };
       var response = await http.post(url, body: body);
       print("${response.statusCode}");
       print("${response.body}");

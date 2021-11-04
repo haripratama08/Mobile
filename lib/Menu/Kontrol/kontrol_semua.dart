@@ -242,39 +242,39 @@ class _SemuaState extends State<Semua> with Validation {
                                           ),
                                         ],
                                       ),
-                                      SizedBox(
-                                        width:
-                                            MediaQuery.of(context).size.width /
-                                                7,
-                                      ),
-                                      GestureDetector(
-                                        onTap: () {
-                                          setState(() {
-                                            dialog();
-                                          });
-                                        },
-                                        child: Container(
-                                          child: Center(
-                                              child: Icon(
-                                            Icons.border_color,
-                                            size: 10,
-                                          )),
-                                          height: MediaQuery.of(context)
-                                                  .size
-                                                  .width /
-                                              15,
-                                          width: MediaQuery.of(context)
-                                                  .size
-                                                  .width /
-                                              15,
-                                          decoration: BoxDecoration(
-                                              border: Border.all(
-                                                  width: 1.5,
-                                                  color: Colors.black),
-                                              borderRadius:
-                                                  BorderRadius.circular(5)),
-                                        ),
-                                      )
+                                      // SizedBox(
+                                      //   width:
+                                      //       MediaQuery.of(context).size.width /
+                                      //           7,
+                                      // ),
+                                      // GestureDetector(
+                                      //   onTap: () {
+                                      //     setState(() {
+                                      //       dialog();
+                                      //     });
+                                      //   },
+                                      //   child: Container(
+                                      //     child: Center(
+                                      //         child: Icon(
+                                      //       Icons.border_color,
+                                      //       size: 10,
+                                      //     )),
+                                      //     height: MediaQuery.of(context)
+                                      //             .size
+                                      //             .width /
+                                      //         15,
+                                      //     width: MediaQuery.of(context)
+                                      //             .size
+                                      //             .width /
+                                      //         15,
+                                      //     decoration: BoxDecoration(
+                                      //         border: Border.all(
+                                      //             width: 1.5,
+                                      //             color: Colors.black),
+                                      //         borderRadius:
+                                      //             BorderRadius.circular(5)),
+                                      //   ),
+                                      // )
                                     ],
                                   )),
                                   height:
@@ -304,54 +304,56 @@ class _SemuaState extends State<Semua> with Validation {
       builder: (BuildContext context) {
         return AlertDialog(
           actions: <Widget>[
-            Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                Padding(
-                    padding: const EdgeInsets.fromLTRB(100, 5, 100, 5),
-                    child: new Text(
-                      "Nama Baru",
-                      style: TextStyle(fontFamily: 'Mont', fontSize: 15),
-                    )),
-                Container(
-                    width: 150,
-                    height: 50,
-                    child: TextFormField(
-                      controller: alias,
-                      keyboardType: TextInputType.text,
-                      autofocus: false,
-                      decoration: InputDecoration(
-                        fillColor: Colors.white,
-                        filled: true,
-                        hintText: 'nama kontrol',
-                        contentPadding:
-                            EdgeInsets.fromLTRB(10.0, 10.0, 20.0, 10.0),
+            SingleChildScrollView(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  Padding(
+                      padding: const EdgeInsets.fromLTRB(100, 5, 100, 5),
+                      child: new Text(
+                        "Nama Baru",
+                        style: TextStyle(fontFamily: 'Mont', fontSize: 15),
+                      )),
+                  Container(
+                      width: 150,
+                      height: 50,
+                      child: TextFormField(
+                        controller: alias,
+                        keyboardType: TextInputType.text,
+                        autofocus: false,
+                        decoration: InputDecoration(
+                          fillColor: Colors.white,
+                          filled: true,
+                          hintText: 'nama kontrol',
+                          contentPadding:
+                              EdgeInsets.fromLTRB(10.0, 10.0, 20.0, 10.0),
+                        ),
+                        validator: validateall,
+                      )),
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(50, 20, 50, 15),
+                    child: GestureDetector(
+                      onTap: () {
+                        FocusScope.of(context).requestFocus(FocusNode());
+                        doGantiAliasKontrol();
+                        listkontrol.clear();
+                        loadKontrol();
+                      },
+                      child: Container(
+                        height: 30,
+                        width: 100,
+                        decoration: BoxDecoration(
+                            color: Colors.green[900],
+                            borderRadius: BorderRadius.circular(5)),
+                        child: Center(
+                            child: Text("Terapkan",
+                                style: TextStyle(
+                                    color: Colors.white, fontFamily: 'Mont'))),
                       ),
-                      validator: validateall,
-                    )),
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(50, 20, 50, 15),
-                  child: GestureDetector(
-                    onTap: () {
-                      FocusScope.of(context).requestFocus(FocusNode());
-                      doGantiAliasKontrol();
-                      listkontrol.clear();
-                      loadKontrol();
-                    },
-                    child: Container(
-                      height: 30,
-                      width: 100,
-                      decoration: BoxDecoration(
-                          color: Colors.green[900],
-                          borderRadius: BorderRadius.circular(5)),
-                      child: Center(
-                          child: Text("Terapkan",
-                              style: TextStyle(
-                                  color: Colors.white, fontFamily: 'Mont'))),
                     ),
-                  ),
-                )
-              ],
+                  )
+                ],
+              ),
             ),
           ],
           shape: RoundedRectangleBorder(

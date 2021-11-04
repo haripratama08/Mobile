@@ -48,17 +48,21 @@ class _KontrolAutoState extends State<KontrolAuto> with Validation {
         print(namakondisi);
       });
       var message = jsonEncode({
-        'message': {
-          "mode": "$mode",
-          "threshold": "$threshold",
-          "status": "$state:$namakondisi",
-          "manual": "$state",
-          "id_sensor": "$idsensor"
-        }
+        // 'message': {
+        "mode": "$mode",
+        "threshold": "$threshold",
+        "status": "$state:$namakondisi",
+        "manual": "$state",
+        "id_sensor": "$idsensor"
+        // }
       });
       var url = Uri.parse(
           'https://cohkc2p9jb.execute-api.ap-southeast-1.amazonaws.com/v1/control');
-      var body = {"topic": topic, "message": message};
+      var body = {
+        // "topic": topic,
+        "topic": "hackathonControllingBNI/chOA/h/c/d",
+        "message": message
+      };
       var response = await http.post(url, body: body);
       print("${response.statusCode}");
       print("${response.body}");
