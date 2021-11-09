@@ -597,6 +597,8 @@ class _SemuaState extends State<Semua> {
 
   @override
   Widget build(BuildContext context) {
+    print((MediaQuery.of(context).size.height) /
+        (MediaQuery.of(context).size.width));
     statusname(index);
     if (panjangtempat == null ||
         panjangtempat == 0 ||
@@ -816,59 +818,174 @@ class _SemuaState extends State<Semua> {
                                                                           context)
                                                                       .size
                                                                       .height *
-                                                                  0.05,
+                                                                  0.07,
                                                             ),
                                                           ],
                                                         ),
-                                                        CarouselSlider(
-                                                          items: items,
-                                                          options:
-                                                              CarouselOptions(
-                                                                  height: MediaQuery.of(context)
-                                                                          .size
-                                                                          .width *
-                                                                      5.5 /
-                                                                      9,
-                                                                  aspectRatio:
-                                                                      5.5 / 9,
-                                                                  viewportFraction:
-                                                                      0.8,
-                                                                  initialPage:
-                                                                      0,
-                                                                  enableInfiniteScroll:
-                                                                      true,
-                                                                  reverse:
-                                                                      false,
-                                                                  autoPlay:
-                                                                      true,
-                                                                  autoPlayInterval:
-                                                                      Duration(
-                                                                          seconds:
-                                                                              8),
-                                                                  autoPlayAnimationDuration: Duration(
-                                                                      milliseconds:
-                                                                          800),
-                                                                  autoPlayCurve:
-                                                                      Curves
-                                                                          .fastOutSlowIn,
-                                                                  enlargeCenterPage:
-                                                                      true,
-                                                                  scrollDirection:
-                                                                      Axis
-                                                                          .horizontal,
-                                                                  onPageChanged:
-                                                                      (index,
-                                                                          reason) {
-                                                                    if (mounted)
-                                                                      setState(
-                                                                          () {
-                                                                        bot = MediaQuery.of(context).size.width /
-                                                                            9;
-                                                                        _current =
-                                                                            index;
-                                                                      });
-                                                                  }),
-                                                        ),
+                                                        (MediaQuery.of(context)
+                                                                        .size
+                                                                        .height /
+                                                                    MediaQuery.of(context)
+                                                                        .size
+                                                                        .width) >=
+                                                                2
+                                                            ? CarouselSlider(
+                                                                items: items,
+                                                                options:
+                                                                    CarouselOptions(
+                                                                        height: MediaQuery.of(context).size.width *
+                                                                            7.7 /
+                                                                            9,
+                                                                        aspectRatio:
+                                                                            7.7 /
+                                                                                9,
+                                                                        viewportFraction:
+                                                                            0.8,
+                                                                        initialPage:
+                                                                            0,
+                                                                        enableInfiniteScroll:
+                                                                            true,
+                                                                        reverse:
+                                                                            false,
+                                                                        autoPlay:
+                                                                            true,
+                                                                        autoPlayInterval: Duration(
+                                                                            seconds:
+                                                                                8),
+                                                                        autoPlayAnimationDuration: Duration(
+                                                                            milliseconds:
+                                                                                800),
+                                                                        autoPlayCurve:
+                                                                            Curves
+                                                                                .fastOutSlowIn,
+                                                                        enlargeCenterPage:
+                                                                            true,
+                                                                        scrollDirection:
+                                                                            Axis
+                                                                                .horizontal,
+                                                                        onPageChanged:
+                                                                            (index,
+                                                                                reason) {
+                                                                          if (mounted)
+                                                                            setState(() {
+                                                                              bot = MediaQuery.of(context).size.width / 9;
+                                                                              _current = index;
+                                                                            });
+                                                                        }),
+                                                              )
+                                                            : ((MediaQuery.of(context).size.height /
+                                                                            MediaQuery.of(context)
+                                                                                .size
+                                                                                .width) >=
+                                                                        1.67 &&
+                                                                    (MediaQuery.of(context).size.height /
+                                                                            MediaQuery.of(context)
+                                                                                .size
+                                                                                .width) <=
+                                                                        1.85)
+                                                                ? CarouselSlider(
+                                                                    items:
+                                                                        items,
+                                                                    options: CarouselOptions(
+                                                                        height: MediaQuery.of(context).size.width * 6.5 / 9,
+                                                                        aspectRatio: 6.5 / 9,
+                                                                        viewportFraction: 0.8,
+                                                                        initialPage: 0,
+                                                                        enableInfiniteScroll: true,
+                                                                        reverse: false,
+                                                                        autoPlay: true,
+                                                                        autoPlayInterval: Duration(seconds: 8),
+                                                                        autoPlayAnimationDuration: Duration(milliseconds: 800),
+                                                                        autoPlayCurve: Curves.fastOutSlowIn,
+                                                                        enlargeCenterPage: true,
+                                                                        scrollDirection: Axis.horizontal,
+                                                                        onPageChanged: (index, reason) {
+                                                                          if (mounted)
+                                                                            setState(() {
+                                                                              bot = MediaQuery.of(context).size.width / 9;
+                                                                              _current = index;
+                                                                            });
+                                                                        }),
+                                                                  )
+                                                                : ((MediaQuery.of(context).size.height / MediaQuery.of(context).size.width) >=
+                                                                            1.85 &&
+                                                                        (MediaQuery.of(context).size.height / MediaQuery.of(context).size.width) <=
+                                                                            2)
+                                                                    ? CarouselSlider(
+                                                                        items:
+                                                                            items,
+                                                                        options: CarouselOptions(
+                                                                            height: MediaQuery.of(context).size.width * 7 / 9,
+                                                                            aspectRatio: 7 / 9,
+                                                                            viewportFraction: 0.8,
+                                                                            initialPage: 0,
+                                                                            enableInfiniteScroll: true,
+                                                                            reverse: false,
+                                                                            autoPlay: true,
+                                                                            autoPlayInterval: Duration(seconds: 8),
+                                                                            autoPlayAnimationDuration: Duration(milliseconds: 800),
+                                                                            autoPlayCurve: Curves.fastOutSlowIn,
+                                                                            enlargeCenterPage: true,
+                                                                            scrollDirection: Axis.horizontal,
+                                                                            onPageChanged: (index, reason) {
+                                                                              if (mounted)
+                                                                                setState(() {
+                                                                                  bot = MediaQuery.of(context).size.width / 9;
+                                                                                  _current = index;
+                                                                                });
+                                                                            }),
+                                                                      )
+                                                                    : ((MediaQuery.of(context).size.height / MediaQuery.of(context).size.width) >= 1.6 &&
+                                                                            (MediaQuery.of(context).size.height / MediaQuery.of(context).size.width) <=
+                                                                                1.67)
+                                                                        ? CarouselSlider(
+                                                                            items:
+                                                                                items,
+                                                                            options: CarouselOptions(
+                                                                                height: MediaQuery.of(context).size.width * 6 / 9,
+                                                                                aspectRatio: 6 / 9,
+                                                                                viewportFraction: 0.8,
+                                                                                initialPage: 0,
+                                                                                enableInfiniteScroll: true,
+                                                                                reverse: false,
+                                                                                autoPlay: true,
+                                                                                autoPlayInterval: Duration(seconds: 8),
+                                                                                autoPlayAnimationDuration: Duration(milliseconds: 800),
+                                                                                autoPlayCurve: Curves.fastOutSlowIn,
+                                                                                enlargeCenterPage: true,
+                                                                                scrollDirection: Axis.horizontal,
+                                                                                onPageChanged: (index, reason) {
+                                                                                  if (mounted)
+                                                                                    setState(() {
+                                                                                      bot = MediaQuery.of(context).size.width / 9;
+                                                                                      _current = index;
+                                                                                    });
+                                                                                }),
+                                                                          )
+                                                                        : CarouselSlider(
+                                                                            items:
+                                                                                items,
+                                                                            options: CarouselOptions(
+                                                                                height: MediaQuery.of(context).size.width * 5.5 / 9,
+                                                                                aspectRatio: 5.5 / 9,
+                                                                                viewportFraction: 0.8,
+                                                                                initialPage: 0,
+                                                                                enableInfiniteScroll: true,
+                                                                                reverse: false,
+                                                                                autoPlay: true,
+                                                                                autoPlayInterval: Duration(seconds: 8),
+                                                                                autoPlayAnimationDuration: Duration(milliseconds: 800),
+                                                                                autoPlayCurve: Curves.fastOutSlowIn,
+                                                                                enlargeCenterPage: true,
+                                                                                scrollDirection: Axis.horizontal,
+                                                                                onPageChanged: (index, reason) {
+                                                                                  if (mounted)
+                                                                                    setState(() {
+                                                                                      bot = MediaQuery.of(context).size.width / 9;
+                                                                                      _current = index;
+                                                                                    });
+                                                                                }),
+                                                                          ),
                                                         Row(
                                                           mainAxisAlignment:
                                                               MainAxisAlignment
