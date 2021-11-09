@@ -37,7 +37,6 @@ class _KontrolAutoState extends State<KontrolAuto> with Validation {
   Widget build(BuildContext context) {
     Future<http.Response> publish(
         String mode, String threshold, String state) async {
-      print(state);
       setState(() {
         if (selectedkondisi == '>') {
           namakondisi = 'atas';
@@ -45,24 +44,17 @@ class _KontrolAutoState extends State<KontrolAuto> with Validation {
           namakondisi = 'bawah';
         }
         thresholdvalue = threshold;
-        print(namakondisi);
       });
       var message = jsonEncode({
-        // 'message': {
         "mode": "$mode",
         "threshold": "$threshold",
         "status": "$state:$namakondisi",
         "manual": "$state",
         "id_sensor": "$idsensor"
-        // }
       });
       var url = Uri.parse(
           'https://cohkc2p9jb.execute-api.ap-southeast-1.amazonaws.com/v1/control');
-      var body = {
-        // "topic": topic,
-        "topic": "hackathonControllingBNI/chOA/h/c/d",
-        "message": message
-      };
+      var body = {"topic": topic, "message": message};
       var response = await http.post(url, body: body);
       print("${response.statusCode}");
       print("${response.body}");
@@ -149,7 +141,6 @@ class _KontrolAutoState extends State<KontrolAuto> with Validation {
                                               iconSize: 13,
                                               underline: SizedBox(),
                                               onChanged: (newValue) {
-                                                print(newValue);
                                                 if (mounted)
                                                   setState(() {
                                                     pilihsensor = null;
@@ -205,9 +196,6 @@ class _KontrolAutoState extends State<KontrolAuto> with Validation {
                                               30,
                                         ),
                                       ),
-                                      // SizedBox(
-                                      //   height: 5,
-                                      // ),
                                       Container(
                                         width:
                                             MediaQuery.of(context).size.width /

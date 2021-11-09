@@ -65,8 +65,6 @@ class _MenuState extends State<Menu> with SingleTickerProviderStateMixin {
 
   void _onTabItem(int index) {
     setState(() {
-      print("index $index");
-      print("widget index ${widget.index}");
       _selectedIndex = index;
     });
     setState(() {
@@ -74,15 +72,12 @@ class _MenuState extends State<Menu> with SingleTickerProviderStateMixin {
           index == 0 && widget.index == 0 ||
           index == null && widget.index == null ||
           index == null && widget.index == 0) {
-        print("index = $index dan widget = ${widget.index}");
         setState(() {
           route = Semua();
         });
       } else if (index == 0 && widget.index != null ||
           index == 0 && widget.index != 0) {
         _selectedIndex = widget.index;
-        print("index = $index dan widget = ${widget.index}");
-        print("---------------------------------------");
         if (widget.index == 0) {
           setState(() {
             route = Semua();
@@ -110,9 +105,6 @@ class _MenuState extends State<Menu> with SingleTickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
-    print("selected index yang dipilih $_selectedIndex");
-    print(namaalat);
-    print(widget.namaalat);
     return DefaultTabController(
         length: 4,
         child: Scaffold(

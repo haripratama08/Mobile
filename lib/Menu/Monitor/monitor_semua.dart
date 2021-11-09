@@ -126,7 +126,6 @@ class _SemuaState extends State<Semua> {
         headers: {HttpHeaders.authorizationHeader: '$token'});
     var jsonResponse = json.decode(jsonString.body);
     Data2 data2 = Data2.fromJson(jsonResponse);
-    print("device $jsonResponse");
     if (this.mounted) {
       setState(() {
         List<Widget> list = [];
@@ -529,12 +528,10 @@ class _SemuaState extends State<Semua> {
 
   void changename(int index) {
     status2 = index;
-    print(index);
     items.clear();
   }
 
   void dataname(int index) {
-    print(index);
     if (index == null) {
       changename(0);
       items.clear();
@@ -792,7 +789,7 @@ class _SemuaState extends State<Semua> {
                                                                           context)
                                                                       .size
                                                                       .height *
-                                                                  0.055,
+                                                                  0.07,
                                                               child: nil.length ==
                                                                       null
                                                                   ? Text("")
@@ -819,7 +816,7 @@ class _SemuaState extends State<Semua> {
                                                                           context)
                                                                       .size
                                                                       .height *
-                                                                  0.035,
+                                                                  0.05,
                                                             ),
                                                           ],
                                                         ),
@@ -830,10 +827,10 @@ class _SemuaState extends State<Semua> {
                                                                   height: MediaQuery.of(context)
                                                                           .size
                                                                           .width *
-                                                                      7 /
+                                                                      5.5 /
                                                                       9,
-                                                                  aspectRatio: 7 /
-                                                                      9,
+                                                                  aspectRatio:
+                                                                      5.5 / 9,
                                                                   viewportFraction:
                                                                       0.8,
                                                                   initialPage:
@@ -848,10 +845,9 @@ class _SemuaState extends State<Semua> {
                                                                       Duration(
                                                                           seconds:
                                                                               8),
-                                                                  autoPlayAnimationDuration:
-                                                                      Duration(
-                                                                          milliseconds:
-                                                                              800),
+                                                                  autoPlayAnimationDuration: Duration(
+                                                                      milliseconds:
+                                                                          800),
                                                                   autoPlayCurve:
                                                                       Curves
                                                                           .fastOutSlowIn,

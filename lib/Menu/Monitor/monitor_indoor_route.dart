@@ -105,9 +105,9 @@ class MonitorIndoorRouteState extends State<MonitorIndoorRoute>
   }
 
   Future doGanti() async {
-    print(listnama);
+    // print(listnama);
     listnama.clear();
-    print(listnama);
+    // print(listnama);
     try {
       var rs = await ganti.doGanti(alias.text, idala2, uuid, token);
       var jsonRes = json.decode(rs.body);
@@ -166,7 +166,7 @@ class MonitorIndoorRouteState extends State<MonitorIndoorRoute>
 
   @override
   Widget build(BuildContext context) {
-    print("panjang $panjanglistnama");
+    // print("panjang $panjanglistnama");
     return panjanglistnama == 0
         ? Container(
             height: MediaQuery.of(context).size.height / 3,
@@ -202,7 +202,7 @@ class MonitorIndoorRouteState extends State<MonitorIndoorRoute>
                         }
 
                         status(index);
-                        print("panjang listnama $panjanglistnama");
+                        // print("panjang listnama $panjanglistnama");
 
                         if (panjanglistnama == 0) {
                           return Container(

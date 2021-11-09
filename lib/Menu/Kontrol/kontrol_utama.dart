@@ -640,7 +640,6 @@ class _KontrolUtamaState extends State<KontrolUtama>
                                                                                 if (mounted)
                                                                                   setState(() {
                                                                                     pilihsensor = val;
-                                                                                    print("pilihansensor $val");
                                                                                   });
                                                                               },
                                                                               hint: Padding(
@@ -693,6 +692,7 @@ class _KontrolUtamaState extends State<KontrolUtama>
                                               ),
                                               Center(
                                                 child: ToggleSwitch(
+                                                  totalSwitches: 2,
                                                   fontSize:
                                                       MediaQuery.of(context)
                                                               .size
@@ -703,8 +703,10 @@ class _KontrolUtamaState extends State<KontrolUtama>
                                                   changeOnTap: true,
                                                   minWidth: 85.0,
                                                   cornerRadius: 25.0,
-                                                  activeBgColor:
-                                                      Colors.green[900],
+                                                  borderWidth: 2.0,
+                                                  activeBgColor: [
+                                                    Colors.green[900]
+                                                  ],
                                                   activeFgColor: Colors.white,
                                                   inactiveBgColor: Colors.grey,
                                                   inactiveFgColor: Colors.white,
@@ -887,7 +889,6 @@ class _KontrolUtamaState extends State<KontrolUtama>
                                                                               if (mounted)
                                                                                 setState(() {
                                                                                   pilihsensor = val;
-                                                                                  print("pilihansensor $val");
                                                                                 });
                                                                             },
                                                                             hint: Padding(
@@ -952,7 +953,6 @@ class _KontrolUtamaState extends State<KontrolUtama>
                                                   iconSize: 13,
                                                   underline: SizedBox(),
                                                   onChanged: (newValue) {
-                                                    print(newValue);
                                                     if (mounted)
                                                       setState(() {
                                                         selectedkondisi =
@@ -1020,7 +1020,12 @@ class _KontrolUtamaState extends State<KontrolUtama>
                                               changeOnTap: true,
                                               minWidth: 85.0,
                                               cornerRadius: 25.0,
-                                              activeBgColor: Colors.green[900],
+                                              borderWidth: 2.0,
+                                              activeBgColor: [
+                                                Colors.green[900]
+                                              ],
+                                              totalSwitches: 2,
+                                              // activeBgColor: Colors.green[900],
                                               activeFgColor: Colors.white,
                                               inactiveBgColor: Colors.grey,
                                               inactiveFgColor: Colors.white,
