@@ -211,6 +211,7 @@ class _KontrolAutoState extends State<KontrolAuto> with Validation {
                                                 if (value.isEmpty) {
                                                   return 'isikan batas';
                                                 }
+                                                return null;
                                               },
                                               controller: threshold,
                                               keyboardType:
@@ -303,6 +304,7 @@ class _KontrolAutoState extends State<KontrolAuto> with Validation {
             if (value.isEmpty) {
               return ' please enter value';
             }
+            return null;
           },
         ));
   }
