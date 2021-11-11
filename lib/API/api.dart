@@ -35,6 +35,7 @@ class ApiRegister {
   Future<http.Response> doRegis(String username, String password, String nama,
       String email, String telp, String alamat) async {
     var url = Uri.parse('$endPoint/user/register');
+    print("username");
     var body = {
       "username": username,
       "password": password,

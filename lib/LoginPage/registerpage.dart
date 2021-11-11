@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 import 'package:ch_v2_1/API/api.dart';
 import 'package:ch_v2_1/LoginPage/loginpage.dart';
 import 'package:ch_v2_1/Validator/validation.dart';
@@ -33,35 +34,48 @@ class _RegisterPageState extends State<RegisterPage> with Validation {
 
   ApiRegister apiRegis = ApiRegister();
   Future doRegis() async {
+    print(username.text);
+    print(
+      passwordreal.text,
+    );
+    print(
+      email.text,
+    );
+    print(
+      telp.text,
+    );
+    print(
+      alamat.text,
+    );
     setState(() {
       loading = true;
     });
-    if (formKey.currentState.validate()) {
-      formKey.currentState.save();
-      try {
-        var rs = await apiRegis.doRegis(
-          username.text,
-          passwordreal.text,
-          nama.text,
-          email.text,
-          telp.text,
-          alamat.text,
-        );
-        var jsonRes = json.decode(rs.body);
-        print(jsonRes);
-        setState(() {
-          msg = jsonRes['message'];
-          print(msg);
-        });
-        if (jsonRes['status'] == 'Created') {
-          Navigator.push(context,
-              new MaterialPageRoute(builder: (context) => new LoginPage()));
-        } else {
-          // Navigator.push(context,
-          //     new MaterialPageRoute(builder: (context) => new RegisterPage()));
-        }
-      } catch (e) {}
-    }
+    // if (formKey.currentState.validate()) {
+    //   formKey.currentState.save();
+    try {
+      var rs = await apiRegis.doRegis(
+        username.text,
+        passwordreal.text,
+        nama.text,
+        email.text,
+        telp.text,
+        alamat.text,
+      );
+      var jsonRes = json.decode(rs.body);
+      print(jsonRes);
+      setState(() {
+        msg = jsonRes['message'];
+        print(msg);
+      });
+      if (jsonRes['status'] == 'Created') {
+        Navigator.push(context,
+            new MaterialPageRoute(builder: (context) => new LoginPage()));
+      } else {
+        // Navigator.push(context,
+        //     new MaterialPageRoute(builder: (context) => new RegisterPage()));
+      }
+    } catch (e) {}
+
     setState(() {
       loading = false;
     });
