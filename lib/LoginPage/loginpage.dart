@@ -51,11 +51,9 @@ class _LoginPageState extends State<LoginPage> {
     try {
       final result = await InternetAddress.lookup('google.com');
       if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
-        print('connected');
         getPref();
       }
     } on SocketException catch (_) {
-      print('not connected');
       showDialog(
           context: context,
           builder: (BuildContext context) {
@@ -75,11 +73,8 @@ class _LoginPageState extends State<LoginPage> {
         loading = true;
       });
       try {
-        print(username.text);
-        print(password.text);
         var rs = await apiLogin.doLogin(username.text, password.text);
         var jsonRes = json.decode(rs.body);
-        print("jsonres :$jsonRes");
         data = (jsonRes["data"]);
         if (jsonRes['status'] == 'OK') {
           setState(() {
@@ -98,9 +93,7 @@ class _LoginPageState extends State<LoginPage> {
             msg = jsonRes['message'];
           });
         }
-      } catch (error) {
-        print(error);
-      }
+      } catch (error) {}
     }
     setState(() {
       loading = false;
@@ -115,7 +108,6 @@ class _LoginPageState extends State<LoginPage> {
       pref.setString("nama", nama);
       pref.setString("token", token);
       pref.setString("user", user);
-      print("uuid di savePref $uuid");
     });
   }
 
@@ -154,7 +146,7 @@ class _LoginPageState extends State<LoginPage> {
       tag: 'hero',
       child: CircleAvatar(
         backgroundColor: Colors.transparent,
-        radius: 48.0,
+        radius: 55.0,
         child: Image.asset('asset/img/ch.png'),
       ),
     );
@@ -165,6 +157,7 @@ class _LoginPageState extends State<LoginPage> {
             if (value.isEmpty) {
               return ' please enter username';
             }
+            return null;
           },
           controller: username,
           keyboardType: TextInputType.text,
@@ -188,6 +181,7 @@ class _LoginPageState extends State<LoginPage> {
             if (value.isEmpty) {
               return ' please enter password';
             }
+            return null;
           },
           controller: password,
           autofocus: false,
@@ -271,6 +265,9 @@ class _LoginPageState extends State<LoginPage> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
                 logo,
+                SizedBox(
+                  height: 25,
+                ),
                 usernameForm,
                 SizedBox(height: 24.0),
                 passwordForm,

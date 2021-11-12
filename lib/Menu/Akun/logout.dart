@@ -1,3 +1,4 @@
+import 'package:ch_v2_1/API/api.dart';
 import 'package:ch_v2_1/dialogbox/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -6,6 +7,7 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:ch_v2_1/LoginPage/loginpage.dart';
 import 'dart:async';
+import 'package:ch_v2_1/Menu/Monitor/monitor_semua.dart';
 
 class Logout extends StatefulWidget {
   @override
@@ -19,27 +21,28 @@ class _LogoutState extends State<Logout> {
   String alamat;
   String foto;
   double size;
+  String namas;
   void initState() {
     loadSensor();
     super.initState();
   }
 
   Future loadSensor() async {
-    var jsonString = await http.get(
-        'https://ydtmch9j99.execute-api.us-east-1.amazonaws.com/dev/api/profile',
-        headers: {HttpHeaders.authorizationHeader: '$token'});
+    var url = Uri.parse('$endPoint/profile');
+    var jsonString = await http
+        .get(url, headers: {HttpHeaders.authorizationHeader: '$token'});
     var jsonResponse = json.decode(jsonString.body);
     print(jsonResponse);
     print(token);
     setState(() {
       size = MediaQuery.of(context).size.width / 2;
       status = jsonResponse['status'];
-      nama = (jsonResponse['data'])['nama'];
+      namas = (jsonResponse['data'])['nama'];
       email = (jsonResponse['data'])['email'];
       telp = (jsonResponse['data'])['telp'];
       alamat = (jsonResponse['data'])['alamat'];
       foto = (jsonResponse['data'])['foto'];
-      print(nama);
+      print(namas);
       print(email);
       print(telp);
     });
@@ -47,12 +50,8 @@ class _LogoutState extends State<Logout> {
 
   @override
   Widget build(BuildContext context) {
-    if (foto == null || nama == null || email == null || alamat == null) {
-      return
-          // AlertDialog(
-          //     content: SingleChildScrollView(
-          //         child:
-          Center(
+    if (foto == null || namas == null || email == null || alamat == null) {
+      return Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
@@ -68,7 +67,6 @@ class _LogoutState extends State<Logout> {
           ],
         ),
       );
-      // ));
     } else {
       return Column(
         children: [
@@ -102,11 +100,10 @@ class _LogoutState extends State<Logout> {
                               ),
                               SizedBox(width: 10),
                               Text(
-                                "$nama",
+                                "$namas",
                                 style: new TextStyle(
                                   fontSize: 15,
                                   color: Colors.black,
-                                  fontFamily: "Mont",
                                 ),
                               ),
                             ],
@@ -127,7 +124,6 @@ class _LogoutState extends State<Logout> {
                                 style: new TextStyle(
                                   fontSize: 15,
                                   color: Colors.black,
-                                  fontFamily: "Mont",
                                 ),
                               ),
                             ],
@@ -148,7 +144,6 @@ class _LogoutState extends State<Logout> {
                                 style: new TextStyle(
                                   fontSize: 15,
                                   color: Colors.black,
-                                  fontFamily: "Mont",
                                 ),
                               ),
                             ],
@@ -169,7 +164,6 @@ class _LogoutState extends State<Logout> {
                                 style: new TextStyle(
                                   fontSize: 15,
                                   color: Colors.black,
-                                  fontFamily: "Mont",
                                 ),
                               ),
                             ],
@@ -211,45 +205,55 @@ class _LogoutState extends State<Logout> {
                   );
                   final pref = await SharedPreferences.getInstance();
                   await pref.clear();
+                  items.clear();
+                  iditems.clear();
+                  itemsshadow.clear();
+                  listnama.clear();
+                  tempatlist.clear();
                 },
               ),
               title: new Text(
                 "Keluar",
                 style: new TextStyle(
                   color: Colors.black,
-                  fontFamily: "Mont",
+                  // fontFamily: "Mont",
                   fontWeight: FontWeight.bold,
                 ),
               ),
             ),
           ),
-          Padding(
-            padding: const EdgeInsets.only(bottom: 4),
-            child: ListTile(
-              leading: IconButton(
-                color: Colors.green[900],
-                iconSize: 30.0,
-                icon: Icon(Icons.edit),
-                onPressed: () async {
-                  size = MediaQuery.of(context).size.width / 2;
-                  Navigator.pushReplacementNamed(
-                    context,
-                    '/login',
-                  );
-                  final pref = await SharedPreferences.getInstance();
-                  await pref.clear();
-                },
-              ),
-              title: new Text(
-                "Edit",
-                style: new TextStyle(
-                  color: Colors.black,
-                  fontFamily: "Mont",
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ),
-          ),
+          // Padding(
+          //   padding: const EdgeInsets.only(bottom: 4),
+          //   child: ListTile(
+          //     leading: IconButton(
+          //       color: Colors.green[900],
+          //       iconSize: 30.0,
+          //       icon: Icon(Icons.edit),
+          //       onPressed: () async {
+          //         size = MediaQuery.of(context).size.width / 2;
+          //         Navigator.pushReplacementNamed(
+          //           context,
+          //           '/login',
+          //         );
+          //         final pref = await SharedPreferences.getInstance();
+          //         await pref.clear();
+          //         items.clear();
+          //         iditems.clear();
+          //         itemsshadow.clear();
+          //         listnama.clear();
+          //         tempatlist.clear();
+          //       },
+          //     ),
+          //     title: new Text(
+          //       "Edit",
+          //       style: new TextStyle(
+          //         color: Colors.black,
+          //         fontFamily: "Mont",
+          //         fontWeight: FontWeight.bold,
+          //       ),
+          //     ),
+          //   ),
+          // ),
         ],
       );
     }

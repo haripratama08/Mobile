@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:ch_v2_1/Menu/Monitor/monitor_semua.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
@@ -34,6 +35,7 @@ int idala2;
 int idlokas2;
 int idalate;
 int ind;
+int panjanglistnama;
 
 class MonitorIndoorRoute extends StatefulWidget {
   final int ind;
@@ -52,14 +54,15 @@ class MonitorIndoorRouteState extends State<MonitorIndoorRoute>
   GantiAlias ganti = GantiAlias();
 
   Future loadDevice() async {
-    var jsonString = await http.get('$endPoint/data?uuid=$uuid',
-        headers: {HttpHeaders.authorizationHeader: '$token'});
+    var url = Uri.parse('$endPoint/data?uuid=$uuid');
+    var jsonString = await http
+        .get(url, headers: {HttpHeaders.authorizationHeader: '$token'});
     var jsonResponse = json.decode(jsonString.body);
     Data2 data2 = Data2.fromJson(jsonResponse);
     if (this.mounted) {
       setState(() {
-        print("nilai i ${widget.ind}");
         List<Widget> list = [];
+        panjanglistnama = data2.data.lokasi[widget.ind].hub.length;
         if (data2.data.lokasi[widget.ind].hub.length == 0) {
           msg = "Tidak Ada Alat";
         } else {
@@ -76,9 +79,6 @@ class MonitorIndoorRouteState extends State<MonitorIndoorRoute>
               } else {
                 listnama.add('$data5');
               }
-              print('listnama length ${listnama.length}');
-              print("number $number");
-              print("listnama $listnama");
               number = listnama.length;
               if (idlokasi.length == number) {
               } else {
@@ -102,13 +102,12 @@ class MonitorIndoorRouteState extends State<MonitorIndoorRoute>
         }
       });
     }
-    return loadDevice();
   }
 
   Future doGanti() async {
-    print(listnama);
+    // print(listnama);
     listnama.clear();
-    print(listnama);
+    // print(listnama);
     try {
       var rs = await ganti.doGanti(alias.text, idala2, uuid, token);
       var jsonRes = json.decode(rs.body);
@@ -118,8 +117,14 @@ class MonitorIndoorRouteState extends State<MonitorIndoorRoute>
         loadDevice();
         print(jsonRes);
       });
-      Navigator.push(
-          context, new MaterialPageRoute(builder: (context) => new Menu()));
+      jsonRes['status'] == "OK"
+          ? Navigator.push(
+              context,
+              new MaterialPageRoute(
+                  builder: (context) => new Menu(
+                        index: 0,
+                      )))
+          : print("tidak ada");
       print("abis itu $listnama");
     } catch (e) {}
   }
@@ -161,23 +166,24 @@ class MonitorIndoorRouteState extends State<MonitorIndoorRoute>
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: msg == "Tidak Ada Alat"
-          ? Container(
-              height: MediaQuery.of(context).size.height / 3,
-              child: Center(
-                  child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.all(10.0),
-                    child: Text('Tidak Ada Alat',
-                        style: TextStyle(fontFamily: 'Mont', fontSize: 12)),
-                  ),
-                ],
-              )),
-            )
-          : Container(
+    // print("panjang $panjanglistnama");
+    return panjanglistnama == 0
+        ? Container(
+            height: MediaQuery.of(context).size.height / 3,
+            child: Center(
+                child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(10.0),
+                  child: Text('Tidak Ada Alat',
+                      style: TextStyle(fontFamily: 'Mont', fontSize: 13)),
+                ),
+              ],
+            )),
+          )
+        : Scaffold(
+            body: Container(
               height: MediaQuery.of(context).size.height / 4.5,
               child: ListView(
                 children: [
@@ -187,7 +193,6 @@ class MonitorIndoorRouteState extends State<MonitorIndoorRoute>
                       scrollDirection: Axis.vertical,
                       itemCount: listnama.length,
                       itemBuilder: (BuildContext context, int index) {
-                        print(msg);
                         void status(int ins) {
                           if (status1 == ins) {
                             warna = Colors.green[100];
@@ -196,11 +201,10 @@ class MonitorIndoorRouteState extends State<MonitorIndoorRoute>
                           }
                         }
 
-                        print("index $index");
-                        print(listnama);
                         status(index);
-                        if (listnama.length == 0) {
-                          // if (msg == "Tidak Ada Alat") {
+                        // print("panjang listnama $panjanglistnama");
+
+                        if (panjanglistnama == 0) {
                           return Container(
                             height: MediaQuery.of(context).size.height / 3,
                             child: Center(
@@ -216,22 +220,20 @@ class MonitorIndoorRouteState extends State<MonitorIndoorRoute>
                               ],
                             )),
                           );
-                          // }
                         } else {
                           return GestureDetector(
                               onTap: () {
                                 setState(() {
+                                  loadDevice();
+                                  listnama.clear();
+                                  idlokasi.clear();
+                                  idhub.clear();
+                                  idalat.clear();
                                   loading = true;
                                   itemsshadow.clear();
                                   items.clear();
                                   data(status1);
                                   change(index);
-                                  Semua(
-                                      loading: true,
-                                      idlokas: idlokas2,
-                                      idhu: idhu2,
-                                      idala: idala2,
-                                      items: []);
                                   items = items;
                                   itemsshadow = itemsshadow;
                                 });
@@ -273,40 +275,40 @@ class MonitorIndoorRouteState extends State<MonitorIndoorRoute>
                                                   .width /
                                               12,
                                         ),
-                                        GestureDetector(
-                                          onTap: () {
-                                            setState(() {
-                                              idalate = idala2;
-                                              nama = listnama[index];
-                                            });
-                                            dialog();
-                                          },
-                                          child: Container(
-                                            child: Center(
-                                                child:
-                                                    Icon(Icons.border_color)),
-                                            height: MediaQuery.of(context)
-                                                    .size
-                                                    .width /
-                                                10,
-                                            width: MediaQuery.of(context)
-                                                    .size
-                                                    .width /
-                                                10,
-                                            decoration: BoxDecoration(
-                                                border: Border.all(
-                                                    width: 1.5,
-                                                    color: Colors.black),
-                                                borderRadius:
-                                                    BorderRadius.circular(5)),
-                                          ),
-                                        )
+                                        // GestureDetector(
+                                        //   onTap: () {
+                                        //     setState(() {
+                                        //       idalate = idala2;
+                                        //       nama = listnama[index];
+                                        //     });
+                                        //     dialog();
+                                        //   },
+                                        //   child: Container(
+                                        //     child: Center(
+                                        //         child:
+                                        //             Icon(Icons.border_color)),
+                                        //     height: MediaQuery.of(context)
+                                        //             .size
+                                        //             .width /
+                                        //         10,
+                                        //     width: MediaQuery.of(context)
+                                        //             .size
+                                        //             .width /
+                                        //         10,
+                                        //     decoration: BoxDecoration(
+                                        //         border: Border.all(
+                                        //             width: 1.5,
+                                        //             color: Colors.black),
+                                        //         borderRadius:
+                                        //             BorderRadius.circular(5)),
+                                        //   ),
+                                        // )
                                       ],
                                     )),
-                                    height:
-                                        MediaQuery.of(context).size.height / 11,
+                                    height: MediaQuery.of(context).size.height /
+                                        11.5,
                                     width: MediaQuery.of(context).size.width *
-                                        4.5 /
+                                        4 /
                                         5,
                                     padding: const EdgeInsets.all(10),
                                     decoration: BoxDecoration(
@@ -323,7 +325,7 @@ class MonitorIndoorRouteState extends State<MonitorIndoorRoute>
                 ],
               ),
             ),
-    );
+          );
   }
 
   void dialog() {

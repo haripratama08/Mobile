@@ -1,4 +1,12 @@
+import 'dart:convert';
+import 'package:ch_v2_1/Menu/Kontrol/kontrol_utama.dart';
+
 class Login {
+  String status;
+  String accessToken;
+  String tokenType;
+  String message;
+  Data data;
   Login({
     this.status,
     this.accessToken,
@@ -6,12 +14,6 @@ class Login {
     this.message,
     this.data,
   });
-
-  String status;
-  String accessToken;
-  String tokenType;
-  String message;
-  Data data;
 
   factory Login.fromJson(Map<String, dynamic> json) => Login(
         status: json["status"],
@@ -31,17 +33,17 @@ class Login {
 }
 
 class Data {
+  String username;
+  String email;
+  String nama;
+  String uuid;
+
   Data({
     this.username,
     this.email,
     this.nama,
     this.uuid,
   });
-
-  String username;
-  String email;
-  String nama;
-  String uuid;
 
   factory Data.fromJson(Map<String, dynamic> json) => Data(
         username: json["username"],
@@ -231,12 +233,12 @@ class SmartTimer {
     this._time = map['time'];
     this._state = map['state'];
   }
-  //getter dan setter (mengambil dan mengisi data kedalam object)
-  // getter
-  int get id => _id;
-  String get name => _name;
-  String get time => _time;
-  String get state => _state;
+  // //getter dan setter (mengambil dan mengisi data kedalam object)
+  // // getter
+  // int get id => _id;
+  // String get name => _name;
+  // String get time => _time;
+  // String get state => _state;
 
   // setter
   set name(String value) {
@@ -255,9 +257,9 @@ class SmartTimer {
   Map<String, dynamic> toMap() {
     Map<String, dynamic> map = Map<String, dynamic>();
     map['id'] = this._id;
-    map['name'] = name;
-    map['time'] = time;
-    map['state'] = state;
+    map['name'] = this._name;
+    map['time'] = this._time;
+    map['state'] = this._state;
     return map;
   }
 }
@@ -388,4 +390,99 @@ class Alat3 {
         "id": id,
         "nama": nama,
       };
+}
+
+List<Looping> loopingFromJson(String str) =>
+    List<Looping>.from(json.decode(str).map((x) => Looping.fromJson(x)));
+String loopingToJson(List<Looping> data) =>
+    json.encode(List<dynamic>.from(data.map((x) => x.toJson())));
+
+class Looping {
+  Looping({
+    this.idlokasi,
+    this.idhub,
+    this.idalat,
+    this.nama,
+  });
+
+  int idlokasi;
+  int idhub;
+  int idalat;
+  String nama;
+
+  factory Looping.fromJson(Map<String, dynamic> json) => Looping(
+        idlokasi: json["idlokasi"],
+        idhub: json["idhub"],
+        idalat: json["idalat"],
+        nama: json["nama"],
+      );
+
+  Map<String, dynamic> toJson() => {
+        "idlokasi": idlokasi,
+        "idhub": idhub,
+        "idalat": idalat,
+        "nama": nama,
+      };
+}
+
+class Loop {
+  Loop({
+    this.idsensor,
+    this.nama,
+  });
+
+  int idsensor;
+  String nama;
+
+  factory Loop.fromJson(Map<String, dynamic> json) => Loop(
+        idsensor: json["idsensor"],
+        nama: json["nama"],
+      );
+
+  Map<String, dynamic> toJson() => {
+        "idsensor": idsensor,
+        "nama": nama,
+      };
+}
+
+class Repository {
+  List<Map> getAll() => trial;
+
+  getidlokasibynama(String nama) => trial
+      .map((map) => Looping.fromJson(map))
+      .where((item) => item.nama == nama)
+      .map((item) => item.idlokasi)
+      .toList();
+
+  getidhubbynama(String nama) => trial
+      .map((map) => Looping.fromJson(map))
+      .where((item) => item.nama == nama)
+      .map((item) => item.idhub)
+      .toList();
+
+  getidalatbynama(String nama) => trial
+      .map((map) => Looping.fromJson(map))
+      .where((item) => item.nama == nama)
+      .map((item) => item.idalat)
+      .toList();
+
+  List<String> getnama() => trial
+      .map((map) => Looping.fromJson(map))
+      .map((item) => item.nama)
+      .toList();
+}
+
+class RepositorySensor {
+  List<Map> getAll() => listsensors;
+
+  getidsensorbynama(String nama) => listsensors
+      .map((map) => Loop.fromJson(map))
+      .where((item) => item.nama == nama)
+      .map((item) => item.idsensor)
+      .toList();
+
+  List<String> getnama() => listsensors
+      .map((map) => Loop.fromJson(map))
+      .map((item) => item.nama)
+      .toList();
 }

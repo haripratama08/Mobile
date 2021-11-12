@@ -1,9 +1,9 @@
 import 'dart:async';
 import 'dart:convert';
-import 'package:ch_v2_1/Menu/menu.dart';
 import 'package:flutter/material.dart';
 import 'package:ch_v2_1/Menu/Kontrol/kontrol_utama.dart';
 import 'package:http/http.dart' as http;
+import '../../API/api.dart';
 
 class KontrolManual extends StatefulWidget {
   @override
@@ -16,53 +16,50 @@ int value = 0;
 class _KontrolManualState extends State<KontrolManual> {
   @override
   Widget build(BuildContext context) {
-    Future publish(String mode, String atas, String bawah, String state) async {
+    Future<http.Response> publish(
+        String mode, String atas, String bawah, String state) async {
       setState(() {
         loading = true;
-        // print(mode);
-        // print(state);
       });
       loading = false;
-      print("$mode $atas $topic $bawah $state");
-      var jsonString = await http.get(
-          'http://ec2-18-139-101-44.ap-southeast-1.compute.amazonaws.com:2000/control?topic=$topic&message={"mode": "$mode","atas": "$atas","bawah": "$bawah","manual": "$state"}');
-      final jsonResponse = json.decode(jsonString.body);
-      if (this.mounted) {
+      var message = jsonEncode({
+        "mode": "$mode",
+        "threshold": "0",
+        "status": "null",
+        "manual": "$state",
+        "id_sensor": "null"
+      });
+      var url = Uri.parse('$kontrol');
+      var body = {"topic": topic, "message": message};
+      var response = await http.post(url, body: body);
+      print("${response.statusCode}");
+      print("${response.body}");
+      if (response.statusCode == 200) {
+        liststate.clear();
+        print("Published to $topic");
         setState(() {
-          msg = jsonResponse['success'];
           loading = false;
-        });
-        if (msg == "1") {
-          print("Published to $topic");
-          setState(() {
-            loading = false;
-            showDialog(
-              context: context,
-              builder: (ctxt) => new AlertDialog(
+          showDialog(
+            context: context,
+            builder: (ctxt) {
+              Future.delayed(Duration(seconds: 2), () {
+                Navigator.of(context).pop(true);
+              });
+              return new AlertDialog(
                 title: Column(
                   children: <Widget>[
                     Center(child: Image.asset("asset/img/datasent.png")),
                   ],
                 ),
-              ),
-            );
-            Timer(Duration(seconds: 1), () {
-              Navigator.push(
-                  context,
-                  new MaterialPageRoute(
-                      builder: (context) => new Menu(
-                            index: 1,
-                          )));
-              // Navigator.pop(context);
-              // Navigator.pop(context);
-            });
-          });
-        }
+              );
+            },
+          );
+        });
       }
+      return response;
     }
 
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(50, 10, 50, 10),
+    return Container(
       child: Container(
         child: loading == true
             ? Center(
@@ -73,7 +70,8 @@ class _KontrolManualState extends State<KontrolManual> {
               )
             : GestureDetector(
                 onTap: () {
-                  // print("tap");
+                  liststate.clear();
+                  FocusScope.of(context).requestFocus(FocusNode());
                   publish("manual", "0", "0", statesend);
                 },
                 child: Container(
@@ -84,8 +82,8 @@ class _KontrolManualState extends State<KontrolManual> {
                               fontFamily: 'Mont',
                               fontSize: 15)),
                     ),
-                    height: 40,
-                    width: 120,
+                    height: 30,
+                    width: 100,
                     decoration: BoxDecoration(
                         color: Colors.red[900],
                         borderRadius: BorderRadius.circular(10)))),

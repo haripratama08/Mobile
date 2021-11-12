@@ -5,6 +5,8 @@ import 'package:ch_v2_1/Validator/validation.dart';
 import 'package:flutter/material.dart';
 
 String msg = '';
+bool _passwordVisible = true;
+bool _passwordVisible2 = true;
 
 class RegisterPage extends StatefulWidget {
   @override
@@ -34,32 +36,32 @@ class _RegisterPageState extends State<RegisterPage> with Validation {
     setState(() {
       loading = true;
     });
-    if (formKey.currentState.validate()) {
-      formKey.currentState.save();
-      try {
-        var rs = await apiRegis.doRegis(
-          username.text,
-          passwordreal.text,
-          nama.text,
-          email.text,
-          telp.text,
-          alamat.text,
-        );
-        var jsonRes = json.decode(rs.body);
-        print(jsonRes);
-        setState(() {
-          msg = jsonRes['message'];
-          print(msg);
-        });
-        if (jsonRes['success'] == '1') {
-          Navigator.push(context,
-              new MaterialPageRoute(builder: (context) => new LoginPage()));
-        } else {
-          Navigator.push(context,
-              new MaterialPageRoute(builder: (context) => new RegisterPage()));
-        }
-      } catch (e) {}
-    }
+    // if (formKey.currentState.validate()) {
+    //   formKey.currentState.save();
+    try {
+      var rs = await apiRegis.doRegis(
+        username.text,
+        passwordreal.text,
+        nama.text,
+        email.text,
+        telp.text,
+        alamat.text,
+      );
+      var jsonRes = json.decode(rs.body);
+      print(jsonRes);
+      setState(() {
+        msg = jsonRes['message'];
+        print(msg);
+      });
+      if (jsonRes['status'] == 'Created') {
+        Navigator.push(context,
+            new MaterialPageRoute(builder: (context) => new LoginPage()));
+      } else {
+        // Navigator.push(context,
+        //     new MaterialPageRoute(builder: (context) => new RegisterPage()));
+      }
+    } catch (e) {}
+
     setState(() {
       loading = false;
     });
@@ -127,104 +129,76 @@ class _RegisterPageState extends State<RegisterPage> with Validation {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: <Widget>[
-        CircleAvatar(
-            backgroundColor: Colors.green[900],
-            foregroundColor: Color(0XFFFFFF),
-            radius: 48.0,
-            child: CircleAvatar(
-              foregroundColor: Colors.transparent,
-              backgroundColor: Colors.white,
-              radius: 47,
-              backgroundImage: AssetImage('asset/img/ch.png'),
-            )),
-        SizedBox(height: 10),
-        // _image == null
-        //     ? GestureDetector(
-        //         onTap: () {
-        //           pilihFoto();
-        //         },
-        //         child: CircleAvatar(
-        //             backgroundColor: Colors.green[900],
-        //             foregroundColor: Color(0XFFFFFF),
-        //             radius: 48.0,
-        //             child: CircleAvatar(
-        //               foregroundColor: Colors.transparent,
-        //               backgroundColor: Colors.white,
-        //               radius: 47,
-        //               backgroundImage: AssetImage('asset/img/pngwing.com.png'),
-        //             )),
-        //       )
-        //     : GestureDetector(
-        //         onTap: () {
-        //           pilihFoto();
-        //         },
-        //         child: CircleAvatar(
-        //             backgroundColor: Colors.green[900],
-        //             foregroundColor: Color(0XFFFFFF),
-        //             radius: 48.0,
-        //             child: CircleAvatar(
-        //               foregroundColor: Colors.transparent,
-        //               backgroundColor: Colors.white,
-        //               radius: 47,
-        //               backgroundImage: FileImage(_image),
-        //             )),
-        //       ),
-        // GestureDetector(
-        //   onTap: () {
-        //     FocusScope.of(context).requestFocus(FocusNode());
-        // },
-        // child: new
-        Container(
-          child: Form(
-              key: formKey,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  SizedBox(height: 15),
-                  userField(),
-                  SizedBox(height: 10),
-                  passwordField(),
-                  SizedBox(height: 10),
-                  retypeField(),
-                  SizedBox(height: 10),
-                  nameField(),
-                  SizedBox(height: 10),
-                  emailField(),
-                  SizedBox(height: 10),
-                  telpField(),
-                  SizedBox(height: 10),
-                  addressField(),
-                  Padding(
-                    padding: const EdgeInsets.only(top: 20.0),
-                    child: Text(
-                      msg,
-                      style: TextStyle(
-                          color: Colors.red, fontFamily: "Mont", fontSize: 12),
-                    ),
-                  ),
-                  SizedBox(height: 5),
-                  loading == true
-                      ? Padding(
-                          padding: const EdgeInsets.all(10.0),
-                          child: Center(
-                            child: CircularProgressIndicator(
-                              valueColor: new AlwaysStoppedAnimation<Color>(
-                                  Color((0xff186962))),
-                            ),
-                          ),
-                        )
-                      : registerButton(),
-                  SizedBox(
-                    height: 50,
-                  )
-                ],
+      resizeToAvoidBottomInset: false,
+      body: SingleChildScrollView(
+          child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          SizedBox(
+            height: 100,
+          ),
+          CircleAvatar(
+              backgroundColor: Colors.transparent,
+              foregroundColor: Color(0XFFFFFF),
+              radius: 48.0,
+              child: CircleAvatar(
+                foregroundColor: Colors.transparent,
+                backgroundColor: Colors.transparent,
+                radius: 47,
+                backgroundImage: AssetImage('asset/img/ch.png'),
               )),
-        ),
-      ],
-    ));
+          SizedBox(height: 10),
+          Container(
+            child: Container(
+                key: formKey,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    SizedBox(height: 15),
+                    nameField(),
+                    SizedBox(height: 10),
+                    userField(),
+                    SizedBox(height: 10),
+                    passwordField(),
+                    SizedBox(height: 10),
+                    retypeField(),
+                    SizedBox(height: 10),
+                    emailField(),
+                    SizedBox(height: 10),
+                    telpField(),
+                    SizedBox(height: 10),
+                    addressField(),
+                    Padding(
+                      padding: const EdgeInsets.only(top: 20.0),
+                      child: Text(
+                        msg,
+                        style: TextStyle(
+                            color: Colors.red,
+                            fontFamily: "Mont",
+                            fontSize: 12),
+                      ),
+                    ),
+                    SizedBox(height: 5),
+                    loading == true
+                        ? Padding(
+                            padding: const EdgeInsets.all(10.0),
+                            child: Center(
+                              child: CircularProgressIndicator(
+                                valueColor: new AlwaysStoppedAnimation<Color>(
+                                    Color((0xff186962))),
+                              ),
+                            ),
+                          )
+                        : registerButton(),
+                    SizedBox(
+                      height: 50,
+                    )
+                  ],
+                )),
+          ),
+        ],
+      )),
+    );
   }
 
   Widget userField() {
@@ -235,6 +209,7 @@ class _RegisterPageState extends State<RegisterPage> with Validation {
             if (value.isEmpty) {
               return ' please enter username';
             }
+            return null;
           },
           controller: username,
           keyboardType: TextInputType.text,
@@ -260,6 +235,7 @@ class _RegisterPageState extends State<RegisterPage> with Validation {
             if (value.isEmpty) {
               return ' email';
             }
+            return null;
           },
           controller: email,
           keyboardType: TextInputType.text,
@@ -285,12 +261,26 @@ class _RegisterPageState extends State<RegisterPage> with Validation {
             if (value.isEmpty) {
               return ' password';
             }
+            return null;
           },
           controller: passwordreal,
+          obscureText: _passwordVisible,
           keyboardType: TextInputType.text,
           autofocus: false,
           decoration: InputDecoration(
-            prefixIcon: Icon(Icons.lock, color: Colors.green[900]),
+            suffixIcon: GestureDetector(
+              onTap: () {
+                setState(() {
+                  _passwordVisible = !_passwordVisible;
+                });
+              },
+              child: Icon(
+                  _passwordVisible ? Icons.visibility_off : Icons.visibility),
+            ),
+            prefixIcon: Icon(
+              Icons.lock,
+              color: Colors.green[900],
+            ),
             hintText: 'Password',
             labelStyle:
                 TextStyle(color: Colors.white, fontFamily: "Montserrat"),
@@ -308,15 +298,29 @@ class _RegisterPageState extends State<RegisterPage> with Validation {
         child: TextFormField(
           validator: (value) {
             if (value.isEmpty) {
-              return 'password';
+              return 'konfirmasi password';
             }
+            return null;
           },
           controller: passwordtype,
+          obscureText: _passwordVisible2,
           keyboardType: TextInputType.text,
           autofocus: false,
           decoration: InputDecoration(
-            prefixIcon: Icon(Icons.lock, color: Colors.green[900]),
-            hintText: 'Pasword Retype',
+            suffixIcon: GestureDetector(
+              onTap: () {
+                setState(() {
+                  _passwordVisible2 = !_passwordVisible2;
+                });
+              },
+              child: Icon(
+                  _passwordVisible2 ? Icons.visibility_off : Icons.visibility),
+            ),
+            prefixIcon: Icon(
+              Icons.lock,
+              color: Colors.green[900],
+            ),
+            hintText: 'Konfirmasi Password',
             labelStyle:
                 TextStyle(color: Colors.white, fontFamily: "Montserrat"),
             contentPadding: EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
@@ -335,6 +339,7 @@ class _RegisterPageState extends State<RegisterPage> with Validation {
             if (value.isEmpty) {
               return 'nama lengkap';
             }
+            return null;
           },
           controller: nama,
           keyboardType: TextInputType.text,
@@ -360,6 +365,7 @@ class _RegisterPageState extends State<RegisterPage> with Validation {
             if (value.isEmpty) {
               return 'Alamat';
             }
+            return null;
           },
           controller: alamat,
           keyboardType: TextInputType.text,
@@ -385,6 +391,7 @@ class _RegisterPageState extends State<RegisterPage> with Validation {
             if (value.isEmpty) {
               return 'Nomor Telpon';
             }
+            return null;
           },
           controller: telp,
           keyboardType: TextInputType.text,

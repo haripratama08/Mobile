@@ -1,15 +1,18 @@
+import 'package:ch_v2_1/LoginPage/loginpage.dart';
 import 'package:ch_v2_1/Menu/Kontrol/kontrol_utama.dart';
 import 'package:flutter/material.dart';
-import 'package:ch_v2_1/LoginPage/loginpage.dart';
 import 'package:ch_v2_1/Menu/Akun/logout.dart';
 import 'package:ch_v2_1/Menu/tambahan/stringcap.dart';
 import 'package:ch_v2_1/Menu/Monitor/monitor_semua.dart';
 
-int index = 0;
-int _selectedIndex = 0;
+int _selectedIndex;
 int count = 0;
+int index = 0;
+String namaalat;
 
 class Menu extends StatefulWidget {
+  final namaalat;
+  final int count;
   final int index;
   final String nama;
   final String email;
@@ -23,6 +26,7 @@ class Menu extends StatefulWidget {
   const Menu(
       {Key key,
       this.nama,
+      this.namaalat,
       this.email,
       this.user,
       this.uuid,
@@ -30,6 +34,7 @@ class Menu extends StatefulWidget {
       this.idlokas,
       this.idhu,
       this.idala,
+      this.count,
       this.index})
       : super(key: key);
   @override
@@ -37,49 +42,64 @@ class Menu extends StatefulWidget {
 }
 
 class _MenuState extends State<Menu> with SingleTickerProviderStateMixin {
-  Widget route = Semua();
+  Widget route;
   void initState() {
-    Menu();
     _onTabItem(index);
     super.initState();
   }
 
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    setState(() {});
+  }
+
   void dispose() {
-    Menu();
     _onTabItem(index);
     super.dispose();
   }
 
+  void change(int index) {
+    _onTabItem(index);
+  }
+
   void _onTabItem(int index) {
     setState(() {
-      print("index setelah dari kontrol : ${widget.index}");
-      if (widget.index != null && count != 1) {
-        index = widget.index;
-        count = 1;
-      } else {
-        _selectedIndex = index;
-        count = 0;
-      }
       _selectedIndex = index;
-      if (index == 0) {
-        route = Semua();
+    });
+    setState(() {
+      if (index == 0 && widget.index == null ||
+          index == 0 && widget.index == 0 ||
+          index == null && widget.index == null ||
+          index == null && widget.index == 0) {
+        setState(() {
+          route = Semua();
+        });
+      } else if (index == 0 && widget.index != null ||
+          index == 0 && widget.index != 0) {
+        _selectedIndex = widget.index;
+        if (widget.index == 0) {
+          setState(() {
+            route = Semua();
+          });
+        } else if (widget.index == 1) {
+          setState(() {
+            route = KontrolUtama();
+          });
+        } else if (widget.index == 2) {
+          setState(() {
+            route = Logout();
+          });
+        }
+      } else if (index == 1) {
+        setState(() {
+          route = KontrolUtama();
+        });
+      } else if (index == 2) {
+        setState(() {
+          route = Logout();
+        });
       }
-      if (index == 1) {
-        route = KontrolUtama();
-      }
-
-      // ketika sudah ready untuk kamera dan automasi
-
-      // if (index == 2) {
-      //   route = KameraUtama();
-      // }
-      // if (index == 3) {
-      //   route = Automasi();
-      // }
-      if (index == 2) {
-        route = Logout();
-      }
-      print(_selectedIndex);
     });
   }
 
@@ -129,72 +149,55 @@ class _MenuState extends State<Menu> with SingleTickerProviderStateMixin {
               ],
             ),
             child: BottomNavigationBar(
-              showSelectedLabels: true,
-              unselectedItemColor: Colors.green[900],
-              selectedItemColor: Color(0xFFF7931E),
-              items: <BottomNavigationBarItem>[
-                BottomNavigationBarItem(
-                  icon: Icon(Icons.desktop_windows),
-                  title: new Text(
-                    "Monitor",
-                    style: new TextStyle(
-                      fontSize: MediaQuery.of(context).size.height / 65,
-                      fontFamily: "Mont",
-                      fontWeight: FontWeight.bold,
-                    ),
+                showSelectedLabels: true,
+                unselectedItemColor: Colors.green[900],
+                selectedItemColor: Color(0xFFF7931E),
+                items: <BottomNavigationBarItem>[
+                  BottomNavigationBarItem(
+                    icon: Icon(Icons.desktop_windows),
+                    label: "Monitor",
+                    // title: new Text(
+                    //   "Monitor",
+                    //   style: new TextStyle(
+                    //     fontSize: MediaQuery.of(context).size.height / 65,
+                    //     fontFamily: "Mont",
+                    //     fontWeight: FontWeight.bold,
+                    //   ),
+                    // ),
                   ),
-                ),
-                BottomNavigationBarItem(
-                  icon: Icon(Icons.settings_remote_rounded),
-                  title: new Text(
-                    "Kontrol",
-                    style: new TextStyle(
-                      fontSize: MediaQuery.of(context).size.height / 65,
-                      fontFamily: "Mont",
-                      fontWeight: FontWeight.bold,
-                    ),
+                  BottomNavigationBarItem(
+                    icon: Icon(Icons.settings_remote_rounded),
+                    label: "Kontrol",
+                    // title: new Text(
+                    //   "Kontrol",
+                    //   style: new TextStyle(
+                    //     fontSize: MediaQuery.of(context).size.height / 65,
+                    //     fontFamily: "Mont",
+                    //     fontWeight: FontWeight.bold,
+                    //   ),
+                    // ),
                   ),
-                ),
-                // ketika sudah ready untuk menu kamera dan automasi
-
-                // BottomNavigationBarItem(
-                //   icon: Icon(Icons.video_library),
-                //   title: new Text(
-                //     "Kamera",
-                //     style: new TextStyle(
-                //       fontSize: MediaQuery.of(context).size.height / 65,
-                //       fontFamily: "Mont",
-                //       fontWeight: FontWeight.bold,
-                //     ),
-                //   ),
-                // ),
-                // BottomNavigationBarItem(
-                //   icon: Icon(Icons.smart_button_rounded),
-                //   title: new Text(
-                //     "Automasi",
-                //     style: new TextStyle(
-                //       fontSize: MediaQuery.of(context).size.height / 65,
-                //       fontFamily: "Mont",
-                //       fontWeight: FontWeight.bold,
-                //     ),
-                //   ),
-                // ),
-                BottomNavigationBarItem(
-                  icon: Icon(Icons.account_circle),
-                  title: new Text(
-                    "Akun",
-                    style: new TextStyle(
-                      fontSize: MediaQuery.of(context).size.height / 65,
-                      fontFamily: "Mont",
-                      fontWeight: FontWeight.bold,
-                    ),
+                  BottomNavigationBarItem(
+                    icon: Icon(Icons.account_circle),
+                    label: "Akun",
+                    // title: new Text(
+                    //   "Akun",
+                    //   style: new TextStyle(
+                    //     fontSize: MediaQuery.of(context).size.height / 65,
+                    //     fontFamily: "Mont",
+                    //     fontWeight: FontWeight.bold,
+                    //   ),
+                    // ),
                   ),
+                ],
+                selectedLabelStyle: TextStyle(
+                  fontSize: MediaQuery.of(context).size.height / 65,
+                  fontFamily: "Mont",
+                  fontWeight: FontWeight.bold,
                 ),
-              ],
-              type: BottomNavigationBarType.fixed,
-              currentIndex: _selectedIndex,
-              onTap: _onTabItem,
-            ),
+                type: BottomNavigationBarType.fixed,
+                currentIndex: _selectedIndex,
+                onTap: (change)),
           ),
         ));
   }
