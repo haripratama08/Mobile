@@ -2,16 +2,6 @@
 <!-- Modify this file to customize your launch splash screen -->
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android">
     <item android:drawable="@android:color/white" />
-<<<<<<< HEAD
-  <meta-data
-                android:name="io.flutter.app.android.SplashScreenUntilFirstFrame"
-                android:resource="@drawable/launcher"/>
-     <item>
-        <bitmap
-            android:gravity="center"
-            android:src="@mipmap/launcher_icon" />
-    </item> 
-=======
 
     <!-- You can insert your own image assets here -->
     <item>
@@ -19,5 +9,4 @@
             android:gravity="center"
             android:src="@mipmap/ch" />
     </item>
->>>>>>> 4a35dd8c05b48d200f7b166f1bfe20402e92fbd3
 </layer-list>

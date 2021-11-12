@@ -5,10 +5,6 @@ import 'dart:io';
 String kontrol =
     'https://cohkc2p9jb.execute-api.ap-southeast-1.amazonaws.com/v1/control';
 String endPoint =
-<<<<<<< HEAD
-    //production
-    'https://hx7jt0d4pd.execute-api.ap-southeast-1.amazonaws.com/v1/api';
-=======
 
 // development
     // 'https://ep5iozludi.execute-api.ap-southeast-1.amazonaws.com/dev/api';
@@ -18,7 +14,6 @@ String endPoint =
 
 //download
 // 'https://1a47p0lyxl.execute-api.ap-southeast-1.amazonaws.com/v1';
->>>>>>> 4a35dd8c05b48d200f7b166f1bfe20402e92fbd3
 
 class ApiLogin {
   Future<http.Response> doLogin(String username, String password) async {
@@ -39,11 +34,7 @@ class Gantinotif {
 class ApiRegister {
   Future<http.Response> doRegis(String username, String password, String nama,
       String email, String telp, String alamat) async {
-<<<<<<< HEAD
-    String url = '$endPoint/user/register';
-=======
     var url = Uri.parse('$endPoint/user/register');
->>>>>>> 4a35dd8c05b48d200f7b166f1bfe20402e92fbd3
     var body = {
       "username": username,
       "password": password,
@@ -51,10 +42,6 @@ class ApiRegister {
       "email": email,
       "telp": telp,
       "alamat": alamat,
-<<<<<<< HEAD
-      // "foto": foto,
-=======
->>>>>>> 4a35dd8c05b48d200f7b166f1bfe20402e92fbd3
     };
     return http.post(url, body: body);
   }
