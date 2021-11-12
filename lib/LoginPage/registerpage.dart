@@ -36,32 +36,32 @@ class _RegisterPageState extends State<RegisterPage> with Validation {
     setState(() {
       loading = true;
     });
-    if (formKey.currentState.validate()) {
-      formKey.currentState.save();
-      try {
-        var rs = await apiRegis.doRegis(
-          username.text,
-          passwordreal.text,
-          nama.text,
-          email.text,
-          telp.text,
-          alamat.text,
-        );
-        var jsonRes = json.decode(rs.body);
-        print(jsonRes);
-        setState(() {
-          msg = jsonRes['message'];
-          print(msg);
-        });
-        if (jsonRes['status'] == 'Created') {
-          Navigator.push(context,
-              new MaterialPageRoute(builder: (context) => new LoginPage()));
-        } else {
-          // Navigator.push(context,
-          //     new MaterialPageRoute(builder: (context) => new RegisterPage()));
-        }
-      } catch (e) {}
-    }
+    // if (formKey.currentState.validate()) {
+    //   formKey.currentState.save();
+    try {
+      var rs = await apiRegis.doRegis(
+        username.text,
+        passwordreal.text,
+        nama.text,
+        email.text,
+        telp.text,
+        alamat.text,
+      );
+      var jsonRes = json.decode(rs.body);
+      print(jsonRes);
+      setState(() {
+        msg = jsonRes['message'];
+        print(msg);
+      });
+      if (jsonRes['status'] == 'Created') {
+        Navigator.push(context,
+            new MaterialPageRoute(builder: (context) => new LoginPage()));
+      } else {
+        // Navigator.push(context,
+        //     new MaterialPageRoute(builder: (context) => new RegisterPage()));
+      }
+    } catch (e) {}
+
     setState(() {
       loading = false;
     });
