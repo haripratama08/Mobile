@@ -223,6 +223,7 @@ class _RegisterPageState extends State<RegisterPage> with Validation {
             if (value.isEmpty) {
               return ' please enter username';
             }
+            return null;
           },
           controller: username,
           keyboardType: TextInputType.text,
@@ -248,6 +249,7 @@ class _RegisterPageState extends State<RegisterPage> with Validation {
             if (value.isEmpty) {
               return ' email';
             }
+            return null;
           },
           controller: email,
           keyboardType: TextInputType.text,
@@ -273,6 +275,7 @@ class _RegisterPageState extends State<RegisterPage> with Validation {
             if (value.isEmpty) {
               return ' password';
             }
+            return null;
           },
           controller: passwordreal,
           obscureText: _passwordVisible,
@@ -311,6 +314,7 @@ class _RegisterPageState extends State<RegisterPage> with Validation {
             if (value.isEmpty) {
               return 'konfirmasi password';
             }
+            return null;
           },
           controller: passwordtype,
           obscureText: _passwordVisible2,
@@ -349,6 +353,7 @@ class _RegisterPageState extends State<RegisterPage> with Validation {
             if (value.isEmpty) {
               return 'nama lengkap';
             }
+            return null;
           },
           controller: nama,
           keyboardType: TextInputType.text,
@@ -374,6 +379,7 @@ class _RegisterPageState extends State<RegisterPage> with Validation {
             if (value.isEmpty) {
               return 'Alamat';
             }
+            return null;
           },
           controller: alamat,
           keyboardType: TextInputType.text,
@@ -399,6 +405,7 @@ class _RegisterPageState extends State<RegisterPage> with Validation {
             if (value.isEmpty) {
               return 'Nomor Telpon';
             }
+            return null;
           },
           controller: telp,
           keyboardType: TextInputType.text,
