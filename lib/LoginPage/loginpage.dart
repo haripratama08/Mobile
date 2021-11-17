@@ -9,7 +9,6 @@ import 'package:flutter/services.dart';
 import 'dart:io';
 import 'dart:async';
 import 'package:shared_preferences/shared_preferences.dart';
-// import 'package:firebase_messaging/firebase_messaging.dart';
 
 String uuid;
 String nama = '';
@@ -25,7 +24,6 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
-  // final FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
   TextEditingController username = new TextEditingController();
   TextEditingController password = new TextEditingController();
   ApiLogin apiLogin = ApiLogin();
@@ -150,6 +148,7 @@ class _LoginPageState extends State<LoginPage> {
         child: Image.asset('asset/img/ch.png'),
       ),
     );
+
     final usernameForm = Padding(
         padding: EdgeInsets.symmetric(horizontal: 20.0),
         child: TextFormField(
@@ -209,6 +208,7 @@ class _LoginPageState extends State<LoginPage> {
                 borderSide: BorderSide(color: Colors.green[900])),
           ),
         ));
+
     final loginButton = Padding(
       padding: EdgeInsets.symmetric(
         vertical: 16.0,
@@ -231,6 +231,7 @@ class _LoginPageState extends State<LoginPage> {
         ),
       ),
     );
+
     final registerPage = TextButton(
         onPressed: () {
           Navigator.push(context,
@@ -251,6 +252,7 @@ class _LoginPageState extends State<LoginPage> {
             ),
           ],
         )));
+
     return Scaffold(
       backgroundColor: Colors.white,
       body: GestureDetector(

@@ -1,8 +1,7 @@
 import 'dart:convert';
-import 'dart:io';
+import 'package:rules/rules.dart';
 import 'package:ch_v2_1/API/api.dart';
 import 'package:ch_v2_1/LoginPage/loginpage.dart';
-import 'package:ch_v2_1/Validator/validation.dart';
 import 'package:flutter/material.dart';
 
 String msg = '';
@@ -14,7 +13,7 @@ class RegisterPage extends StatefulWidget {
   _RegisterPageState createState() => _RegisterPageState();
 }
 
-class _RegisterPageState extends State<RegisterPage> with Validation {
+class _RegisterPageState extends State<RegisterPage> {
   TextEditingController username = new TextEditingController();
   TextEditingController passwordreal = new TextEditingController();
   TextEditingController passwordtype = new TextEditingController();
@@ -24,8 +23,10 @@ class _RegisterPageState extends State<RegisterPage> with Validation {
   TextEditingController alamat = new TextEditingController();
   TextEditingController foto = new TextEditingController();
   String msg = '';
+
   final formKey = GlobalKey<FormState>();
   bool loading = false;
+
   @override
   void initState() {
     loading = false;
@@ -50,8 +51,9 @@ class _RegisterPageState extends State<RegisterPage> with Validation {
     setState(() {
       loading = true;
     });
-    // if (formKey.currentState.validate()) {
-    //   formKey.currentState.save();
+
+    if (formKey.currentState.validate()) {}
+    formKey.currentState.save();
     try {
       var rs = await apiRegis.doRegis(
         username.text,
@@ -163,7 +165,7 @@ class _RegisterPageState extends State<RegisterPage> with Validation {
               )),
           SizedBox(height: 10),
           Container(
-            child: Container(
+            child: Form(
                 key: formKey,
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -313,6 +315,8 @@ class _RegisterPageState extends State<RegisterPage> with Validation {
           validator: (value) {
             if (value.isEmpty) {
               return 'konfirmasi password';
+            } else if (value != passwordreal.text) {
+              return 'konfirmasi password tidak tepat';
             }
             return null;
           },
