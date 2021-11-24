@@ -225,9 +225,9 @@ class SmartTimer {
 
   // konstruktor versi 2: konversi dari Map ke Contact
   SmartTimer.fromMap(Map<String, dynamic> map) {
-    print("id $_id");
-    print("name $_name");
-    print("$_time");
+    //print("id $_id");
+    //print("name $_name");
+    //print("$_time");
     this._id = map['id'];
     this._name = map['name'];
     this._time = map['time'];

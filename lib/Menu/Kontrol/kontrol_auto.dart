@@ -57,12 +57,12 @@ class _KontrolAutoState extends State<KontrolAuto> with Validation {
           'https://cohkc2p9jb.execute-api.ap-southeast-1.amazonaws.com/v1/control');
       var body = {"topic": topic, "message": message};
       var response = await http.post(url, body: body);
-      print("${response.statusCode}");
-      print("${response.body}");
-      print(message);
+      // print("${response.statusCode}");
+      // print("${response.body}");
+      // print(message);
       if (response.statusCode == 200) {
         liststate.clear();
-        print("Published to $topic");
+        // print("Published to $topic");
         setState(() {
           loading = false;
           showDialog(

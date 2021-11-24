@@ -34,19 +34,19 @@ class _RegisterPageState extends State<RegisterPage> {
 
   ApiRegister apiRegis = ApiRegister();
   Future doRegis() async {
-    print(username.text);
-    print(
-      passwordreal.text,
-    );
-    print(
-      email.text,
-    );
-    print(
-      telp.text,
-    );
-    print(
-      alamat.text,
-    );
+    // print(username.text);
+    // print(
+    //   passwordreal.text,
+    // );
+    // print(
+    //   email.text,
+    // );
+    // print(
+    //   telp.text,
+    // );
+    // print(
+    //   alamat.text,
+    // );
 
     if (formKey.currentState.validate()) {
       // setState(() {
@@ -62,10 +62,10 @@ class _RegisterPageState extends State<RegisterPage> {
           alamat.text,
         );
         var jsonRes = json.decode(rs.body);
-        print(jsonRes);
+        // print(jsonRes);
         setState(() {
           msg = jsonRes['message'];
-          print(msg);
+          // print(msg);
         });
         if (jsonRes['status'] == 'Created') {
           Navigator.push(context,
@@ -73,7 +73,7 @@ class _RegisterPageState extends State<RegisterPage> {
         } else {}
       } catch (e) {}
     } else {
-      print("tidak validasi");
+      // print("tidak validasi");
     }
     formKey.currentState.save();
     setState(() {

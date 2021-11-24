@@ -103,7 +103,7 @@ class _SemuaState extends State<Semua> with Validation {
                   kontrolnamechoosen == null
                       ? kontrolnamechoosen = kontrolnamelist[0]
                       : kontrolnamechoosen = kontrolnamechoosen;
-                  topic = "$kontrolnamechoosen/crophero/control/testing";
+                  topic = "$kontrolnamechoosen/crophero/control";
                   // print(kontrolnamelist[0]);
                   // print(topic);
                 }
@@ -125,7 +125,7 @@ class _SemuaState extends State<Semua> with Validation {
       listkontrol.clear();
       setState(() {
         loadKontrol();
-        print(jsonRes);
+        // print(jsonRes);
       });
       Timer(Duration(seconds: 1), () {
         Navigator.push(

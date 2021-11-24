@@ -16,7 +16,6 @@ int value = 0;
 class _KontrolManualState extends State<KontrolManual> {
   @override
   Widget build(BuildContext context) {
-    
     Future<http.Response> publish(
         String mode, String atas, String bawah, String state) async {
       setState(() {
@@ -28,16 +27,16 @@ class _KontrolManualState extends State<KontrolManual> {
         "threshold": "0",
         "status": "null",
         "manual": "$state",
-        "id_sensor": "null"
+        "id_sensor": "null",
       });
       var url = Uri.parse('$kontrol');
       var body = {"topic": topic, "message": message};
       var response = await http.post(url, body: body);
-      print("${response.statusCode}");
-      print("${response.body}");
+      // print("${response.statusCode}");
+      // print("${response.body}");
       if (response.statusCode == 200) {
         liststate.clear();
-        print("Published to $topic");
+        // print("Published to $topic");
         setState(() {
           loading = false;
           showDialog(

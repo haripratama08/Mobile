@@ -183,7 +183,7 @@ class _KontrolUtamaState extends State<KontrolUtama>
                   iDkontrol == null
                       ? iDkontrol = listidkontrol[0]
                       : iDkontrol = iDkontrol;
-                  print(namaalatkontrol);
+                  // print(namaalatkontrol);
                 }
               }
             }
@@ -793,8 +793,8 @@ class _KontrolUtamaState extends State<KontrolUtama>
                                                                   SizedBox(),
                                                               onChanged:
                                                                   (newValue) {
-                                                                print(
-                                                                    "value $newValue");
+                                                                // print(
+                                                                //     "value $newValue");
                                                                 _selectedmonitor(
                                                                     newValue);
                                                                 loadSensor(
@@ -1152,7 +1152,7 @@ class _KontrolUtamaState extends State<KontrolUtama>
         idalat = prin3[0];
         var prin4 = repo.getnamaalat(value);
         devname = prin4[0];
-        print("device name  $devname");
+        // print("device name  $devname");
 
         loadSensor(prin[0], prin2[0], prin3[0]);
       });
