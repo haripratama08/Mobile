@@ -1,4 +1,5 @@
 import 'package:ch_v2_1/API/api.dart';
+import 'package:ch_v2_1/Menu/Kontrol/kontrol_utama.dart';
 import 'package:ch_v2_1/dialogbox/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -205,11 +206,12 @@ class _LogoutState extends State<Logout> {
                   );
                   final pref = await SharedPreferences.getInstance();
                   await pref.clear();
+                  trial.clear();
                   items.clear();
                   iditems.clear();
                   itemsshadow.clear();
                   listnama.clear();
-                  tempatlist.clear();
+                  // tempatlist.clear();
                 },
               ),
               title: new Text(

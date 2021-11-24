@@ -1,5 +1,5 @@
 import 'dart:convert';
-import 'package:rules/rules.dart';
+import 'package:flutter/services.dart';
 import 'package:ch_v2_1/API/api.dart';
 import 'package:ch_v2_1/LoginPage/loginpage.dart';
 import 'package:flutter/material.dart';
@@ -21,7 +21,6 @@ class _RegisterPageState extends State<RegisterPage> {
   TextEditingController email = new TextEditingController();
   TextEditingController telp = new TextEditingController();
   TextEditingController alamat = new TextEditingController();
-  TextEditingController foto = new TextEditingController();
   String msg = '';
 
   final formKey = GlobalKey<FormState>();
@@ -48,40 +47,40 @@ class _RegisterPageState extends State<RegisterPage> {
     print(
       alamat.text,
     );
-    setState(() {
-      loading = true;
-    });
 
-    if (formKey.currentState.validate()) {}
+    if (formKey.currentState.validate()) {
+      // setState(() {
+      //   loading = true;
+      // });
+      try {
+        var rs = await apiRegis.doRegis(
+          username.text,
+          passwordreal.text,
+          nama.text,
+          email.text,
+          telp.text,
+          alamat.text,
+        );
+        var jsonRes = json.decode(rs.body);
+        print(jsonRes);
+        setState(() {
+          msg = jsonRes['message'];
+          print(msg);
+        });
+        if (jsonRes['status'] == 'Created') {
+          Navigator.push(context,
+              new MaterialPageRoute(builder: (context) => new LoginPage()));
+        } else {}
+      } catch (e) {}
+    } else {
+      print("tidak validasi");
+    }
     formKey.currentState.save();
-    try {
-      var rs = await apiRegis.doRegis(
-        username.text,
-        passwordreal.text,
-        nama.text,
-        email.text,
-        telp.text,
-        alamat.text,
-      );
-      var jsonRes = json.decode(rs.body);
-      print(jsonRes);
-      setState(() {
-        msg = jsonRes['message'];
-        print(msg);
-      });
-      if (jsonRes['status'] == 'Created') {
-        Navigator.push(context,
-            new MaterialPageRoute(builder: (context) => new LoginPage()));
-      } else {
-        // Navigator.push(context,
-        //     new MaterialPageRoute(builder: (context) => new RegisterPage()));
-      }
-    } catch (e) {}
-
     setState(() {
       loading = false;
     });
   }
+
 // registrasi ke API
   // Future<int> submitSubscription(
   //     {File image,
@@ -130,9 +129,7 @@ class _RegisterPageState extends State<RegisterPage> {
   //   }
   //   return response.statusCode;
   // }
-
 // untuk mendapat gambar dari Device
-
   // Future uploadFoto(ImageSource media) async {
   //   final pickedFile = await picker.getImage(source: media);
   //   setState(() {
@@ -223,10 +220,13 @@ class _RegisterPageState extends State<RegisterPage> {
         child: TextFormField(
           validator: (value) {
             if (value.isEmpty) {
-              return ' please enter username';
+              return 'masukan username';
             }
             return null;
           },
+          inputFormatters: [
+            FilteringTextInputFormatter.deny(new RegExp(r"\s\b|\b\s"))
+          ],
           controller: username,
           keyboardType: TextInputType.text,
           autofocus: false,
@@ -249,7 +249,9 @@ class _RegisterPageState extends State<RegisterPage> {
         child: TextFormField(
           validator: (value) {
             if (value.isEmpty) {
-              return ' email';
+              return ' masukan email';
+            } else if (!value.contains('@')) {
+              return ' masukan email dengan benar';
             }
             return null;
           },
@@ -275,7 +277,9 @@ class _RegisterPageState extends State<RegisterPage> {
         child: TextFormField(
           validator: (value) {
             if (value.isEmpty) {
-              return ' password';
+              return 'masukan password';
+            } else if (!value.contains(RegExp(r"(\w+)"))) {
+              return 'perbaiki kombinasi password untuk keamanan anda';
             }
             return null;
           },
@@ -314,7 +318,7 @@ class _RegisterPageState extends State<RegisterPage> {
         child: TextFormField(
           validator: (value) {
             if (value.isEmpty) {
-              return 'konfirmasi password';
+              return 'masukan konfirmasi password';
             } else if (value != passwordreal.text) {
               return 'konfirmasi password tidak tepat';
             }
@@ -355,7 +359,7 @@ class _RegisterPageState extends State<RegisterPage> {
         child: TextFormField(
           validator: (value) {
             if (value.isEmpty) {
-              return 'nama lengkap';
+              return 'masukan nama lengkap';
             }
             return null;
           },
@@ -381,7 +385,7 @@ class _RegisterPageState extends State<RegisterPage> {
         child: TextFormField(
           validator: (value) {
             if (value.isEmpty) {
-              return 'Alamat';
+              return 'masukan alamat';
             }
             return null;
           },
@@ -407,7 +411,7 @@ class _RegisterPageState extends State<RegisterPage> {
         child: TextFormField(
           validator: (value) {
             if (value.isEmpty) {
-              return 'Nomor Telpon';
+              return 'masukan nomor telpon';
             }
             return null;
           },
@@ -437,9 +441,20 @@ class _RegisterPageState extends State<RegisterPage> {
             minWidth: 200.0,
             height: 42.0,
             onPressed: () {
-              msg = '';
-              FocusScope.of(context).requestFocus(FocusNode());
-              doRegis();
+              if (nama.text.isEmpty ||
+                  username.text.isEmpty ||
+                  passwordreal.text.isEmpty ||
+                  passwordtype.text.isEmpty ||
+                  email.text.isEmpty ||
+                  telp.text.isEmpty ||
+                  alamat.text.isEmpty) {
+                msg = 'mohon lengkapi isian terlebih dahulu';
+              } else {
+                msg = '';
+                FocusScope.of(context).requestFocus(FocusNode());
+                doRegis();
+              }
+
               // submitSubscription(
               //     image: _image,
               //     username: username.text,

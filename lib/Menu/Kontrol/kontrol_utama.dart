@@ -15,7 +15,9 @@ String selectedkondisi;
 String namaalatkontrol;
 List<String> liststate = [];
 String pilihsensor;
+String namaalata;
 int idsensor;
+String devname;
 int itemsbefore;
 int idjns;
 String jnssensor;
@@ -50,6 +52,7 @@ int data1;
 int data3;
 int data4;
 String data5;
+String data6;
 String nama;
 String success;
 String nama1;
@@ -180,6 +183,7 @@ class _KontrolUtamaState extends State<KontrolUtama>
                   iDkontrol == null
                       ? iDkontrol = listidkontrol[0]
                       : iDkontrol = iDkontrol;
+                  print(namaalatkontrol);
                 }
               }
             }
@@ -200,6 +204,7 @@ class _KontrolUtamaState extends State<KontrolUtama>
         List<Widget> list = [];
         for (int i = 0; i < data2.data.lokasi.length; i++) {
           panjangtempat = data2.data.lokasi.length;
+
           if (tempatlist.length == panjangtempat) {
           } else {
             tempat = data2.data.lokasi[i].nama;
@@ -212,6 +217,7 @@ class _KontrolUtamaState extends State<KontrolUtama>
               data3 = data2.data.lokasi[i].hub[j].id;
               data4 = data2.data.lokasi[i].hub[j].alat[k].id;
               data5 = data2.data.lokasi[i].hub[j].alat[k].alias;
+              data6 = data2.data.lokasi[i].hub[j].alat[k].nama;
               //logic untuk membuat sudah ada pada list tidak masuk kembali
               if (name.contains(data5)) {
               } else {
@@ -237,7 +243,8 @@ class _KontrolUtamaState extends State<KontrolUtama>
                   'idlokasi': data1,
                   'idhub': data3,
                   'idalat': data4,
-                  'nama': data5
+                  'nama': data5,
+                  'devname': data6
                 };
                 trial.add(data);
               }
@@ -249,7 +256,7 @@ class _KontrolUtamaState extends State<KontrolUtama>
         );
       });
     }
-    // return loadMonitor();
+    return loadMonitor();
   }
 
   Future loadSensor(int idlokasienter, int idhubenter, int idalatenter) async {
@@ -323,6 +330,8 @@ class _KontrolUtamaState extends State<KontrolUtama>
 
   @override
   void initState() {
+    listname.clear();
+    trial.clear();
     _startTimer();
     loadKontrol();
     loadMonitor();
@@ -784,6 +793,8 @@ class _KontrolUtamaState extends State<KontrolUtama>
                                                                   SizedBox(),
                                                               onChanged:
                                                                   (newValue) {
+                                                                print(
+                                                                    "value $newValue");
                                                                 _selectedmonitor(
                                                                     newValue);
                                                                 loadSensor(
@@ -1139,6 +1150,10 @@ class _KontrolUtamaState extends State<KontrolUtama>
         idhub = prin2[0];
         var prin3 = repo.getidalatbynama(value);
         idalat = prin3[0];
+        var prin4 = repo.getnamaalat(value);
+        devname = prin4[0];
+        print("device name  $devname");
+
         loadSensor(prin[0], prin2[0], prin3[0]);
       });
   }

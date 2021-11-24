@@ -105,6 +105,7 @@ class _SemuaState extends State<Semua> {
 
   @override
   void initState() {
+    tempatlist.clear();
     _startTimer();
     loadDevice2();
     super.initState();

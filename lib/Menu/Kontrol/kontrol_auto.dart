@@ -46,6 +46,7 @@ class _KontrolAutoState extends State<KontrolAuto> with Validation {
         thresholdvalue = threshold;
       });
       var message = jsonEncode({
+        "tm": "$devname",
         "mode": "$mode",
         "threshold": "$threshold",
         "status": "$state:$namakondisi",
@@ -58,6 +59,7 @@ class _KontrolAutoState extends State<KontrolAuto> with Validation {
       var response = await http.post(url, body: body);
       print("${response.statusCode}");
       print("${response.body}");
+      print(message);
       if (response.statusCode == 200) {
         liststate.clear();
         print("Published to $topic");

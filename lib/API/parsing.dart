@@ -403,18 +403,21 @@ class Looping {
     this.idhub,
     this.idalat,
     this.nama,
+    this.devname,
   });
 
   int idlokasi;
   int idhub;
   int idalat;
   String nama;
+  String devname;
 
   factory Looping.fromJson(Map<String, dynamic> json) => Looping(
         idlokasi: json["idlokasi"],
         idhub: json["idhub"],
         idalat: json["idalat"],
         nama: json["nama"],
+        devname: json["devname"],
       );
 
   Map<String, dynamic> toJson() => {
@@ -422,6 +425,7 @@ class Looping {
         "idhub": idhub,
         "idalat": idalat,
         "nama": nama,
+        "devname": devname,
       };
 }
 
@@ -464,6 +468,12 @@ class Repository {
       .map((map) => Looping.fromJson(map))
       .where((item) => item.nama == nama)
       .map((item) => item.idalat)
+      .toList();
+
+  getnamaalat(String nama) => trial
+      .map((map) => Looping.fromJson(map))
+      .where((item) => item.nama == nama)
+      .map((item) => item.devname)
       .toList();
 
   List<String> getnama() => trial
