@@ -104,8 +104,6 @@ class _SemuaState extends State<Semua> with Validation {
                       ? kontrolnamechoosen = kontrolnamelist[0]
                       : kontrolnamechoosen = kontrolnamechoosen;
                   topic = "$kontrolnamechoosen/crophero/control";
-                  // print(kontrolnamelist[0]);
-                  // print(topic);
                 }
               }
             }

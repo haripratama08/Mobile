@@ -211,6 +211,7 @@ class _LogoutState extends State<Logout> {
                   iditems.clear();
                   itemsshadow.clear();
                   listnama.clear();
+                  listname.clear();
                   // tempatlist.clear();
                 },
               ),

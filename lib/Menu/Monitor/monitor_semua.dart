@@ -105,7 +105,7 @@ class _SemuaState extends State<Semua> {
 
   @override
   void initState() {
-    tempatlist.clear();
+    // tempatlist.clear();
     _startTimer();
     loadDevice2();
     super.initState();
@@ -114,12 +114,12 @@ class _SemuaState extends State<Semua> {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    setState(() {
-      items.clear();
-      itemsshadow.clear();
-      iditems.clear();
-      loadSensor();
-    });
+    // setState(() {
+    //   items.clear();
+    //   itemsshadow.clear();
+    //   iditems.clear();
+    //   loadSensor();
+    // });
   }
 
   Future loadDevice2() async {
@@ -129,48 +129,54 @@ class _SemuaState extends State<Semua> {
     Data2 data2 = Data2.fromJson(jsonResponse);
     if (this.mounted) {
       setState(() {
-        List<Widget> list = [];
-        for (int i = 0; i < data2.data.lokasi.length; i++) {
-          panjangtempat = data2.data.lokasi.length;
-          if (tempatlist.length == panjangtempat) {
-          } else {
-            tempat = data2.data.lokasi[i].nama;
-            id = data2.data.lokasi[i].id;
-            tempatlist.add(tempat);
-            idlist.add(id);
-          }
-          for (int j = 0; j < data2.data.lokasi[i].hub.length; j++) {
-            for (int k = 0; k < data2.data.lokasi[i].hub[j].alat.length; k++) {
-              alat = data2.data.lokasi[i].hub[j].alat.length;
-              data1 = data2.data.lokasi[i].id;
-              data3 = data2.data.lokasi[i].hub[j].id;
-              data4 = data2.data.lokasi[i].hub[j].alat[k].id;
-              data5 = data2.data.lokasi[i].hub[j].alat[k].nama;
-              if (name.contains(data5)) {
-              } else {
-                name.add('$data5');
+        try {
+          List<Widget> list = [];
+          for (int i = 0; i < data2.data.lokasi.length; i++) {
+            panjangtempat = data2.data.lokasi.length;
+            if (tempatlist.length == panjangtempat) {
+            } else {
+              tempat = data2.data.lokasi[i].nama;
+              id = data2.data.lokasi[i].id;
+              tempatlist.add(tempat);
+              idlist.add(id);
+            }
+            for (int j = 0; j < data2.data.lokasi[i].hub.length; j++) {
+              for (int k = 0;
+                  k < data2.data.lokasi[i].hub[j].alat.length;
+                  k++) {
+                alat = data2.data.lokasi[i].hub[j].alat.length;
+                data1 = data2.data.lokasi[i].id;
+                data3 = data2.data.lokasi[i].hub[j].id;
+                data4 = data2.data.lokasi[i].hub[j].alat[k].id;
+                data5 = data2.data.lokasi[i].hub[j].alat[k].nama;
+                if (name.contains(data5)) {
+                } else {
+                  name.add('$data5');
+                }
+                number = name.length;
+                if (loc.length == number) {
+                } else {
+                  loc.add(data1);
+                }
+                if (huc.length == number) {
+                } else {
+                  huc.add(data3);
+                }
+                if (dev.length == number) {
+                } else {
+                  dev.add(data4);
+                }
+                list2.add(
+                    ('{ "idlokasi" : $data1,  "idhub" : $data3,  "idalat" : $data4, "nama" : $data5}'));
               }
-              number = name.length;
-              if (loc.length == number) {
-              } else {
-                loc.add(data1);
-              }
-              if (huc.length == number) {
-              } else {
-                huc.add(data3);
-              }
-              if (dev.length == number) {
-              } else {
-                dev.add(data4);
-              }
-              list2.add(
-                  ('{ "idlokasi" : $data1,  "idhub" : $data3,  "idalat" : $data4, "nama" : $data5}'));
             }
           }
+          return new Row(
+            children: list,
+          );
+        } on Exception catch (_) {
+          print('kosong');
         }
-        return new Row(
-          children: list,
-        );
       });
     }
 
@@ -276,92 +282,99 @@ class _SemuaState extends State<Semua> {
                 zerodata = true;
               })
             : setState(() {
-                panjang = ((jsonResponse["data"])["data"].length);
-                namaalat =
-                    ((((jsonResponse["data"])["info"])["alat"])["alias"]);
-                for (var i = 0; i < panjang; i++) {
-                  if (items.length == panjang) {
-                  } else if (items.length > panjang) {
-                    items.clear();
-                    iditems.clear();
-                    itemsshadow.clear();
-                  } else {
-                    nilai1 = ((((jsonResponse["data"])["data"])[i])["data"])
-                        .toStringAsFixed(1);
-                    nilailast = ((((jsonResponse["data"])["data"])[0])["data"])
-                        .toStringAsFixed(1);
-                    nil.add(nilai1);
-                    idjns = (((jsonResponse["data"])["data"])[i])["id"];
-                    tanggal1 = ((((jsonResponse["data"])["data"])[i])[
-                        "tanggal_sensor"]);
-                    DateTime parseDate =
-                        new DateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
-                            .parse(tanggal1);
-                    var inputDate = DateTime.parse(parseDate.toString());
-                    var outputFormat = DateFormat('dd-MM-yyyy hh:mm a');
-                    var outputDate = outputFormat.format(inputDate);
-                    notif =
-                        ((((jsonResponse["data"])["data"])[i])["notifikasi"]);
-                    mean = ((((jsonResponse["data"])["data"])[i])["mean"])
-                        .toStringAsFixed(1);
-                    max = ((((jsonResponse["data"])["data"])[i])["max"])
-                        .toStringAsFixed(1);
-                    min = ((((jsonResponse["data"])["data"])[i])["min"])
-                        .toStringAsFixed(1);
-                    jnssensor = (((jsonResponse["data"])["data"])[i])["jenis"];
-                    if (itemsshadow.contains(jnssensor) &&
-                        itemsbefore == items.length) {
+                try {
+                  panjang = ((jsonResponse["data"])["data"].length);
+                  namaalat =
+                      ((((jsonResponse["data"])["info"])["alat"])["alias"]);
+                  for (var i = 0; i < panjang; i++) {
+                    if (items.length == panjang) {
+                    } else if (items.length > panjang) {
                       items.clear();
                       iditems.clear();
                       itemsshadow.clear();
                     } else {
-                      if (jnssensor == "Kelembapan Tanah") {
-                        img = "asset/img/soil.png";
-                        satuan = "%";
-                      } else if (jnssensor == "Suhu Udara") {
-                        img = "asset/img/temp.png";
-                        satuan = "\u00B0C";
-                      } else if (jnssensor == "Kelembapan Udara") {
-                        img = "asset/img/rh.png";
-                        satuan = "%";
-                      } else if (jnssensor == "Ketinggian Air") {
-                        img = "asset/img/Tsuhu.png";
-                        satuan = "cm";
+                      nilai1 = ((((jsonResponse["data"])["data"])[i])["data"])
+                          .toStringAsFixed(1);
+                      nilailast =
+                          ((((jsonResponse["data"])["data"])[0])["data"])
+                              .toStringAsFixed(1);
+                      nil.add(nilai1);
+                      idjns = (((jsonResponse["data"])["data"])[i])["id"];
+                      tanggal1 = ((((jsonResponse["data"])["data"])[i])[
+                          "tanggal_sensor"]);
+                      DateTime parseDate =
+                          new DateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
+                              .parse(tanggal1);
+                      var inputDate = DateTime.parse(parseDate.toString());
+                      var outputFormat = DateFormat('dd-MM-yyyy hh:mm a');
+                      var outputDate = outputFormat.format(inputDate);
+                      notif =
+                          ((((jsonResponse["data"])["data"])[i])["notifikasi"]);
+                      mean = ((((jsonResponse["data"])["data"])[i])["mean"])
+                          .toStringAsFixed(1);
+                      max = ((((jsonResponse["data"])["data"])[i])["max"])
+                          .toStringAsFixed(1);
+                      min = ((((jsonResponse["data"])["data"])[i])["min"])
+                          .toStringAsFixed(1);
+                      jnssensor =
+                          (((jsonResponse["data"])["data"])[i])["jenis"];
+                      if (itemsshadow.contains(jnssensor) &&
+                          itemsbefore == items.length) {
+                        items.clear();
+                        iditems.clear();
+                        itemsshadow.clear();
                       } else {
-                        img = "asset/img/light.png";
-                        satuan = "lux";
+                        if (jnssensor == "Kelembapan Tanah") {
+                          img = "asset/img/soil.png";
+                          satuan = "%";
+                        } else if (jnssensor == "Suhu Udara") {
+                          img = "asset/img/temp.png";
+                          satuan = "\u00B0C";
+                        } else if (jnssensor == "Kelembapan Udara") {
+                          img = "asset/img/rh.png";
+                          satuan = "%";
+                        } else if (jnssensor == "Ketinggian Air") {
+                          img = "asset/img/Tsuhu.png";
+                          satuan = "cm";
+                        } else {
+                          img = "asset/img/light.png";
+                          satuan = "lux";
+                        }
+                        if (notif == 0) {
+                          notifikasitoogle = false;
+                        } else if (notif == 1) {
+                          notifikasitoogle = true;
+                        }
+                        setState(() {
+                          zerodata = false;
+                          noty.add(notifikasitoogle);
+                          iditems.add(notif);
+                          itemsshadow.add(jnssensor);
+                          items.add(
+                            parameter(
+                                jnssensor,
+                                satuan,
+                                img,
+                                nilai1,
+                                min,
+                                max,
+                                mean,
+                                outputDate,
+                                notifikasitoogle,
+                                idjns,
+                                i,
+                                namaalat),
+                          );
+                        });
                       }
-                      if (notif == 0) {
-                        notifikasitoogle = false;
-                      } else if (notif == 1) {
-                        notifikasitoogle = true;
-                      }
-                      setState(() {
-                        zerodata = false;
-                        noty.add(notifikasitoogle);
-                        iditems.add(notif);
-                        itemsshadow.add(jnssensor);
-                        items.add(
-                          parameter(
-                              jnssensor,
-                              satuan,
-                              img,
-                              nilai1,
-                              min,
-                              max,
-                              mean,
-                              outputDate,
-                              notifikasitoogle,
-                              idjns,
-                              i,
-                              namaalat),
-                        );
-                      });
                     }
                   }
+                  itemsbefore = items.length;
+                } on Exception catch (_) {
+                  print("kosong");
                 }
-                itemsbefore = items.length;
               });
+
         Future.delayed(const Duration(minutes: 1), () {
           return loadSensor();
         });

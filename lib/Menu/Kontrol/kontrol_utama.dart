@@ -11,6 +11,7 @@ import 'package:flutter/material.dart';
 import 'package:toggle_switch/toggle_switch.dart';
 import 'package:ch_v2_1/API/parsing.dart';
 
+List<String> listname = [];
 String selectedkondisi;
 String namaalatkontrol;
 List<String> liststate = [];
@@ -95,7 +96,7 @@ class _KontrolUtamaState extends State<KontrolUtama>
   List<dynamic> idl = [];
   List<dynamic> states = [];
   int idlokasikontrol;
-  List<String> listname = [];
+
   List<String> listkontrol = [];
   TabController _tabController;
   int index = 1;
@@ -183,6 +184,7 @@ class _KontrolUtamaState extends State<KontrolUtama>
                   iDkontrol == null
                       ? iDkontrol = listidkontrol[0]
                       : iDkontrol = iDkontrol;
+                  print(listname);
                   // print(namaalatkontrol);
                 }
               }
@@ -330,8 +332,6 @@ class _KontrolUtamaState extends State<KontrolUtama>
 
   @override
   void initState() {
-    listname.clear();
-    trial.clear();
     _startTimer();
     loadKontrol();
     loadMonitor();
@@ -1111,7 +1111,7 @@ class _KontrolUtamaState extends State<KontrolUtama>
                                                     0.05,
                                                 child: Center(
                                                     child: Text(
-                                                        "${listname[index - 1]}",
+                                                        "${listname[i]}",
                                                         style: TextStyle(
                                                             color: Colors.black,
                                                             fontFamily: 'Mont',
