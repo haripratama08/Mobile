@@ -358,6 +358,9 @@ class _KontrolUtamaState extends State<KontrolUtama>
       }
     }
 
+    // print("alat $selectedalat");
+    // print("sensor $pilihsensor");
+    // print("listsensor $listed");
     state(status);
     return DefaultTabController(
         initialIndex: 0,
@@ -490,200 +493,11 @@ class _KontrolUtamaState extends State<KontrolUtama>
                                                             23,
                                                       ),
                                                     ),
-                                              value == 1
-                                                  ? Column(
-                                                      children: [
-                                                        new Text(
-                                                          "Pengaturan",
-                                                          style: TextStyle(
-                                                            fontFamily: 'Mont',
-                                                            color: Colors.red,
-                                                            fontSize: MediaQuery.of(
-                                                                        context)
-                                                                    .size
-                                                                    .width /
-                                                                23,
-                                                          ),
-                                                        ),
-                                                        SizedBox(
-                                                          height: 5,
-                                                        ),
-                                                        Padding(
-                                                          padding:
-                                                              const EdgeInsets
-                                                                      .fromLTRB(
-                                                                  100.0,
-                                                                  5.0,
-                                                                  100.0,
-                                                                  5.0),
-                                                          child: Container(
-                                                            height: 40,
-                                                            width: 170,
-                                                            decoration:
-                                                                myBoxDecoration(),
-                                                            child:
-                                                                DropdownButton(
-                                                                    value:
-                                                                        selectedalat,
-                                                                    isExpanded:
-                                                                        true,
-                                                                    icon:
-                                                                        Padding(
-                                                                      padding: const EdgeInsets
-                                                                              .only(
-                                                                          left:
-                                                                              15.0),
-                                                                      child:
-                                                                          Icon(
-                                                                        Icons
-                                                                            .arrow_drop_down,
-                                                                        color: Color(
-                                                                            0xff186962),
-                                                                      ),
-                                                                    ),
-                                                                    iconSize:
-                                                                        14,
-                                                                    underline:
-                                                                        SizedBox(),
-                                                                    onChanged:
-                                                                        (newValue) {
-                                                                      _selectedmonitor(
-                                                                          newValue);
-                                                                      loadSensor(
-                                                                          idlokasi,
-                                                                          idhub,
-                                                                          idalat);
-                                                                      _startTimer();
-                                                                      listed
-                                                                          .clear();
-                                                                      if (mounted)
-                                                                        setState(
-                                                                            () {
-                                                                          pilihsensor =
-                                                                              null;
-                                                                          listsensors
-                                                                              .clear();
-                                                                          selectedalat =
-                                                                              newValue;
-                                                                        });
-                                                                    },
-                                                                    hint:
-                                                                        Padding(
-                                                                      padding:
-                                                                          const EdgeInsets.all(
-                                                                              8.0),
-                                                                      child:
-                                                                          Text(
-                                                                        'Pilih Alat',
-                                                                        style: TextStyle(
-                                                                            fontSize:
-                                                                                14),
-                                                                      ),
-                                                                    ),
-                                                                    items: trial
-                                                                        .map(
-                                                                            (alat) {
-                                                                      return DropdownMenuItem(
-                                                                        value: alat[
-                                                                            'nama'],
-                                                                        child:
-                                                                            Padding(
-                                                                          padding:
-                                                                              const EdgeInsets.only(left: 10.0),
-                                                                          child:
-                                                                              Text(
-                                                                            "${alat['nama']}",
-                                                                            style:
-                                                                                TextStyle(
-                                                                              fontSize: 14,
-                                                                              fontFamily: "Verdana",
-                                                                              color: Colors.black,
-                                                                            ),
-                                                                          ),
-                                                                        ),
-                                                                      );
-                                                                    }).toList()),
-                                                          ),
-                                                        ),
-                                                        (selectedalat == null &&
-                                                                _counter != 0)
-                                                            ? Text('')
-                                                            : (selectedalat !=
-                                                                        null &&
-                                                                    _counter !=
-                                                                        0)
-                                                                ? Text('')
-                                                                : (selectedalat ==
-                                                                            null &&
-                                                                        _counter ==
-                                                                            0)
-                                                                    ? Text('')
-                                                                    : Padding(
-                                                                        padding: const EdgeInsets.fromLTRB(
-                                                                            100.0,
-                                                                            5.0,
-                                                                            100.0,
-                                                                            5.0),
-                                                                        child:
-                                                                            Container(
-                                                                          height:
-                                                                              40,
-                                                                          width:
-                                                                              170,
-                                                                          decoration:
-                                                                              myBoxDecoration(),
-                                                                          child: DropdownButton(
-                                                                              value: pilihsensor,
-                                                                              isExpanded: true,
-                                                                              icon: Padding(
-                                                                                padding: const EdgeInsets.only(left: 15.0),
-                                                                                child: Icon(
-                                                                                  Icons.arrow_drop_down,
-                                                                                  color: Color(0xff186962),
-                                                                                ),
-                                                                              ),
-                                                                              iconSize: 14,
-                                                                              underline: SizedBox(),
-                                                                              onChanged: (String val) {
-                                                                                _selectedsensor(val);
-                                                                                if (mounted)
-                                                                                  setState(() {
-                                                                                    pilihsensor = val;
-                                                                                  });
-                                                                              },
-                                                                              hint: Padding(
-                                                                                padding: const EdgeInsets.all(8.0),
-                                                                                child: Text(
-                                                                                  'Pilih Sensor',
-                                                                                  style: TextStyle(fontSize: 14),
-                                                                                ),
-                                                                              ),
-                                                                              items: listed.map((detail) {
-                                                                                return DropdownMenuItem<String>(
-                                                                                  value: detail,
-                                                                                  child: Padding(
-                                                                                    padding: const EdgeInsets.only(left: 10.0),
-                                                                                    child: Text(
-                                                                                      "$detail",
-                                                                                      style: TextStyle(
-                                                                                        fontSize: 14,
-                                                                                        fontFamily: "Verdana",
-                                                                                        color: Colors.black,
-                                                                                      ),
-                                                                                    ),
-                                                                                  ),
-                                                                                );
-                                                                              }).toList()),
-                                                                        ),
-                                                                      )
-                                                      ],
-                                                    )
-                                                  : SizedBox(
-                                                      height:
-                                                          MediaQuery.of(context)
-                                                                  .size
-                                                                  .height /
-                                                              200),
+                                              SizedBox(
+                                                  height: MediaQuery.of(context)
+                                                          .size
+                                                          .height /
+                                                      200),
                                               new Text(
                                                 "Mode",
                                                 style: TextStyle(
@@ -793,15 +607,13 @@ class _KontrolUtamaState extends State<KontrolUtama>
                                                                   SizedBox(),
                                                               onChanged:
                                                                   (newValue) {
-                                                                // print(
-                                                                //     "value $newValue");
                                                                 _selectedmonitor(
                                                                     newValue);
                                                                 loadSensor(
                                                                     idlokasi,
                                                                     idhub,
                                                                     idalat);
-                                                                _startTimer();
+                                                                // _startTimer();
                                                                 listed.clear();
                                                                 if (mounted)
                                                                   setState(() {
@@ -857,76 +669,81 @@ class _KontrolUtamaState extends State<KontrolUtama>
                                                         height: 5,
                                                       ),
                                                       (selectedalat == null &&
-                                                              _counter != 0)
+                                                              listed.isEmpty)
                                                           ? Text('')
-                                                          : (selectedalat !=
+                                                          : (selectedalat ==
                                                                       null &&
-                                                                  _counter != 0)
+                                                                  listed
+                                                                      .isNotEmpty)
                                                               ? Text('')
-                                                              : (selectedalat ==
-                                                                          null &&
-                                                                      _counter ==
-                                                                          0)
-                                                                  ? Text('')
-                                                                  : Padding(
-                                                                      padding: const EdgeInsets
+                                                              : Padding(
+                                                                  padding:
+                                                                      const EdgeInsets
                                                                               .fromLTRB(
                                                                           100.0,
                                                                           10.0,
                                                                           100.0,
                                                                           5.0),
-                                                                      child:
-                                                                          Container(
-                                                                        height:
-                                                                            32,
-                                                                        width:
-                                                                            170,
-                                                                        decoration:
-                                                                            myBoxDecoration(),
-                                                                        child: DropdownButton(
-                                                                            value: pilihsensor,
-                                                                            isExpanded: true,
-                                                                            icon: Padding(
-                                                                              padding: const EdgeInsets.only(left: 15.0),
-                                                                              child: Icon(
-                                                                                Icons.arrow_drop_down,
-                                                                                color: Color(0xff186962),
-                                                                              ),
-                                                                            ),
-                                                                            iconSize: 13,
-                                                                            underline: SizedBox(),
-                                                                            onChanged: (String val) {
-                                                                              _selectedsensor(val);
-                                                                              if (mounted)
-                                                                                setState(() {
-                                                                                  pilihsensor = val;
-                                                                                });
-                                                                            },
-                                                                            hint: Padding(
-                                                                              padding: const EdgeInsets.all(8.0),
+                                                                  child:
+                                                                      Container(
+                                                                    height: 32,
+                                                                    width: 170,
+                                                                    decoration:
+                                                                        myBoxDecoration(),
+                                                                    child: DropdownButton(
+                                                                        value: pilihsensor,
+                                                                        isExpanded: true,
+                                                                        icon: Padding(
+                                                                          padding:
+                                                                              const EdgeInsets.only(left: 15.0),
+                                                                          child:
+                                                                              Icon(
+                                                                            Icons.arrow_drop_down,
+                                                                            color:
+                                                                                Color(0xff186962),
+                                                                          ),
+                                                                        ),
+                                                                        iconSize: 13,
+                                                                        underline: SizedBox(),
+                                                                        onChanged: (String val) {
+                                                                          _selectedsensor(
+                                                                              val);
+                                                                          if (mounted)
+                                                                            setState(() {
+                                                                              pilihsensor = val;
+                                                                            });
+                                                                        },
+                                                                        hint: Padding(
+                                                                          padding:
+                                                                              const EdgeInsets.all(8.0),
+                                                                          child:
+                                                                              Text(
+                                                                            'Pilih Sensor',
+                                                                            style:
+                                                                                TextStyle(fontSize: 13),
+                                                                          ),
+                                                                        ),
+                                                                        items: listed.map((detail) {
+                                                                          return DropdownMenuItem<
+                                                                              String>(
+                                                                            value:
+                                                                                detail,
+                                                                            child:
+                                                                                Padding(
+                                                                              padding: const EdgeInsets.only(left: 10.0),
                                                                               child: Text(
-                                                                                'Pilih Sensor',
-                                                                                style: TextStyle(fontSize: 13),
+                                                                                "$detail",
+                                                                                style: TextStyle(
+                                                                                  fontSize: 13,
+                                                                                  fontFamily: "Verdana",
+                                                                                  color: Colors.black,
+                                                                                ),
                                                                               ),
                                                                             ),
-                                                                            items: listed.map((detail) {
-                                                                              return DropdownMenuItem<String>(
-                                                                                value: detail,
-                                                                                child: Padding(
-                                                                                  padding: const EdgeInsets.only(left: 10.0),
-                                                                                  child: Text(
-                                                                                    "$detail",
-                                                                                    style: TextStyle(
-                                                                                      fontSize: 13,
-                                                                                      fontFamily: "Verdana",
-                                                                                      color: Colors.black,
-                                                                                    ),
-                                                                                  ),
-                                                                                ),
-                                                                              );
-                                                                            }).toList()),
-                                                                      ),
-                                                                    )
+                                                                          );
+                                                                        }).toList()),
+                                                                  ),
+                                                                )
                                                     ],
                                                   ),
                                                 )

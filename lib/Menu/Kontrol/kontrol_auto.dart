@@ -145,8 +145,6 @@ class _KontrolAutoState extends State<KontrolAuto> with Validation {
                                               onChanged: (newValue) {
                                                 if (mounted)
                                                   setState(() {
-                                                    pilihsensor = null;
-                                                    listsensors.clear();
                                                     selectedstate = newValue;
                                                   });
                                               },
