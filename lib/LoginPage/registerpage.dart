@@ -141,6 +141,13 @@ class _RegisterPageState extends State<RegisterPage> {
 
   @override
   Widget build(BuildContext context) {
+    print(username.text?.isEmpty ?? true);
+    print(passwordreal.text?.isEmpty ?? true);
+    print(passwordtype.text?.isEmpty ?? true);
+    print(nama.text?.isEmpty ?? true);
+    print(email.text?.isEmpty ?? true);
+    print(telp.text?.isEmpty ?? true);
+    print(alamat.text?.isEmpty ?? true);
     return Scaffold(
       resizeToAvoidBottomInset: false,
       body: SingleChildScrollView(

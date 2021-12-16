@@ -1,5 +1,6 @@
 import 'package:ch_v2_1/API/api.dart';
 import 'package:ch_v2_1/Menu/Kontrol/kontrol_utama.dart';
+import 'package:ch_v2_1/Menu/Kontrol/kontrol_auto.dart';
 import 'package:ch_v2_1/dialogbox/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -8,7 +9,7 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:ch_v2_1/LoginPage/loginpage.dart';
 import 'dart:async';
-import 'package:ch_v2_1/Menu/Monitor/monitor_semua.dart';
+import 'package:ch_v2_1/Menu/Monitor/monitor_semua.dart' as a;
 
 class Logout extends StatefulWidget {
   @override
@@ -23,18 +24,17 @@ class _LogoutState extends State<Logout> {
   String foto;
   double size;
   String namas;
+
   void initState() {
-    loadSensor();
+    loadIdentitas();
     super.initState();
   }
 
-  Future loadSensor() async {
+  Future loadIdentitas() async {
     var url = Uri.parse('$endPoint/profile');
     var jsonString = await http
         .get(url, headers: {HttpHeaders.authorizationHeader: '$token'});
     var jsonResponse = json.decode(jsonString.body);
-    print(jsonResponse);
-    print(token);
     setState(() {
       size = MediaQuery.of(context).size.width / 2;
       status = jsonResponse['status'];
@@ -43,9 +43,6 @@ class _LogoutState extends State<Logout> {
       telp = (jsonResponse['data'])['telp'];
       alamat = (jsonResponse['data'])['alamat'];
       foto = (jsonResponse['data'])['foto'];
-      print(namas);
-      print(email);
-      print(telp);
     });
   }
 
@@ -206,20 +203,39 @@ class _LogoutState extends State<Logout> {
                   );
                   final pref = await SharedPreferences.getInstance();
                   await pref.clear();
+
+                  token = null;
+                  uuid = null;
+                  //menghapus isi dari variabel yang ada di a
+                  a.items.clear();
+                  a.idlokasi.clear();
+                  a.idhub.clear();
+                  a.idalat.clear();
+                  a.items.clear();
+                  a.iditems.clear();
+                  a.itemsshadow.clear();
+                  a.listnama.clear();
+                  a.tempatlist.clear();
+                  a.loc.clear();
+                  a.huc.clear();
+                  a.dev.clear();
+
+                  //menghapus isi dari variabel yang ada di kontrol
                   trial.clear();
-                  items.clear();
-                  iditems.clear();
-                  itemsshadow.clear();
-                  listnama.clear();
                   listname.clear();
-                  // tempatlist.clear();
+                  namaalatkontrol = null;
+                  listed.clear();
+                  selectedalat = null;
+                  pilihsensor = null;
+                  listsensor.clear();
+                  selectedkondisi = null;
+                  selectedstate = null;
                 },
               ),
               title: new Text(
                 "Keluar",
                 style: new TextStyle(
                   color: Colors.black,
-                  // fontFamily: "Mont",
                   fontWeight: FontWeight.bold,
                 ),
               ),

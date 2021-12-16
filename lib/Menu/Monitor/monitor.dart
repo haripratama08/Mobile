@@ -131,6 +131,7 @@ class _MonitorIndoorState extends State<MonitorIndoor> with Validation {
     idlokas = idlokasi[index];
     idhu = idhub[index];
     idala = idalat[index];
+    loadDevice();
   }
 
   void data(int index) {
@@ -161,7 +162,6 @@ class _MonitorIndoorState extends State<MonitorIndoor> with Validation {
     super.dispose();
   }
 
-  Semua all = Semua();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -196,9 +196,6 @@ class _MonitorIndoorState extends State<MonitorIndoor> with Validation {
                           change(index);
                           items = items;
                           itemsshadow = itemsshadow;
-                          // Menu(
-                          //   namaalat: namaalat,
-                          // );
                         });
                       },
                       child: Padding(
@@ -226,35 +223,6 @@ class _MonitorIndoorState extends State<MonitorIndoor> with Validation {
                                     ),
                                   ],
                                 ),
-                                // SizedBox(
-                                //   width: MediaQuery.of(context).size.width / 7,
-                                // ),
-                                // GestureDetector(
-                                //   onTap: () {
-                                //     setState(() {
-                                //       idalate = idala;
-                                //       nama = listnama[index];
-                                //       print(
-                                //           "pilihan nama monitor'${listnama[index]}'");
-                                //     });
-                                //     dialog();
-                                //   },
-                                //   child: Container(
-                                //     child: Center(
-                                //         child: Icon(
-                                //       Icons.border_color,
-                                //       size: 10,
-                                //     )),
-                                //     height:
-                                //         MediaQuery.of(context).size.width / 15,
-                                //     width:
-                                //         MediaQuery.of(context).size.width / 15,
-                                //     decoration: BoxDecoration(
-                                //         border: Border.all(
-                                //             width: 1.5, color: Colors.black),
-                                //         borderRadius: BorderRadius.circular(5)),
-                                //   ),
-                                // )
                               ],
                             )),
                             height: MediaQuery.of(context).size.height / 11.5,

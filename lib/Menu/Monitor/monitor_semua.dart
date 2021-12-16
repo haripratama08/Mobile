@@ -13,6 +13,9 @@ import 'package:flutter/material.dart';
 import 'package:ch_v2_1/Menu/tambahan/stringcap.dart';
 import 'package:ch_v2_1/Menu/menu.dart';
 
+int idalabef;
+int idhubef;
+int idlokasbef;
 String nilailast;
 String event;
 List<String> nil = [];
@@ -105,7 +108,6 @@ class _SemuaState extends State<Semua> {
 
   @override
   void initState() {
-    // tempatlist.clear();
     _startTimer();
     loadDevice2();
     super.initState();
@@ -114,12 +116,6 @@ class _SemuaState extends State<Semua> {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    // setState(() {
-    //   items.clear();
-    //   itemsshadow.clear();
-    //   iditems.clear();
-    //   loadSensor();
-    // });
   }
 
   Future loadDevice2() async {
@@ -184,27 +180,33 @@ class _SemuaState extends State<Semua> {
   }
 
   void refreshData() {
-    setState(() {
-      refresh = true;
-      items.clear();
-      iditems.clear();
-      itemsshadow.clear();
-      FocusScope.of(context).requestFocus(FocusNode());
-    });
+    if (this.mounted) {
+      setState(() {
+        refresh = true;
+        items.clear();
+        iditems.clear();
+        itemsshadow.clear();
+        FocusScope.of(context).requestFocus(FocusNode());
+      });
+    }
     print("Refreshing");
     Future.delayed(Duration(seconds: 2), () {
-      setState(() {
-        refresh = false;
-        print("Refreshed");
-      });
+      if (this.mounted) {
+        setState(() {
+          refresh = false;
+          print("Refreshed");
+        });
+      }
     });
   }
 
   Future gantinotif(int sets, int idsensor, String token) async {
-    setState(() {
-      loadSensor();
-      loading = true;
-    });
+    if (this.mounted) {
+      setState(() {
+        loadSensor();
+        loading = true;
+      });
+    }
     var jsonString = await http.put(
         Uri.parse('$endPoint/sensor/notifikasi?set=$sets&id_sensor=$idsensor'),
         headers: {HttpHeaders.authorizationHeader: '$token'});
@@ -275,109 +277,111 @@ class _SemuaState extends State<Semua> {
               '$endPoint/mobile/sensor?lokasi=${loc[0]}&hub=${huc[0]}&alat=${dev[0]}'),
           headers: {HttpHeaders.authorizationHeader: '$token'});
       var jsonResponse = json.decode(jsonString.body);
-      if (this.mounted) {
-        (isNumeric("${((((jsonResponse["data"])["data"])[0])["data"])}") ==
-                false)
-            ? setState(() {
-                zerodata = true;
-              })
-            : setState(() {
-                try {
-                  panjang = ((jsonResponse["data"])["data"].length);
-                  namaalat =
-                      ((((jsonResponse["data"])["info"])["alat"])["alias"]);
-                  for (var i = 0; i < panjang; i++) {
-                    if (items.length == panjang) {
-                    } else if (items.length > panjang) {
-                      items.clear();
-                      iditems.clear();
-                      itemsshadow.clear();
+      print("data $jsonResponse");
+      if ((isNumeric("${((((jsonResponse["data"])["data"])[0])["data"])}") ==
+          false)) {
+        if (this.mounted) {
+          setState(() {
+            zerodata = true;
+            print(zerodata);
+          });
+        }
+      } else {
+        if (this.mounted) {
+          setState(() {
+            try {
+              panjang = ((jsonResponse["data"])["data"].length);
+              namaalat = ((((jsonResponse["data"])["info"])["alat"])["alias"]);
+              for (var i = 0; i < panjang; i++) {
+                if (items.length == panjang) {
+                } else if (items.length > panjang) {
+                  items.clear();
+                  iditems.clear();
+                  itemsshadow.clear();
+                } else {
+                  nilai1 = ((((jsonResponse["data"])["data"])[i])["data"])
+                      .toStringAsFixed(1);
+                  nilailast = ((((jsonResponse["data"])["data"])[0])["data"])
+                      .toStringAsFixed(1);
+                  nil.add(nilai1);
+                  idjns = (((jsonResponse["data"])["data"])[i])["id"];
+                  tanggal1 =
+                      ((((jsonResponse["data"])["data"])[i])["tanggal_sensor"]);
+                  DateTime parseDate =
+                      new DateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
+                          .parse(tanggal1);
+                  var inputDate = DateTime.parse(parseDate.toString());
+                  var outputFormat = DateFormat('dd-MM-yyyy hh:mm a');
+                  var outputDate = outputFormat.format(inputDate);
+                  notif = ((((jsonResponse["data"])["data"])[i])["notifikasi"]);
+                  mean = ((((jsonResponse["data"])["data"])[i])["mean"])
+                      .toStringAsFixed(1);
+                  max = ((((jsonResponse["data"])["data"])[i])["max"])
+                      .toStringAsFixed(1);
+                  min = ((((jsonResponse["data"])["data"])[i])["min"])
+                      .toStringAsFixed(1);
+                  jnssensor = (((jsonResponse["data"])["data"])[i])["jenis"];
+                  if (itemsshadow.contains(jnssensor) &&
+                      itemsbefore == items.length) {
+                    items.clear();
+                    iditems.clear();
+                    itemsshadow.clear();
+                  } else {
+                    if (jnssensor == "Kelembapan Tanah") {
+                      img = "asset/img/soil.png";
+                      satuan = "%";
+                    } else if (jnssensor == "Suhu Udara") {
+                      img = "asset/img/temp.png";
+                      satuan = "\u00B0C";
+                    } else if (jnssensor == "Kelembapan Udara") {
+                      img = "asset/img/rh.png";
+                      satuan = "%";
+                    } else if (jnssensor == "Ketinggian Air") {
+                      img = "asset/img/Tsuhu.png";
+                      satuan = "cm";
                     } else {
-                      nilai1 = ((((jsonResponse["data"])["data"])[i])["data"])
-                          .toStringAsFixed(1);
-                      nilailast =
-                          ((((jsonResponse["data"])["data"])[0])["data"])
-                              .toStringAsFixed(1);
-                      nil.add(nilai1);
-                      idjns = (((jsonResponse["data"])["data"])[i])["id"];
-                      tanggal1 = ((((jsonResponse["data"])["data"])[i])[
-                          "tanggal_sensor"]);
-                      DateTime parseDate =
-                          new DateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
-                              .parse(tanggal1);
-                      var inputDate = DateTime.parse(parseDate.toString());
-                      var outputFormat = DateFormat('dd-MM-yyyy hh:mm a');
-                      var outputDate = outputFormat.format(inputDate);
-                      notif =
-                          ((((jsonResponse["data"])["data"])[i])["notifikasi"]);
-                      mean = ((((jsonResponse["data"])["data"])[i])["mean"])
-                          .toStringAsFixed(1);
-                      max = ((((jsonResponse["data"])["data"])[i])["max"])
-                          .toStringAsFixed(1);
-                      min = ((((jsonResponse["data"])["data"])[i])["min"])
-                          .toStringAsFixed(1);
-                      jnssensor =
-                          (((jsonResponse["data"])["data"])[i])["jenis"];
-                      if (itemsshadow.contains(jnssensor) &&
-                          itemsbefore == items.length) {
-                        items.clear();
-                        iditems.clear();
-                        itemsshadow.clear();
-                      } else {
-                        if (jnssensor == "Kelembapan Tanah") {
-                          img = "asset/img/soil.png";
-                          satuan = "%";
-                        } else if (jnssensor == "Suhu Udara") {
-                          img = "asset/img/temp.png";
-                          satuan = "\u00B0C";
-                        } else if (jnssensor == "Kelembapan Udara") {
-                          img = "asset/img/rh.png";
-                          satuan = "%";
-                        } else if (jnssensor == "Ketinggian Air") {
-                          img = "asset/img/Tsuhu.png";
-                          satuan = "cm";
-                        } else {
-                          img = "asset/img/light.png";
-                          satuan = "lux";
-                        }
-                        if (notif == 0) {
-                          notifikasitoogle = false;
-                        } else if (notif == 1) {
-                          notifikasitoogle = true;
-                        }
-                        setState(() {
-                          zerodata = false;
-                          noty.add(notifikasitoogle);
-                          iditems.add(notif);
-                          itemsshadow.add(jnssensor);
-                          items.add(
-                            parameter(
-                                jnssensor,
-                                satuan,
-                                img,
-                                nilai1,
-                                min,
-                                max,
-                                mean,
-                                outputDate,
-                                notifikasitoogle,
-                                idjns,
-                                i,
-                                namaalat),
-                          );
-                        });
-                      }
+                      img = "asset/img/light.png";
+                      satuan = "lux";
                     }
+                    if (notif == 0) {
+                      notifikasitoogle = false;
+                    } else if (notif == 1) {
+                      notifikasitoogle = true;
+                    }
+                    setState(() {
+                      zerodata = false;
+                      noty.add(notifikasitoogle);
+                      iditems.add(notif);
+                      itemsshadow.add(jnssensor);
+                      items.add(
+                        parameter(
+                            jnssensor,
+                            satuan,
+                            img,
+                            nilai1,
+                            min,
+                            max,
+                            mean,
+                            outputDate,
+                            notifikasitoogle,
+                            idjns,
+                            i,
+                            namaalat),
+                      );
+                    });
                   }
-                  itemsbefore = items.length;
-                } on Exception catch (_) {
-                  print("kosong");
                 }
-              });
+              }
+              itemsbefore = items.length;
+            } on Exception catch (_) {
+              print("kosong");
+            }
+          });
 
-        Future.delayed(const Duration(minutes: 1), () {
-          return loadSensor();
-        });
+          Future.delayed(const Duration(minutes: 1), () {
+            return loadSensor();
+          });
+        }
       }
     } else {
       var jsonString = await http.get(
@@ -385,90 +389,96 @@ class _SemuaState extends State<Semua> {
               '$endPoint/mobile/sensor?lokasi=$idlokas&hub=$idhu&alat=$idala'),
           headers: {HttpHeaders.authorizationHeader: '$token'});
       var jsonResponse = json.decode(jsonString.body);
-      if (this.mounted) {
-        setState(() {
-          (isNumeric("${((((jsonResponse["data"])["data"])[0])["data"])}") ==
-                  false)
-              ? setState(() {
-                  zerodata = true;
-                })
-              : panjang = ((jsonResponse["data"])["data"].length);
-          namaalat = ((((jsonResponse["data"])["info"])["alat"])["alias"]);
-          for (var i = 0; i < panjang; i++) {
-            if (items.length == panjang) {
-            } else if (items.length > panjang) {
-              items.clear();
-              iditems.clear();
-              itemsshadow.clear();
-            } else {
-              nilai1 = ((((jsonResponse["data"])["data"])[i])["data"])
-                  .toStringAsFixed(1);
-              nilailast = ((((jsonResponse["data"])["data"])[0])["data"])
-                  .toStringAsFixed(1);
-              idjns = (((jsonResponse["data"])["data"])[i])["id"];
-              tanggal1 =
-                  ((((jsonResponse["data"])["data"])[i])["tanggal_sensor"]);
-              DateTime parseDate =
-                  new DateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
-                      .parse(tanggal1);
-              var inputDate = DateTime.parse(parseDate.toString());
-              var outputFormat = DateFormat('dd-MM-yyyy hh:mm a');
-              var outputDate = outputFormat.format(inputDate);
-              notif = ((((jsonResponse["data"])["data"])[i])["notifikasi"]);
-              mean = ((((jsonResponse["data"])["data"])[i])["mean"])
-                  .toStringAsFixed(1);
-              max = ((((jsonResponse["data"])["data"])[i])["max"])
-                  .toStringAsFixed(1);
-              min = ((((jsonResponse["data"])["data"])[i])["min"])
-                  .toStringAsFixed(1);
-              jnssensor = (((jsonResponse["data"])["data"])[i])["jenis"];
-              if (itemsshadow.contains(jnssensor) &&
-                  itemsbefore == items.length) {
+      print("data $jsonResponse");
+      if ((isNumeric("${((((jsonResponse["data"])["data"])[0])["data"])}") ==
+          false)) {
+        if (this.mounted) {
+          setState(() {
+            zerodata = true;
+            print(zerodata);
+          });
+        }
+      } else {
+        if (this.mounted) {
+          setState(() {
+            panjang = ((jsonResponse["data"])["data"].length);
+            namaalat = ((((jsonResponse["data"])["info"])["alat"])["alias"]);
+            for (var i = 0; i < panjang; i++) {
+              if (items.length == panjang) {
+              } else if (items.length > panjang) {
                 items.clear();
                 iditems.clear();
                 itemsshadow.clear();
               } else {
-                if (jnssensor == "Kelembapan Tanah") {
-                  img = "asset/img/soil.png";
-                  satuan = "%";
-                } else if (jnssensor == "Suhu Udara") {
-                  img = "asset/img/temp.png";
-                  satuan = "\u00B0C";
-                } else if (jnssensor == "Kelembapan Udara") {
-                  img = "asset/img/rh.png";
-                  satuan = "%";
-                } else if (jnssensor == "Ketinggian Air") {
-                  img = "asset/img/Tsuhu.png";
-                  satuan = "cm";
+                nilai1 = ((((jsonResponse["data"])["data"])[i])["data"])
+                    .toStringAsFixed(1);
+                nilailast = ((((jsonResponse["data"])["data"])[0])["data"])
+                    .toStringAsFixed(1);
+                idjns = (((jsonResponse["data"])["data"])[i])["id"];
+                tanggal1 =
+                    ((((jsonResponse["data"])["data"])[i])["tanggal_sensor"]);
+                DateTime parseDate =
+                    new DateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
+                        .parse(tanggal1);
+                var inputDate = DateTime.parse(parseDate.toString());
+                var outputFormat = DateFormat('dd-MM-yyyy hh:mm a');
+                var outputDate = outputFormat.format(inputDate);
+                notif = ((((jsonResponse["data"])["data"])[i])["notifikasi"]);
+                mean = ((((jsonResponse["data"])["data"])[i])["mean"])
+                    .toStringAsFixed(1);
+                max = ((((jsonResponse["data"])["data"])[i])["max"])
+                    .toStringAsFixed(1);
+                min = ((((jsonResponse["data"])["data"])[i])["min"])
+                    .toStringAsFixed(1);
+                jnssensor = (((jsonResponse["data"])["data"])[i])["jenis"];
+                if (itemsshadow.contains(jnssensor) &&
+                    itemsbefore == items.length) {
+                  items.clear();
+                  iditems.clear();
+                  itemsshadow.clear();
                 } else {
-                  img = "asset/img/light.png";
-                  satuan = "lux";
-                }
-                //notif
-                if (notif == 0) {
-                  notifikasitoogle = false;
-                } else if (notif == 1) {
-                  notifikasitoogle = true;
-                }
+                  if (jnssensor == "Kelembapan Tanah") {
+                    img = "asset/img/soil.png";
+                    satuan = "%";
+                  } else if (jnssensor == "Suhu Udara") {
+                    img = "asset/img/temp.png";
+                    satuan = "\u00B0C";
+                  } else if (jnssensor == "Kelembapan Udara") {
+                    img = "asset/img/rh.png";
+                    satuan = "%";
+                  } else if (jnssensor == "Ketinggian Air") {
+                    img = "asset/img/Tsuhu.png";
+                    satuan = "cm";
+                  } else {
+                    img = "asset/img/light.png";
+                    satuan = "lux";
+                  }
+                  //notif
+                  if (notif == 0) {
+                    notifikasitoogle = false;
+                  } else if (notif == 1) {
+                    notifikasitoogle = true;
+                  }
 
-                setState(() {
-                  zerodata = false;
-                  noty.add(notifikasitoogle);
-                  iditems.add(notif);
-                  itemsshadow.add(jnssensor);
-                  items.add(
-                    parameter(jnssensor, satuan, img, nilai1, min, max, mean,
-                        outputDate, notifikasitoogle, idjns, i, namaalat),
-                  );
-                });
+                  setState(() {
+                    zerodata = false;
+                    noty.add(notifikasitoogle);
+                    iditems.add(notif);
+                    itemsshadow.add(jnssensor);
+                    items.add(
+                      parameter(jnssensor, satuan, img, nilai1, min, max, mean,
+                          outputDate, notifikasitoogle, idjns, i, namaalat),
+                    );
+                  });
+                }
               }
             }
-          }
-          itemsbefore = items.length;
-        });
-        Future.delayed(const Duration(minutes: 1), () {
-          return loadSensor();
-        });
+            itemsbefore = items.length;
+          });
+          Future.delayed(const Duration(minutes: 1), () {
+            return loadSensor();
+          });
+        }
       }
     }
   }
@@ -611,8 +621,16 @@ class _SemuaState extends State<Semua> {
 
   @override
   Widget build(BuildContext context) {
-    print((MediaQuery.of(context).size.height) /
-        (MediaQuery.of(context).size.width));
+    if (idlokas != idlokasbef && idala != idalabef && idhu != idhubef) {
+      print("ganti ke idlokasi : $idlokas, idalat : $idala dan idhub $idhu");
+      items.clear();
+      loadSensor();
+    } else {}
+    setState(() {
+      idalabef = idala;
+      idhubef = idhu;
+      idlokasbef = idlokas;
+    });
     statusname(index);
     if (panjangtempat == null ||
         panjangtempat == 0 ||

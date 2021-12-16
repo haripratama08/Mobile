@@ -35,6 +35,10 @@ class _KontrolAutoState extends State<KontrolAuto> with Validation {
 
   @override
   Widget build(BuildContext context) {
+    print(selectedalat?.isEmpty ?? true);
+    print(pilihsensor?.isEmpty ?? true);
+    print(state?.isEmpty ?? true);
+    print(threshold.text?.isEmpty ?? true);
     Future<http.Response> publish(
         String mode, String threshold, String state) async {
       setState(() {
@@ -57,24 +61,24 @@ class _KontrolAutoState extends State<KontrolAuto> with Validation {
           'https://cohkc2p9jb.execute-api.ap-southeast-1.amazonaws.com/v1/control');
       var body = {"topic": topic, "message": message};
       var response = await http.post(url, body: body);
-      // print("${response.statusCode}");
-      // print("${response.body}");
-      // print(message);
       if (response.statusCode == 200) {
         liststate.clear();
-        // print("Published to $topic");
         setState(() {
           loading = false;
           showDialog(
-            context: context,
-            builder: (ctxt) => new AlertDialog(
-              title: Column(
-                children: <Widget>[
-                  Center(child: Image.asset("asset/img/datasent.png")),
-                ],
-              ),
-            ),
-          );
+              context: context,
+              builder: (ctxt) {
+                Future.delayed(Duration(seconds: 2), () {
+                  Navigator.of(context).pop(true);
+                });
+                return new AlertDialog(
+                  title: Column(
+                    children: <Widget>[
+                      Center(child: Image.asset("asset/img/datasent.png")),
+                    ],
+                  ),
+                );
+              });
         });
       }
       return response;
@@ -251,27 +255,46 @@ class _KontrolAutoState extends State<KontrolAuto> with Validation {
                                       Color(0xffC1272D)),
                                 ),
                               )
-                            : GestureDetector(
-                                onTap: () {
-                                  FocusScope.of(context)
-                                      .requestFocus(FocusNode());
-                                  publish(
-                                      "auto", threshold.text, selectedstate);
-                                },
-                                child: Container(
-                                    child: Center(
-                                      child: Text("Kirim",
-                                          style: TextStyle(
-                                              color: Colors.white,
-                                              fontFamily: 'Mont',
-                                              fontSize: 15)),
-                                    ),
-                                    height: 30,
-                                    width: 100,
-                                    decoration: BoxDecoration(
-                                        color: Colors.red[900],
-                                        borderRadius:
-                                            BorderRadius.circular(10)))),
+                            : ((selectedalat?.isEmpty ?? true) ||
+                                    (pilihsensor?.isEmpty ?? true) ||
+                                    (threshold.text?.isEmpty ?? true))
+                                ? GestureDetector(
+                                    onTap: () {},
+                                    child: Container(
+                                        child: Center(
+                                          child: Text(" Kirim",
+                                              style: TextStyle(
+                                                  color: Colors.white,
+                                                  fontFamily: 'Mont',
+                                                  fontSize: 15)),
+                                        ),
+                                        height: 30,
+                                        width: 100,
+                                        decoration: BoxDecoration(
+                                            color: Colors.grey,
+                                            borderRadius:
+                                                BorderRadius.circular(10))))
+                                : GestureDetector(
+                                    onTap: () {
+                                      FocusScope.of(context)
+                                          .requestFocus(FocusNode());
+                                      publish("auto", threshold.text,
+                                          selectedstate);
+                                    },
+                                    child: Container(
+                                        child: Center(
+                                          child: Text("Kirim",
+                                              style: TextStyle(
+                                                  color: Colors.white,
+                                                  fontFamily: 'Mont',
+                                                  fontSize: 15)),
+                                        ),
+                                        height: 30,
+                                        width: 100,
+                                        decoration: BoxDecoration(
+                                            color: Colors.red[900],
+                                            borderRadius:
+                                                BorderRadius.circular(10))))
                       ],
                     ),
                   )),

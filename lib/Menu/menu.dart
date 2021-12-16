@@ -51,7 +51,6 @@ class _MenuState extends State<Menu> with SingleTickerProviderStateMixin {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    setState(() {});
   }
 
   void dispose() {
@@ -156,38 +155,14 @@ class _MenuState extends State<Menu> with SingleTickerProviderStateMixin {
                   BottomNavigationBarItem(
                     icon: Icon(Icons.desktop_windows),
                     label: "Monitor",
-                    // title: new Text(
-                    //   "Monitor",
-                    //   style: new TextStyle(
-                    //     fontSize: MediaQuery.of(context).size.height / 65,
-                    //     fontFamily: "Mont",
-                    //     fontWeight: FontWeight.bold,
-                    //   ),
-                    // ),
                   ),
                   BottomNavigationBarItem(
                     icon: Icon(Icons.settings_remote_rounded),
                     label: "Kontrol",
-                    // title: new Text(
-                    //   "Kontrol",
-                    //   style: new TextStyle(
-                    //     fontSize: MediaQuery.of(context).size.height / 65,
-                    //     fontFamily: "Mont",
-                    //     fontWeight: FontWeight.bold,
-                    //   ),
-                    // ),
                   ),
                   BottomNavigationBarItem(
                     icon: Icon(Icons.account_circle),
                     label: "Akun",
-                    // title: new Text(
-                    //   "Akun",
-                    //   style: new TextStyle(
-                    //     fontSize: MediaQuery.of(context).size.height / 65,
-                    //     fontFamily: "Mont",
-                    //     fontWeight: FontWeight.bold,
-                    //   ),
-                    // ),
                   ),
                 ],
                 selectedLabelStyle: TextStyle(

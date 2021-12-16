@@ -184,8 +184,6 @@ class _KontrolUtamaState extends State<KontrolUtama>
                   iDkontrol == null
                       ? iDkontrol = listidkontrol[0]
                       : iDkontrol = iDkontrol;
-                  print(listname);
-                  // print(namaalatkontrol);
                 }
               }
             }
@@ -342,9 +340,6 @@ class _KontrolUtamaState extends State<KontrolUtama>
   @override
   void dispose() {
     _tabController.dispose();
-    loadKontrol();
-    loadMonitor();
-    loadState();
     super.dispose();
   }
 
@@ -358,9 +353,6 @@ class _KontrolUtamaState extends State<KontrolUtama>
       }
     }
 
-    // print("alat $selectedalat");
-    // print("sensor $pilihsensor");
-    // print("listsensor $listed");
     state(status);
     return DefaultTabController(
         initialIndex: 0,
@@ -613,7 +605,6 @@ class _KontrolUtamaState extends State<KontrolUtama>
                                                                     idlokasi,
                                                                     idhub,
                                                                     idalat);
-                                                                // _startTimer();
                                                                 listed.clear();
                                                                 if (mounted)
                                                                   setState(() {
