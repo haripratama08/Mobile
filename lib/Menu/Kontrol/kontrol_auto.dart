@@ -30,6 +30,7 @@ class _KontrolAutoState extends State<KontrolAuto> with Validation {
 
   @override
   void initState() {
+    print("initstate");
     super.initState();
   }
 
@@ -325,7 +326,7 @@ class _KontrolAutoState extends State<KontrolAuto> with Validation {
           ),
           validator: (value) {
             if (value.isEmpty) {
-              return ' please enter value';
+              return ' masukan nilai';
             }
             return null;
           },

@@ -270,34 +270,6 @@ class MonitorIndoorRouteState extends State<MonitorIndoorRoute>
                                                   .width /
                                               12,
                                         ),
-                                        // GestureDetector(
-                                        //   onTap: () {
-                                        //     setState(() {
-                                        //       idalate = idala2;
-                                        //       nama = listnama[index];
-                                        //     });
-                                        //     dialog();
-                                        //   },
-                                        //   child: Container(
-                                        //     child: Center(
-                                        //         child:
-                                        //             Icon(Icons.border_color)),
-                                        //     height: MediaQuery.of(context)
-                                        //             .size
-                                        //             .width /
-                                        //         10,
-                                        //     width: MediaQuery.of(context)
-                                        //             .size
-                                        //             .width /
-                                        //         10,
-                                        //     decoration: BoxDecoration(
-                                        //         border: Border.all(
-                                        //             width: 1.5,
-                                        //             color: Colors.black),
-                                        //         borderRadius:
-                                        //             BorderRadius.circular(5)),
-                                        //   ),
-                                        // )
                                       ],
                                     )),
                                     height: MediaQuery.of(context).size.height /

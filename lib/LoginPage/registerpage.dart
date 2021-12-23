@@ -1,4 +1,8 @@
 import 'dart:convert';
+import 'dart:async';
+import 'dart:io';
+import 'package:ch_v2_1/Validator/validation.dart';
+import 'package:ch_v2_1/dialogbox/custom_dialog_box.dart';
 import 'package:flutter/services.dart';
 import 'package:ch_v2_1/API/api.dart';
 import 'package:ch_v2_1/LoginPage/loginpage.dart';
@@ -13,7 +17,7 @@ class RegisterPage extends StatefulWidget {
   _RegisterPageState createState() => _RegisterPageState();
 }
 
-class _RegisterPageState extends State<RegisterPage> {
+class _RegisterPageState extends State<RegisterPage> with Validation {
   TextEditingController username = new TextEditingController();
   TextEditingController passwordreal = new TextEditingController();
   TextEditingController passwordtype = new TextEditingController();
@@ -22,36 +26,44 @@ class _RegisterPageState extends State<RegisterPage> {
   TextEditingController telp = new TextEditingController();
   TextEditingController alamat = new TextEditingController();
   String msg = '';
-
+  bool isbutton = false;
   final formKey = GlobalKey<FormState>();
   bool loading = false;
 
   @override
   void initState() {
+    var controller = TextEditingController();
+    controller.addListener(() {
+      setState(() {
+        isbutton = true;
+      });
+    });
+    check();
+    print(username.text?.isEmpty ?? true);
     loading = false;
     super.initState();
   }
 
+  Future check() async {
+    try {
+      final result = await InternetAddress.lookup('google.com');
+      if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {}
+    } on SocketException catch (_) {
+      showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return CustomDialogBox(
+              title: "Internet Tidak Tersedia",
+              text: "Reload",
+            );
+          });
+      LoginPage();
+    }
+  }
+
   ApiRegister apiRegis = ApiRegister();
   Future doRegis() async {
-    // print(username.text);
-    // print(
-    //   passwordreal.text,
-    // );
-    // print(
-    //   email.text,
-    // );
-    // print(
-    //   telp.text,
-    // );
-    // print(
-    //   alamat.text,
-    // );
-
     if (formKey.currentState.validate()) {
-      // setState(() {
-      //   loading = true;
-      // });
       try {
         var rs = await apiRegis.doRegis(
           username.text,
@@ -62,18 +74,18 @@ class _RegisterPageState extends State<RegisterPage> {
           alamat.text,
         );
         var jsonRes = json.decode(rs.body);
-        // print(jsonRes);
         setState(() {
           msg = jsonRes['message'];
-          // print(msg);
         });
+        print(jsonRes);
         if (jsonRes['status'] == 'Created') {
           Navigator.push(context,
               new MaterialPageRoute(builder: (context) => new LoginPage()));
         } else {}
       } catch (e) {}
     } else {
-      // print("tidak validasi");
+      msg = 'mohon isi dengan benar';
+      print(msg);
     }
     formKey.currentState.save();
     setState(() {
@@ -138,16 +150,18 @@ class _RegisterPageState extends State<RegisterPage> {
   //     } else {}
   //   });
   // }
+  @override
+  void dispose() {
+    username.dispose();
+    nama.dispose();
+    passwordreal.dispose();
+    alamat.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
     print(username.text?.isEmpty ?? true);
-    print(passwordreal.text?.isEmpty ?? true);
-    print(passwordtype.text?.isEmpty ?? true);
-    print(nama.text?.isEmpty ?? true);
-    print(email.text?.isEmpty ?? true);
-    print(telp.text?.isEmpty ?? true);
-    print(alamat.text?.isEmpty ?? true);
     return Scaffold(
       resizeToAvoidBottomInset: false,
       body: SingleChildScrollView(
@@ -228,13 +242,17 @@ class _RegisterPageState extends State<RegisterPage> {
           validator: (value) {
             if (value.isEmpty) {
               return 'masukan username';
+            } else if (value.length < 5) {
+              return 'username harus lebih dari 5 karakter';
+            } else {
+              return null;
             }
-            return null;
           },
           inputFormatters: [
             FilteringTextInputFormatter.deny(new RegExp(r"\s\b|\b\s"))
           ],
           controller: username,
+          autovalidateMode: AutovalidateMode.onUserInteraction,
           keyboardType: TextInputType.text,
           autofocus: false,
           decoration: InputDecoration(
@@ -256,12 +274,19 @@ class _RegisterPageState extends State<RegisterPage> {
         child: TextFormField(
           validator: (value) {
             if (value.isEmpty) {
-              return ' masukan email';
+              return 'masukan email';
             } else if (!value.contains('@')) {
-              return ' masukan email dengan benar';
+              return 'masukan email dengan benar';
+            } else if ((!value.contains('.com')) &&
+                (!value.contains('.ac.id'))) {
+              return 'masukan email dengan benar';
+            } else if (value.length < 5) {
+              return 'email harus lebih dari 5 karakter';
+            } else {
+              return null;
             }
-            return null;
           },
+          autovalidateMode: AutovalidateMode.onUserInteraction,
           controller: email,
           keyboardType: TextInputType.text,
           autofocus: false,
@@ -291,6 +316,7 @@ class _RegisterPageState extends State<RegisterPage> {
             return null;
           },
           controller: passwordreal,
+          autovalidateMode: AutovalidateMode.onUserInteraction,
           obscureText: _passwordVisible,
           keyboardType: TextInputType.text,
           autofocus: false,
@@ -334,6 +360,7 @@ class _RegisterPageState extends State<RegisterPage> {
           controller: passwordtype,
           obscureText: _passwordVisible2,
           keyboardType: TextInputType.text,
+          autovalidateMode: AutovalidateMode.onUserInteraction,
           autofocus: false,
           decoration: InputDecoration(
             suffixIcon: GestureDetector(
@@ -367,10 +394,14 @@ class _RegisterPageState extends State<RegisterPage> {
           validator: (value) {
             if (value.isEmpty) {
               return 'masukan nama lengkap';
+            } else if (value.length < 5) {
+              return 'nama harus lebih dari 5 karakter';
+            } else {
+              return null;
             }
-            return null;
           },
           controller: nama,
+          autovalidateMode: AutovalidateMode.onUserInteraction,
           keyboardType: TextInputType.text,
           autofocus: false,
           decoration: InputDecoration(
@@ -393,10 +424,14 @@ class _RegisterPageState extends State<RegisterPage> {
           validator: (value) {
             if (value.isEmpty) {
               return 'masukan alamat';
+            } else if (value.length < 5) {
+              return 'alamat harus lebih dari 5 huruf';
+            } else {
+              return null;
             }
-            return null;
           },
           controller: alamat,
+          autovalidateMode: AutovalidateMode.onUserInteraction,
           keyboardType: TextInputType.text,
           autofocus: false,
           decoration: InputDecoration(
@@ -417,14 +452,20 @@ class _RegisterPageState extends State<RegisterPage> {
         padding: EdgeInsets.symmetric(horizontal: 50.0),
         child: TextFormField(
           validator: (value) {
+            String patttern = r'(^(?:[+0]9)?[0-9]{10,12}$)';
+            RegExp regExp = new RegExp(patttern);
             if (value.isEmpty) {
               return 'masukan nomor telpon';
+            } else if (value.length < 11 && !regExp.hasMatch(value)) {
+              return 'masukan nomor telepon dengan benar';
+            } else {
+              return null;
             }
-            return null;
           },
           controller: telp,
-          keyboardType: TextInputType.text,
+          keyboardType: TextInputType.phone,
           autofocus: false,
+          autovalidateMode: AutovalidateMode.onUserInteraction,
           decoration: InputDecoration(
             prefixIcon: Icon(Icons.phone, color: Colors.green[900]),
             hintText: 'Nomor Telpon',
@@ -434,6 +475,40 @@ class _RegisterPageState extends State<RegisterPage> {
             border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(32.0),
                 borderSide: BorderSide(color: Colors.green[900])),
+          ),
+        ));
+  }
+
+  Widget registerButtonkosong() {
+    return Padding(
+        padding: EdgeInsets.symmetric(vertical: 5.0),
+        child: Material(
+          color: Colors.grey,
+          borderRadius: BorderRadius.circular(20.0),
+          child: MaterialButton(
+            minWidth: 200.0,
+            height: 42.0,
+            onPressed: () {
+              print(username.text?.isEmpty ?? true);
+              print(passwordreal.text?.isEmpty ?? true);
+              print(passwordtype.text?.isEmpty ?? true);
+              print(nama.text?.isEmpty ?? true);
+              print(email.text?.isEmpty ?? true);
+              print(telp.text?.isEmpty ?? true);
+              print(alamat.text?.isEmpty ?? true);
+              // submitSubscription(
+              //     image: _image,
+              //     username: username.text,
+              //     pass: passwordreal.text,
+              //     nama: nama.text,
+              //     email: email.text,
+              //     telp: telp.text,
+              //     alamat: alamat.text);
+            },
+            child: Text(
+              "Daftar",
+              style: TextStyle(color: Colors.white, fontFamily: "Montserrat"),
+            ),
           ),
         ));
   }
@@ -448,20 +523,20 @@ class _RegisterPageState extends State<RegisterPage> {
             minWidth: 200.0,
             height: 42.0,
             onPressed: () {
-              if (nama.text.isEmpty ||
-                  username.text.isEmpty ||
-                  passwordreal.text.isEmpty ||
-                  passwordtype.text.isEmpty ||
-                  email.text.isEmpty ||
-                  telp.text.isEmpty ||
-                  alamat.text.isEmpty) {
-                msg = 'mohon lengkapi isian terlebih dahulu';
-              } else {
-                msg = '';
-                FocusScope.of(context).requestFocus(FocusNode());
-                doRegis();
-              }
-
+              // if ((username.text?.isEmpty ?? true) ||
+              //     (passwordreal.text?.isEmpty ?? true) ||
+              //     (passwordtype.text?.isEmpty ?? true) ||
+              //     (nama.text?.isEmpty ?? true) ||
+              //     (email.text?.isEmpty ?? true) ||
+              //     (telp.text?.isEmpty ?? true) ||
+              //     (alamat.text?.isEmpty ?? true)) {
+              //   msg = 'mohon lengkapi isian terlebih dahulu';
+              //   print(msg);
+              // } else {
+              msg = '';
+              FocusScope.of(context).requestFocus(FocusNode());
+              doRegis();
+              // }
               // submitSubscription(
               //     image: _image,
               //     username: username.text,

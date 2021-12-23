@@ -330,7 +330,9 @@ class _KontrolUtamaState extends State<KontrolUtama>
 
   @override
   void initState() {
+    namaalatkontrol = null;
     _startTimer();
+    status1 = 0;
     loadKontrol();
     loadMonitor();
     loadState();

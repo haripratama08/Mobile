@@ -140,6 +140,7 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
+    print("masuk");
     final logo = Hero(
       tag: 'hero',
       child: CircleAvatar(

@@ -23,6 +23,7 @@ class _SemuaState extends State<Semua> with Validation {
 
   void initState() {
     loadKontrol();
+    status1 = 0;
     super.initState();
   }
 
@@ -41,6 +42,14 @@ class _SemuaState extends State<Semua> with Validation {
   int panjanglokasi = 0;
   int panjangkontrol = 0;
   bool loading = false;
+
+  void statusa(int ins) {
+    if (status1 == ins) {
+      warna = Colors.green[100];
+    } else {
+      warna = Color(0x098765);
+    }
+  }
 
   Future loadKontrol() async {
     var url = Uri.parse('$endPoint/kontrol?uuid=$uuid');
@@ -104,6 +113,7 @@ class _SemuaState extends State<Semua> with Validation {
                       ? kontrolnamechoosen = kontrolnamelist[0]
                       : kontrolnamechoosen = kontrolnamechoosen;
                   topic = "$kontrolnamechoosen/crophero/control";
+                  print(kontrolnamechoosen);
                 }
               }
             }
@@ -120,10 +130,10 @@ class _SemuaState extends State<Semua> with Validation {
       var rs = await gantikontrol.doGantiAliasKontrol(
           alias.text, iDkontrol, uuid, token);
       var jsonRes = json.decode(rs.body);
+      print(jsonRes);
       listkontrol.clear();
       setState(() {
         loadKontrol();
-        // print(jsonRes);
       });
       Timer(Duration(seconds: 1), () {
         Navigator.push(
@@ -164,14 +174,6 @@ class _SemuaState extends State<Semua> with Validation {
                 scrollDirection: Axis.vertical,
                 itemCount: listkontrol.length == null ? 0 : listkontrol.length,
                 itemBuilder: (BuildContext context, int index) {
-                  void statusa(int ins) {
-                    if (status1 == ins) {
-                      warna = Colors.green[100];
-                    } else {
-                      warna = Color(0x098765);
-                    }
-                  }
-
                   statusa(index);
                   if (listkontrol.length == null) {
                     return Container(

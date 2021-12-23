@@ -32,11 +32,8 @@ class _KontrolManualState extends State<KontrolManual> {
       var url = Uri.parse('$kontrol');
       var body = {"topic": topic, "message": message};
       var response = await http.post(url, body: body);
-      // print("${response.statusCode}");
-      // print("${response.body}");
       if (response.statusCode == 200) {
         liststate.clear();
-        // print("Published to $topic");
         setState(() {
           loading = false;
           showDialog(
