@@ -1,8 +1,8 @@
 import 'dart:async';
+import 'package:ch_v2_1/API/jenismonitoring.dart';
 import 'package:ch_v2_1/Menu/Monitor/monitor_semua.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'package:ch_v2_1/API/parsing.dart';
 import 'dart:convert';
 import 'package:ch_v2_1/LoginPage/loginpage.dart';
 import 'dart:io';
@@ -10,11 +10,15 @@ import 'package:ch_v2_1/Validator/validation.dart';
 import 'package:ch_v2_1/API/api.dart';
 import 'package:ch_v2_1/Menu/menu.dart';
 
+String eventalat;
+String reason;
 List<dynamic> list2 = [];
 int status1 = 0;
 List<dynamic> idlokasi = [];
 List<dynamic> idhub = [];
 List<dynamic> idalat = [];
+List<dynamic> eventdev = [];
+List<dynamic> reasondev = [];
 int number;
 int data1;
 int data3;
@@ -48,11 +52,11 @@ class _MonitorIndoorState extends State<MonitorIndoor> with Validation {
   final formKey = GlobalKey<FormState>();
   GantiAlias ganti = GantiAlias();
   Future loadDevice() async {
-    var url = Uri.parse('$endPoint/data?uuid=$uuid');
+    var url = Uri.parse('$endPoint/user/data');
     var jsonString = await http
         .get(url, headers: {HttpHeaders.authorizationHeader: '$token'});
     var jsonResponse = json.decode(jsonString.body);
-    Data2 data2 = Data2.fromJson(jsonResponse);
+    Jenismonitoring data2 = Jenismonitoring.fromJson(jsonResponse);
     if (this.mounted) {
       setState(() {
         alat = 1;
@@ -67,12 +71,15 @@ class _MonitorIndoorState extends State<MonitorIndoor> with Validation {
               for (int k = 0;
                   k < data2.data.lokasi[i].hub[j].alat.length;
                   k++) {
+                eventalat = data2.data.lokasi[i].hub[j].alat[k].event;
+                print(eventalat);
+                print(idalat.length);
+                reason = data2.data.lokasi[i].hub[j].alat[k].reason;
                 alat = data2.data.lokasi[i].hub[j].alat.length;
                 data1 = data2.data.lokasi[i].id;
                 data3 = data2.data.lokasi[i].hub[j].id;
                 data4 = data2.data.lokasi[i].hub[j].alat[k].id;
                 data5 = data2.data.lokasi[i].hub[j].alat[k].alias;
-
                 if (listnama.contains(data5)) {
                 } else {
                   listnama.add('$data5');
@@ -90,6 +97,16 @@ class _MonitorIndoorState extends State<MonitorIndoor> with Validation {
                 } else {
                   idalat.add(data4);
                 }
+                if (idalat.length == eventdev.length) {
+                } else {
+                  eventdev.add(eventalat);
+                }
+                if (idalat.length == reasondev.length) {
+                } else {
+                  reasondev.add(reason);
+                }
+                print(eventdev);
+                print(idalat.length);
                 list2.add(
                     ('{ "idlokasi" : $data1,  "idhub" : $data3,  "idalat" : $data4, "nama" : $data5}'));
               }
@@ -153,7 +170,11 @@ class _MonitorIndoorState extends State<MonitorIndoor> with Validation {
 
   void initState() {
     loadDevice();
+    eventdev.clear();
+    reasondev.clear();
     listnama.clear();
+    idalat.clear();
+    idhub.clear();
     super.initState();
   }
 
@@ -221,8 +242,26 @@ class _MonitorIndoorState extends State<MonitorIndoor> with Validation {
                                       style: TextStyle(
                                           fontFamily: 'Mont', fontSize: 14),
                                     ),
+                                    eventdev[index] == 'disconnected'
+                                        ? new Text(
+                                            '${reasondev[index]}',
+                                            style: TextStyle(fontSize: 10),
+                                          )
+                                        : new Text(''),
                                   ],
                                 ),
+                                SizedBox(
+                                  width: MediaQuery.of(context).size.width / 7,
+                                ),
+                                eventdev[index] == 'disconnected'
+                                    ? Image.asset(
+                                        'asset/img/disconnect.png',
+                                        height: 20,
+                                      )
+                                    : Image.asset(
+                                        'asset/img/conect.png',
+                                        height: 20,
+                                      ),
                               ],
                             )),
                             height: MediaQuery.of(context).size.height / 11.5,

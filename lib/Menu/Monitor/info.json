@@ -1,0 +1,78 @@
+{
+    "status": "OK",
+    "data": {
+        "uuid": "8c5ea30c-24ff-11ec-8e97-06542865ede0",
+        "lokasi": [
+            {
+                "id": 1,
+                "nama": "Kantor Crophero",
+                "hub": [
+                    {
+                        "id": 1,
+                        "nama": "weather_station_testing",
+                        "alias": "WeatherStation",
+                        "alat": [
+                            {
+                                "id": 1,
+                                "nama": "weather_station_testing",
+                                "alias": " weather station",
+                                "event": "disconnected",
+                                "time": "2021-12-27T03: 04: 34.000Z",
+                                "reason": "MQTT_KEEP_ALIVE_TIMEOUT",
+                                "sensor": [
+                                    {
+                                        "id": 1,
+                                        "jenis_sensor": {
+                                            "jenis": "oksigen"
+                                        }
+                                    },
+                                    {
+                                        "id": 2,
+                                        "jenis_sensor": {
+                                            "jenis": "konsentrasi"
+                                        }
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "id": 2,
+                "nama": "Kantor Crophero 2",
+                "hub": [
+                    {
+                        "id": 1,
+                        "nama": "weather_station_testing",
+                        "alias": "WeatherStation",
+                        "alat": [
+                            {
+                                "id": 1,
+                                "nama": "weather_station_testing",
+                                "alias": " weather station",
+                                "event": "disconnected",
+                                "time": "2021-12-27T03: 04: 34.000Z",
+                                "reason": "MQTT_KEEP_ALIVE_TIMEOUT",
+                                "sensor": [
+                                    {
+                                        "id": 1,
+                                        "jenis_sensor": {
+                                            "jenis": "oksigen"
+                                        }
+                                    },
+                                    {
+                                        "id": 2,
+                                        "jenis_sensor": {
+                                            "jenis": "konsentrasi"
+                                        }
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                ]
+            }
+        ]
+    }
+}

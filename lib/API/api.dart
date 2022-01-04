@@ -7,10 +7,10 @@ String kontrol =
 String endPoint =
 
 // development
-    // 'https://ep5iozludi.execute-api.ap-southeast-1.amazonaws.com/dev/api';
+    'https://ep5iozludi.execute-api.ap-southeast-1.amazonaws.com/dev';
 
 //production
-    'https://hx7jt0d4pd.execute-api.ap-southeast-1.amazonaws.com/v1/api';
+// 'https://hx7jt0d4pd.execute-api.ap-southeast-1.amazonaws.com/v1/api';
 
 //download
 // 'https://1a47p0lyxl.execute-api.ap-southeast-1.amazonaws.com/v1';

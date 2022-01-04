@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
-import 'package:intl/intl.dart';
+import 'package:ch_v2_1/API/parsingmonitoring.dart';
+// import 'package:intl/intl.dart';
 import 'dart:async';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:ch_v2_1/API/api.dart';
@@ -13,6 +14,7 @@ import 'package:flutter/material.dart';
 import 'package:ch_v2_1/Menu/tambahan/stringcap.dart';
 import 'package:ch_v2_1/Menu/menu.dart';
 
+String imgtry;
 int idalabef;
 int idhubef;
 int idlokasbef;
@@ -119,9 +121,10 @@ class _SemuaState extends State<Semua> {
   }
 
   Future loadDevice2() async {
-    var jsonString = await http.get(Uri.parse('$endPoint/data?uuid=$uuid'),
+    var jsonString = await http.get(Uri.parse('$endPoint/user/data'),
         headers: {HttpHeaders.authorizationHeader: '$token'});
     var jsonResponse = json.decode(jsonString.body);
+    print(jsonResponse);
     Data2 data2 = Data2.fromJson(jsonResponse);
     if (this.mounted) {
       setState(() {
@@ -271,13 +274,104 @@ class _SemuaState extends State<Semua> {
   }
 
   Future loadSensor() async {
+    print(loc[0]);
+    print(huc[0]);
+    print(dev[0]);
     if (idlokas == null) {
       var jsonString = await http.get(
           Uri.parse(
-              '$endPoint/mobile/sensor?lokasi=${loc[0]}&hub=${huc[0]}&alat=${dev[0]}'),
+              '$endPoint/monitoring/mobile/sensorRev?lokasi=${loc[0]}&hub=${huc[0]}&alat=${dev[0]}'),
+          headers: {HttpHeaders.authorizationHeader: '$token'});
+      print(token);
+      var jsonResponse = json.decode(jsonString.body);
+      MonitoringParse dataparsing = MonitoringParse.fromJson(jsonResponse);
+      // if ((isNumeric("${((((jsonResponse["data"])["data"])[0])["data"])}") ==
+      //     false)) {
+      //   if (this.mounted) {
+      //     setState(() {
+      //       zerodata = true;
+      //       print(zerodata);
+      //     });
+      //   }
+      // } else {
+      if (this.mounted) {
+        setState(() {
+          try {
+            panjang = dataparsing.data.data.length;
+            namaalat = dataparsing.data.info.namaAlat;
+            for (var i = 0; i < panjang; i++) {
+              if (items.length == panjang) {
+              } else if (items.length > panjang) {
+                items.clear();
+                iditems.clear();
+                itemsshadow.clear();
+              } else {
+                nilai1 =
+                    dataparsing.data.data[i].data[0].nilai.toStringAsFixed(1);
+                idjns = dataparsing.data.data[i].id;
+                tanggal1 = dataparsing.data.data[i].data[0].tanggalUpdate;
+                notif = dataparsing.data.data[i].allowNotifikasi;
+                jnssensor = dataparsing.data.data[i].jenisSensor.jenis;
+                satuan = dataparsing.data.data[i].satuan;
+                satuan == null ? satuan = "" : satuan = satuan;
+                imgtry = dataparsing.data.data[i].jenisSensor.ikon;
+                imgtry == '0'
+                    ? img = '0'
+                    : img =
+                        'https://3tnguegmh6.execute-api.ap-southeast-1.amazonaws.com/dev/icon?icon_name=' +
+                            '${dataparsing.data.data[i].jenisSensor.ikon}';
+                if (notif == 0) {
+                  notifikasitoogle = false;
+                } else if (notif == 1) {
+                  notifikasitoogle = true;
+                }
+                print("------");
+                print(jnssensor);
+                print(satuan);
+                print(img);
+                print(nilai1);
+                print(tanggal1);
+                print(notifikasitoogle);
+                print(idjns);
+                print(i);
+                print(namaalat);
+                print("------");
+                if (itemsshadow.contains(jnssensor) &&
+                    itemsbefore == items.length) {
+                  items.clear();
+                  iditems.clear();
+                  itemsshadow.clear();
+                } else {
+                  setState(() {
+                    zerodata = false;
+                    noty.add(notifikasitoogle);
+                    iditems.add(notif);
+                    itemsshadow.add(jnssensor);
+                    items.add(
+                      parameter(jnssensor, satuan, img, nilai1, tanggal1,
+                          notifikasitoogle, idjns, i, namaalat),
+                    );
+                  });
+                }
+              }
+            }
+            itemsbefore = items.length;
+          } on Exception catch (_) {
+            print(_);
+          }
+        });
+        Future.delayed(const Duration(minutes: 1), () {
+          return loadSensor();
+        });
+      }
+      // }
+    } else {
+      var jsonString = await http.get(
+          Uri.parse(
+              '$endPoint/mobile/sensor?lokasi=$idlokas&hub=$idhu&alat=$idala'),
           headers: {HttpHeaders.authorizationHeader: '$token'});
       var jsonResponse = json.decode(jsonString.body);
-      print("data $jsonResponse");
+      MonitoringParse dataparsing = MonitoringParse.fromJson(jsonResponse);
       if ((isNumeric("${((((jsonResponse["data"])["data"])[0])["data"])}") ==
           false)) {
         if (this.mounted) {
@@ -290,8 +384,8 @@ class _SemuaState extends State<Semua> {
         if (this.mounted) {
           setState(() {
             try {
-              panjang = ((jsonResponse["data"])["data"].length);
-              namaalat = ((((jsonResponse["data"])["info"])["alat"])["alias"]);
+              panjang = dataparsing.data.data.length;
+              namaalat = dataparsing.data.info.namaAlat;
               for (var i = 0; i < panjang; i++) {
                 if (items.length == panjang) {
                 } else if (items.length > panjang) {
@@ -299,50 +393,22 @@ class _SemuaState extends State<Semua> {
                   iditems.clear();
                   itemsshadow.clear();
                 } else {
-                  nilai1 = ((((jsonResponse["data"])["data"])[i])["data"])
-                      .toStringAsFixed(1);
-                  nilailast = ((((jsonResponse["data"])["data"])[0])["data"])
-                      .toStringAsFixed(1);
-                  nil.add(nilai1);
-                  idjns = (((jsonResponse["data"])["data"])[i])["id"];
-                  tanggal1 =
-                      ((((jsonResponse["data"])["data"])[i])["tanggal_sensor"]);
-                  DateTime parseDate =
-                      new DateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
-                          .parse(tanggal1);
-                  var inputDate = DateTime.parse(parseDate.toString());
-                  var outputFormat = DateFormat('dd-MM-yyyy hh:mm a');
-                  var outputDate = outputFormat.format(inputDate);
-                  notif = ((((jsonResponse["data"])["data"])[i])["notifikasi"]);
-                  mean = ((((jsonResponse["data"])["data"])[i])["mean"])
-                      .toStringAsFixed(1);
-                  max = ((((jsonResponse["data"])["data"])[i])["max"])
-                      .toStringAsFixed(1);
-                  min = ((((jsonResponse["data"])["data"])[i])["min"])
-                      .toStringAsFixed(1);
-                  jnssensor = (((jsonResponse["data"])["data"])[i])["jenis"];
+                  nilai1 =
+                      dataparsing.data.data[i].data[0].nilai.toStringAsFixed(1);
+                  idjns = dataparsing.data.data[i].id;
+                  tanggal1 = dataparsing.data.data[i].data[0].tanggalUpdate;
+                  notif = dataparsing.data.data[i].allowNotifikasi;
+                  jnssensor = dataparsing.data.data[i].jenisSensor.jenis;
+                  satuan = dataparsing.data.data[i].satuan;
+                  img =
+                      'https://3tnguegmh6.execute-api.ap-southeast-1.amazonaws.com/dev/icon?icon_name=' +
+                          '${dataparsing.data.data[i].jenisSensor.ikon}';
                   if (itemsshadow.contains(jnssensor) &&
                       itemsbefore == items.length) {
                     items.clear();
                     iditems.clear();
                     itemsshadow.clear();
                   } else {
-                    if (jnssensor == "Kelembapan Tanah") {
-                      img = "asset/img/soil.png";
-                      satuan = "%";
-                    } else if (jnssensor == "Suhu Udara") {
-                      img = "asset/img/temp.png";
-                      satuan = "\u00B0C";
-                    } else if (jnssensor == "Kelembapan Udara") {
-                      img = "asset/img/rh.png";
-                      satuan = "%";
-                    } else if (jnssensor == "Ketinggian Air") {
-                      img = "asset/img/Tsuhu.png";
-                      satuan = "cm";
-                    } else {
-                      img = "asset/img/light.png";
-                      satuan = "lux";
-                    }
                     if (notif == 0) {
                       notifikasitoogle = false;
                     } else if (notif == 1) {
@@ -354,19 +420,8 @@ class _SemuaState extends State<Semua> {
                       iditems.add(notif);
                       itemsshadow.add(jnssensor);
                       items.add(
-                        parameter(
-                            jnssensor,
-                            satuan,
-                            img,
-                            nilai1,
-                            min,
-                            max,
-                            mean,
-                            outputDate,
-                            notifikasitoogle,
-                            idjns,
-                            i,
-                            namaalat),
+                        parameter(jnssensor, satuan, img, nilai1, tanggal1,
+                            notifikasitoogle, idjns, i, namaalat),
                       );
                     });
                   }
@@ -376,104 +431,6 @@ class _SemuaState extends State<Semua> {
             } on Exception catch (_) {
               print("kosong");
             }
-          });
-
-          Future.delayed(const Duration(minutes: 1), () {
-            return loadSensor();
-          });
-        }
-      }
-    } else {
-      var jsonString = await http.get(
-          Uri.parse(
-              '$endPoint/mobile/sensor?lokasi=$idlokas&hub=$idhu&alat=$idala'),
-          headers: {HttpHeaders.authorizationHeader: '$token'});
-      var jsonResponse = json.decode(jsonString.body);
-      print("data $jsonResponse");
-      if ((isNumeric("${((((jsonResponse["data"])["data"])[0])["data"])}") ==
-          false)) {
-        if (this.mounted) {
-          setState(() {
-            zerodata = true;
-            print(zerodata);
-          });
-        }
-      } else {
-        if (this.mounted) {
-          setState(() {
-            panjang = ((jsonResponse["data"])["data"].length);
-            namaalat = ((((jsonResponse["data"])["info"])["alat"])["alias"]);
-            for (var i = 0; i < panjang; i++) {
-              if (items.length == panjang) {
-              } else if (items.length > panjang) {
-                items.clear();
-                iditems.clear();
-                itemsshadow.clear();
-              } else {
-                nilai1 = ((((jsonResponse["data"])["data"])[i])["data"])
-                    .toStringAsFixed(1);
-                nilailast = ((((jsonResponse["data"])["data"])[0])["data"])
-                    .toStringAsFixed(1);
-                idjns = (((jsonResponse["data"])["data"])[i])["id"];
-                tanggal1 =
-                    ((((jsonResponse["data"])["data"])[i])["tanggal_sensor"]);
-                DateTime parseDate =
-                    new DateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
-                        .parse(tanggal1);
-                var inputDate = DateTime.parse(parseDate.toString());
-                var outputFormat = DateFormat('dd-MM-yyyy hh:mm a');
-                var outputDate = outputFormat.format(inputDate);
-                notif = ((((jsonResponse["data"])["data"])[i])["notifikasi"]);
-                mean = ((((jsonResponse["data"])["data"])[i])["mean"])
-                    .toStringAsFixed(1);
-                max = ((((jsonResponse["data"])["data"])[i])["max"])
-                    .toStringAsFixed(1);
-                min = ((((jsonResponse["data"])["data"])[i])["min"])
-                    .toStringAsFixed(1);
-                jnssensor = (((jsonResponse["data"])["data"])[i])["jenis"];
-                if (itemsshadow.contains(jnssensor) &&
-                    itemsbefore == items.length) {
-                  items.clear();
-                  iditems.clear();
-                  itemsshadow.clear();
-                } else {
-                  if (jnssensor == "Kelembapan Tanah") {
-                    img = "asset/img/soil.png";
-                    satuan = "%";
-                  } else if (jnssensor == "Suhu Udara") {
-                    img = "asset/img/temp.png";
-                    satuan = "\u00B0C";
-                  } else if (jnssensor == "Kelembapan Udara") {
-                    img = "asset/img/rh.png";
-                    satuan = "%";
-                  } else if (jnssensor == "Ketinggian Air") {
-                    img = "asset/img/Tsuhu.png";
-                    satuan = "cm";
-                  } else {
-                    img = "asset/img/light.png";
-                    satuan = "lux";
-                  }
-                  //notif
-                  if (notif == 0) {
-                    notifikasitoogle = false;
-                  } else if (notif == 1) {
-                    notifikasitoogle = true;
-                  }
-
-                  setState(() {
-                    zerodata = false;
-                    noty.add(notifikasitoogle);
-                    iditems.add(notif);
-                    itemsshadow.add(jnssensor);
-                    items.add(
-                      parameter(jnssensor, satuan, img, nilai1, min, max, mean,
-                          outputDate, notifikasitoogle, idjns, i, namaalat),
-                    );
-                  });
-                }
-              }
-            }
-            itemsbefore = items.length;
           });
           Future.delayed(const Duration(minutes: 1), () {
             return loadSensor();
@@ -1160,19 +1117,8 @@ class _SemuaState extends State<Semua> {
     }
   }
 
-  Widget parameter(
-      String jenissensor,
-      String satuan,
-      String img,
-      String nilai,
-      String min,
-      String max,
-      String mean,
-      String time,
-      bool toogle,
-      int i,
-      int jum,
-      String namaalat) {
+  Widget parameter(String jenissensor, String satuan, String img, String nilai,
+      String time, bool toogle, int i, int jum, String namaalat) {
     return Center(
       child: SizedBox(
         child: Column(
@@ -1191,12 +1137,18 @@ class _SemuaState extends State<Semua> {
                 SizedBox(
                   height: 10,
                 ),
-                Center(
-                  child: Image.asset(
-                    img,
-                    height: MediaQuery.of(context).size.height / 20,
-                  ),
-                ),
+                img == "0"
+                    ? Center(
+                        child: Container(
+                          height: MediaQuery.of(context).size.height / 140,
+                        ),
+                      )
+                    : Center(
+                        child: Image.network(
+                          img,
+                          height: MediaQuery.of(context).size.height / 15,
+                        ),
+                      ),
                 SizedBox(height: 10),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -1224,84 +1176,84 @@ class _SemuaState extends State<Semua> {
                   ],
                 ),
                 SizedBox(height: 5),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    Column(
-                      children: <Widget>[
-                        Text(
-                          "Min",
-                          style: TextStyle(
-                            fontFamily: "Mont",
-                            fontSize: MediaQuery.of(context).size.height / 60,
-                          ),
-                        ),
-                        Container(
-                            decoration: BoxDecoration(
-                                color: Colors.green[900],
-                                borderRadius: BorderRadius.circular(5)),
-                            child: Center(
-                                child: Text("$min",
-                                    style: TextStyle(
-                                        fontFamily: 'Mont',
-                                        fontSize:
-                                            MediaQuery.of(context).size.height /
-                                                60,
-                                        color: Colors.white))),
-                            height: 40,
-                            width: 50)
-                      ],
-                    ),
-                    SizedBox(width: 5),
-                    Column(
-                      children: <Widget>[
-                        Text("Mean",
-                            style: TextStyle(
-                              fontFamily: "Mont",
-                              fontSize: MediaQuery.of(context).size.height / 60,
-                            )),
-                        Container(
-                            decoration: BoxDecoration(
-                                color: Colors.green[900],
-                                borderRadius: BorderRadius.circular(5)),
-                            child: Center(
-                                child: Text("$mean",
-                                    style: TextStyle(
-                                        fontSize:
-                                            MediaQuery.of(context).size.height /
-                                                60,
-                                        fontFamily: 'Mont',
-                                        color: Colors.white))),
-                            height: 40,
-                            width: 50)
-                      ],
-                    ),
-                    SizedBox(width: 5),
-                    Column(
-                      children: <Widget>[
-                        Text("Max",
-                            style: TextStyle(
-                              fontFamily: "Mont",
-                              fontSize: MediaQuery.of(context).size.height / 60,
-                            )),
-                        Container(
-                            decoration: BoxDecoration(
-                                color: Colors.green[900],
-                                borderRadius: BorderRadius.circular(5)),
-                            child: Center(
-                                child: Text("$max",
-                                    style: TextStyle(
-                                        fontSize:
-                                            MediaQuery.of(context).size.height /
-                                                60,
-                                        fontFamily: 'Mont',
-                                        color: Colors.white))),
-                            height: 40,
-                            width: 50)
-                      ],
-                    ),
-                  ],
-                ),
+                // Row(
+                //   mainAxisAlignment: MainAxisAlignment.center,
+                //   children: <Widget>[
+                //     Column(
+                //       children: <Widget>[
+                //         Text(
+                //           "Min",
+                //           style: TextStyle(
+                //             fontFamily: "Mont",
+                //             fontSize: MediaQuery.of(context).size.height / 60,
+                //           ),
+                //         ),
+                //         Container(
+                //             decoration: BoxDecoration(
+                //                 color: Colors.green[900],
+                //                 borderRadius: BorderRadius.circular(5)),
+                //             child: Center(
+                //                 child: Text("$min",
+                //                     style: TextStyle(
+                //                         fontFamily: 'Mont',
+                //                         fontSize:
+                //                             MediaQuery.of(context).size.height /
+                //                                 60,
+                //                         color: Colors.white))),
+                //             height: 40,
+                //             width: 50)
+                //       ],
+                //     ),
+                //     SizedBox(width: 5),
+                //     Column(
+                //       children: <Widget>[
+                //         Text("Mean",
+                //             style: TextStyle(
+                //               fontFamily: "Mont",
+                //               fontSize: MediaQuery.of(context).size.height / 60,
+                //             )),
+                //         Container(
+                //             decoration: BoxDecoration(
+                //                 color: Colors.green[900],
+                //                 borderRadius: BorderRadius.circular(5)),
+                //             child: Center(
+                //                 child: Text("$mean",
+                //                     style: TextStyle(
+                //                         fontSize:
+                //                             MediaQuery.of(context).size.height /
+                //                                 60,
+                //                         fontFamily: 'Mont',
+                //                         color: Colors.white))),
+                //             height: 40,
+                //             width: 50)
+                //       ],
+                //     ),
+                //     SizedBox(width: 5),
+                //     Column(
+                //       children: <Widget>[
+                //         Text("Max",
+                //             style: TextStyle(
+                //               fontFamily: "Mont",
+                //               fontSize: MediaQuery.of(context).size.height / 60,
+                //             )),
+                //         Container(
+                //             decoration: BoxDecoration(
+                //                 color: Colors.green[900],
+                //                 borderRadius: BorderRadius.circular(5)),
+                //             child: Center(
+                //                 child: Text("$max",
+                //                     style: TextStyle(
+                //                         fontSize:
+                //                             MediaQuery.of(context).size.height /
+                //                                 60,
+                //                         fontFamily: 'Mont',
+                //                         color: Colors.white))),
+                //             height: 40,
+                //             width: 50)
+                //       ],
+                //     ),
+                //   ],
+                // ),
                 SizedBox(height: 10),
                 Center(
                   child: new Text(

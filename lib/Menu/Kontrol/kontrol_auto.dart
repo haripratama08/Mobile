@@ -30,7 +30,6 @@ class _KontrolAutoState extends State<KontrolAuto> with Validation {
 
   @override
   void initState() {
-    print("initstate");
     super.initState();
   }
 

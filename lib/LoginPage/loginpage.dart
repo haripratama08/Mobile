@@ -73,8 +73,10 @@ class _LoginPageState extends State<LoginPage> {
       try {
         var rs = await apiLogin.doLogin(username.text, password.text);
         var jsonRes = json.decode(rs.body);
+        print(jsonRes);
         data = (jsonRes["data"]);
         if (jsonRes['status'] == 'OK') {
+          print(jsonRes);
           setState(() {
             Login login = Login.fromJson(jsonRes);
             status = login.status;
@@ -140,7 +142,6 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
-    print("masuk");
     final logo = Hero(
       tag: 'hero',
       child: CircleAvatar(

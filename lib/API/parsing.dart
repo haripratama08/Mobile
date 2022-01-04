@@ -496,3 +496,23 @@ class RepositorySensor {
       .map((item) => item.nama)
       .toList();
 }
+
+class Monitoring {
+  Monitoring({
+    this.status,
+    this.data,
+  });
+
+  String status;
+  Data data;
+
+  factory Monitoring.fromJson(Map<String, dynamic> json) => Monitoring(
+        status: json["status"],
+        data: Data.fromJson(json["data"]),
+      );
+
+  Map<String, dynamic> toJson() => {
+        "status": status,
+        "data": data.toJson(),
+      };
+}

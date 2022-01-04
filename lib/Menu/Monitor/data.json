@@ -1,8 +1,44 @@
-{"status": "OK", "data": {"info": {"lokasi": {"id": 21, "nama": "kandang dummy"
-            }, "hub": {"id": 11, "nama": "kandum", "alias": "kandum"
-            }, "alat": {"id": 3016, "nama":      
-    "CHMADESP82660200021111501046qnY8ObW", "alias": "kandang"
+{
+    "status": "OK",
+    "data": {
+        "info": {
+            "nama_lokasi": "Kantor Crophero",
+            "nama_hub": "WeatherStation",
+            "nama_alat": "weather station"
+        },
+        "data": [
+            {
+                "id": 1,
+                "allow_notifikasi": 0,
+                "satuan": null,
+                "jenis_sensor": {
+                    "jenis": "oksigen",
+                    "ikon": "oksigenTerlarut.png"
+                },
+                "data": [
+                    {
+                        "tanggal_sensor": "17: 18 24/12/2021",
+                        "tanggal_update": "17: 18 24/12/2021",
+                        "nilai": 20.2
+                    }
+                ]
+            },
+            {
+                "id": 2,
+                "allow_notifikasi": 0,
+                "satuan": "%",
+                "jenis_sensor": {
+                    "jenis": "konsentrasi",
+                    "ikon": 0
+                },
+                "data": [
+                    {
+                        "tanggal_sensor": "17: 18 24/12/2021",
+                        "tanggal_update": "17: 18 24/12/2021",
+                        "nilai": 3081.25
+                    }
+                ]
             }
-        }
+        ]
     }
 }
