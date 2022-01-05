@@ -119,7 +119,7 @@ class _KontrolUtamaState extends State<KontrolUtama>
   }
 
   Future loadKontrol() async {
-    var url = Uri.parse('$endPoint/kontrol?uuid=$uuid');
+    var url = Uri.parse('$endPoint/alat/kontrol');
     var jsonString = await http
         .get(url, headers: {HttpHeaders.authorizationHeader: '$token'});
     var jsonResponse = json.decode(jsonString.body);
@@ -297,7 +297,7 @@ class _KontrolUtamaState extends State<KontrolUtama>
   }
 
   Future loadState() async {
-    var url2 = Uri.parse('$endPoint/kontrol/state?id=$iDkontrol');
+    var url2 = Uri.parse('$endPoint/alat/kontrol/state?id=$iDkontrol');
     var jsonString = await http
         .get(url2, headers: {HttpHeaders.authorizationHeader: '$token'});
     var jsonResponse = json.decode(jsonString.body);

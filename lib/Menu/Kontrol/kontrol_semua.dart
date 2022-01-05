@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 import 'package:ch_v2_1/API/api.dart';
+import 'package:ch_v2_1/API/jeniskontrol.dart';
 import 'package:ch_v2_1/Menu/menu.dart';
 import 'package:ch_v2_1/Validator/validation.dart';
 import 'package:http/http.dart' as http;
@@ -32,6 +33,8 @@ class _SemuaState extends State<Semua> with Validation {
   int idkontrol;
   String kontrolnamechoosen;
   List<String> kontrolnamelist = [];
+  List<String> eventlist = [];
+  List<String> reasonlist = [];
   List<String> listname = [];
   List<String> listkontrol = [];
   int idlokasikontrol;
@@ -52,51 +55,63 @@ class _SemuaState extends State<Semua> with Validation {
   }
 
   Future loadKontrol() async {
-    var url = Uri.parse('$endPoint/kontrol?uuid=$uuid');
+    print("masuk kontrol");
+    var url = Uri.parse('$endPoint/alat/kontrol');
     var jsonString = await http
         .get(url, headers: {HttpHeaders.authorizationHeader: '$token'});
     var jsonResponse = json.decode(jsonString.body);
+    Jeniskontrol jeniskontrol = Jeniskontrol.fromJson(jsonResponse);
+    print("kontrol ${jeniskontrol.data}");
     if (this.mounted) {
       setState(() {
-        if ((jsonResponse['status']) == 'OK') {
-          panjanglokasi = (((jsonResponse['data'])['lokasi']).length);
+        print("kontrol 1 ${jeniskontrol.data.lokasi[0].hub}");
+        print("panjang lokasi kontrol ${jeniskontrol.data.lokasi.length}");
+        if (jeniskontrol.status == 'OK') {
+          panjanglokasi = jeniskontrol.data.lokasi.length;
           for (int i = 0; i < panjanglokasi; i++) {
-            String hub = (((jsonResponse['data'])['lokasi'])[i]['nama']);
-            idlokasikontrol = (((jsonResponse['data'])['lokasi'])[i]['id']);
+            String hub = jeniskontrol.data.lokasi[i].nama;
+            idlokasikontrol = jeniskontrol.data.lokasi[i].id;
             listname.length == panjanglokasi ? print("") : listname.add(hub);
             listidlokasi.length == panjanglokasi
                 ? print("")
                 : listidlokasi.add(idlokasikontrol);
-            var panjanghub =
-                (((jsonResponse['data'])['lokasi'])[i]['hub'].length);
+            var panjanghub = jeniskontrol.data.lokasi[i].hub.length;
 //----------------------------------------------------------------------//
             for (int j = 0; j < panjanghub; j++) {
-              var panjangalat = ((((jsonResponse['data'])['lokasi'])[i]['hub']
-                      [j]['alat']
-                  .length));
-              int idhubkontrol =
-                  ((((jsonResponse['data'])['lokasi'])[i]['hub'][j]['id']));
+              var panjangalat = jeniskontrol.data.lokasi[i].hub[j].alat.length;
+              int idhubkontrol = jeniskontrol.data.lokasi[i].hub[j].id;
               listidhub.length == panjanghub
                   ? print("")
                   : listidhub.add(idhubkontrol);
 //----------------------------------------------------------------------//
               for (int k = 0; k < panjangalat; k++) {
-                panjangkontrol = ((((jsonResponse['data'])['lokasi'])[i]['hub']
-                        [j]['alat'][k]['kontrol']
-                    .length));
-                int idalatkontrol = ((((jsonResponse['data'])['lokasi'])[i]
-                    ['hub'][j]['alat'][k]['id']));
+                panjangkontrol =
+                    jeniskontrol.data.lokasi[i].hub[j].alat[k].kontrol.length;
+                int idalatkontrol =
+                    jeniskontrol.data.lokasi[i].hub[j].alat[k].id;
                 listidalat.length == panjangalat
                     ? print("")
                     : listidalat.add(idalatkontrol);
 //---------------------------------------------------------------------//
                 for (int l = 0; l < panjangkontrol; l++) {
-                  String kontrol = ((((jsonResponse['data'])['lokasi'])[i]
-                      ['hub'][j]['alat'][k]['kontrol'][l])['alias']);
-                  String kontrolname = ((((jsonResponse['data'])['lokasi'])[i]
-                      ['hub'][j]['alat'][k]['kontrol'][l])['nama']);
-                  int idkontrol = ((((jsonResponse['data'])['lokasi'])[i]['hub']
-                      [j]['alat'][k]['kontrol'][l])['id']);
+                  String kontrol = jeniskontrol
+                      .data.lokasi[i].hub[j].alat[k].kontrol[l].alias;
+                  String kontrolname = jeniskontrol
+                      .data.lokasi[i].hub[j].alat[k].kontrol[l].nama;
+                  String event = jeniskontrol
+                      .data.lokasi[i].hub[j].alat[k].kontrol[l].event;
+                  String reason = jeniskontrol
+                      .data.lokasi[i].hub[j].alat[k].kontrol[l].reason;
+                  int idkontrol =
+                      jeniskontrol.data.lokasi[i].hub[j].alat[k].kontrol[l].id;
+
+                  eventlist.length == panjangkontrol
+                      ? print("")
+                      : eventlist.add(event);
+
+                  reasonlist.length == panjangkontrol
+                      ? print("")
+                      : reasonlist.add(reason);
                   listkontrol.contains(kontrol)
                       ? print("")
                       : listkontrol.add(kontrol);
@@ -113,7 +128,6 @@ class _SemuaState extends State<Semua> with Validation {
                       ? kontrolnamechoosen = kontrolnamelist[0]
                       : kontrolnamechoosen = kontrolnamechoosen;
                   topic = "$kontrolnamechoosen/crophero/control";
-                  print(kontrolnamechoosen);
                 }
               }
             }
@@ -242,8 +256,29 @@ class _SemuaState extends State<Semua> with Validation {
                                                 fontFamily: 'Mont',
                                                 fontSize: 14),
                                           ),
+                                          eventlist[index] == 'disconnected'
+                                              ? new Text(
+                                                  '${reasonlist[index]}',
+                                                  style:
+                                                      TextStyle(fontSize: 10),
+                                                )
+                                              : new Text(''),
                                         ],
                                       ),
+                                      SizedBox(
+                                        width:
+                                            MediaQuery.of(context).size.width /
+                                                7,
+                                      ),
+                                      eventlist[index] == 'disconnected'
+                                          ? Image.asset(
+                                              'asset/img/disconnect.png',
+                                              height: 20,
+                                            )
+                                          : Image.asset(
+                                              'asset/img/conect.png',
+                                              height: 20,
+                                            ),
                                     ],
                                   )),
                                   height:
