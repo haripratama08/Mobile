@@ -39,8 +39,9 @@ class _KontrolManualState extends State<KontrolManual> {
           showDialog(
             context: context,
             builder: (ctxt) {
-              Future.delayed(Duration(seconds: 2), () {
-                Navigator.of(context).pop(true);
+              Future.delayed(Duration(seconds: 1), () {
+                // Navigator.pop(context);
+                // Navigator.of(context).pop(true);
               });
               return new AlertDialog(
                 title: Column(
