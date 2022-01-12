@@ -55,17 +55,13 @@ class _SemuaState extends State<Semua> with Validation {
   }
 
   Future loadKontrol() async {
-    print("masuk kontrol");
     var url = Uri.parse('$endPoint/alat/kontrol');
     var jsonString = await http
         .get(url, headers: {HttpHeaders.authorizationHeader: '$token'});
     var jsonResponse = json.decode(jsonString.body);
     Jeniskontrol jeniskontrol = Jeniskontrol.fromJson(jsonResponse);
-    print("kontrol ${jeniskontrol.data}");
     if (this.mounted) {
       setState(() {
-        print("kontrol 1 ${jeniskontrol.data.lokasi[0].hub}");
-        print("panjang lokasi kontrol ${jeniskontrol.data.lokasi.length}");
         if (jeniskontrol.status == 'OK') {
           panjanglokasi = jeniskontrol.data.lokasi.length;
           for (int i = 0; i < panjanglokasi; i++) {
@@ -112,22 +108,26 @@ class _SemuaState extends State<Semua> with Validation {
                   reasonlist.length == panjangkontrol
                       ? print("")
                       : reasonlist.add(reason);
+
                   listkontrol.contains(kontrol)
                       ? print("")
                       : listkontrol.add(kontrol);
+
                   kontrolnamelist.contains(kontrolname)
                       ? print("")
                       : kontrolnamelist.add(kontrolname);
+
                   namaalatkontrol == null
                       ? namaalatkontrol = listkontrol[0]
                       : namaalatkontrol = namaalatkontrol;
+
                   listidkontrol.contains(idkontrol)
                       ? print("")
                       : listidkontrol.add(idkontrol);
+
                   kontrolnamechoosen == null
                       ? kontrolnamechoosen = kontrolnamelist[0]
                       : kontrolnamechoosen = kontrolnamechoosen;
-                  topic = "$kontrolnamechoosen/crophero/control";
                 }
               }
             }

@@ -155,7 +155,6 @@ class _MonitorIndoorState extends State<MonitorIndoor> with Validation {
     if (index == null) {
       change(0);
       items.clear();
-
       idlokas = idlokasi[0];
       idhu = idhub[0];
       idala = idalat[0];
