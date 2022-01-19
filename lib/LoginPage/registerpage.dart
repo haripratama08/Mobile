@@ -208,7 +208,7 @@ class _RegisterPageState extends State<RegisterPage> with Validation {
                         msg,
                         style: TextStyle(
                             color: Colors.red,
-                            fontFamily: "Mont",
+                            fontFamily: "kohi",
                             fontSize: 12),
                       ),
                     ),
@@ -237,7 +237,7 @@ class _RegisterPageState extends State<RegisterPage> with Validation {
 
   Widget userField() {
     return Padding(
-        padding: EdgeInsets.symmetric(horizontal: 50.0),
+        padding: EdgeInsets.symmetric(horizontal: 20.0),
         child: TextFormField(
           validator: (value) {
             if (value.isEmpty) {
@@ -256,13 +256,14 @@ class _RegisterPageState extends State<RegisterPage> with Validation {
           keyboardType: TextInputType.text,
           autofocus: false,
           decoration: InputDecoration(
-            prefixIcon: Icon(Icons.person, color: Colors.green[900]),
+            prefixIcon: Icon(Icons.account_circle, color: Colors.green[900]),
             hintText: 'Username',
-            labelStyle:
-                TextStyle(color: Colors.white, fontFamily: "Montserrat"),
+            hintStyle: TextStyle(
+                color: Colors.black, fontFamily: "kohi", fontSize: 15),
+            labelStyle: TextStyle(color: Colors.white, fontFamily: "kohi"),
             contentPadding: EdgeInsets.fromLTRB(20.0, 5.0, 20.0, 5.0),
             border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(32.0),
+                borderRadius: BorderRadius.circular(10.0),
                 borderSide: BorderSide(color: Colors.green[900])),
           ),
         ));
@@ -270,7 +271,7 @@ class _RegisterPageState extends State<RegisterPage> with Validation {
 
   Widget emailField() {
     return Padding(
-        padding: EdgeInsets.symmetric(horizontal: 50.0),
+        padding: EdgeInsets.symmetric(horizontal: 20.0),
         child: TextFormField(
           validator: (value) {
             if (value.isEmpty) {
@@ -293,11 +294,12 @@ class _RegisterPageState extends State<RegisterPage> with Validation {
           decoration: InputDecoration(
             prefixIcon: Icon(Icons.email, color: Colors.green[900]),
             hintText: 'Email',
-            labelStyle:
-                TextStyle(color: Colors.white, fontFamily: "Montserrat"),
+            hintStyle: TextStyle(
+                color: Colors.black, fontFamily: "kohi", fontSize: 15),
+            labelStyle: TextStyle(color: Colors.white, fontFamily: "kohi"),
             contentPadding: EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
             border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(32.0),
+                borderRadius: BorderRadius.circular(10.0),
                 borderSide: BorderSide(color: Colors.green[900])),
           ),
         ));
@@ -305,7 +307,7 @@ class _RegisterPageState extends State<RegisterPage> with Validation {
 
   Widget passwordField() {
     return Padding(
-        padding: EdgeInsets.symmetric(horizontal: 50.0),
+        padding: EdgeInsets.symmetric(horizontal: 20.0),
         child: TextFormField(
           validator: (value) {
             if (value.isEmpty) {
@@ -331,15 +333,16 @@ class _RegisterPageState extends State<RegisterPage> with Validation {
                   _passwordVisible ? Icons.visibility_off : Icons.visibility),
             ),
             prefixIcon: Icon(
-              Icons.lock,
+              Icons.lock_open,
               color: Colors.green[900],
             ),
             hintText: 'Password',
-            labelStyle:
-                TextStyle(color: Colors.white, fontFamily: "Montserrat"),
+            hintStyle: TextStyle(
+                color: Colors.black, fontFamily: "kohi", fontSize: 15),
+            labelStyle: TextStyle(color: Colors.white, fontFamily: "kohi"),
             contentPadding: EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
             border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(32.0),
+                borderRadius: BorderRadius.circular(10.0),
                 borderSide: BorderSide(color: Colors.green[900])),
           ),
         ));
@@ -347,7 +350,7 @@ class _RegisterPageState extends State<RegisterPage> with Validation {
 
   Widget retypeField() {
     return Padding(
-        padding: EdgeInsets.symmetric(horizontal: 50.0),
+        padding: EdgeInsets.symmetric(horizontal: 20.0),
         child: TextFormField(
           validator: (value) {
             if (value.isEmpty) {
@@ -377,11 +380,12 @@ class _RegisterPageState extends State<RegisterPage> with Validation {
               color: Colors.green[900],
             ),
             hintText: 'Konfirmasi Password',
-            labelStyle:
-                TextStyle(color: Colors.white, fontFamily: "Montserrat"),
+            hintStyle: TextStyle(
+                color: Colors.black, fontFamily: "kohi", fontSize: 15),
+            labelStyle: TextStyle(color: Colors.white, fontFamily: "kohi"),
             contentPadding: EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
             border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(32.0),
+                borderRadius: BorderRadius.circular(10.0),
                 borderSide: BorderSide(color: Colors.green[900])),
           ),
         ));
@@ -389,7 +393,7 @@ class _RegisterPageState extends State<RegisterPage> with Validation {
 
   Widget nameField() {
     return Padding(
-        padding: EdgeInsets.symmetric(horizontal: 50.0),
+        padding: EdgeInsets.symmetric(horizontal: 20.0),
         child: TextFormField(
           validator: (value) {
             if (value.isEmpty) {
@@ -405,13 +409,14 @@ class _RegisterPageState extends State<RegisterPage> with Validation {
           keyboardType: TextInputType.text,
           autofocus: false,
           decoration: InputDecoration(
-            prefixIcon: Icon(Icons.person_pin, color: Colors.green[900]),
+            prefixIcon: Icon(Icons.perm_identity, color: Colors.green[900]),
             hintText: 'Nama Lengkap',
-            labelStyle:
-                TextStyle(color: Colors.white, fontFamily: "Montserrat"),
+            hintStyle: TextStyle(
+                color: Colors.black, fontFamily: "kohi", fontSize: 15),
+            labelStyle: TextStyle(color: Colors.white, fontFamily: "kohi"),
             contentPadding: EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
             border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(32.0),
+                borderRadius: BorderRadius.circular(10.0),
                 borderSide: BorderSide(color: Colors.green[900])),
           ),
         ));
@@ -419,7 +424,7 @@ class _RegisterPageState extends State<RegisterPage> with Validation {
 
   Widget addressField() {
     return Padding(
-        padding: EdgeInsets.symmetric(horizontal: 50.0),
+        padding: EdgeInsets.symmetric(horizontal: 20.0),
         child: TextFormField(
           validator: (value) {
             if (value.isEmpty) {
@@ -437,11 +442,12 @@ class _RegisterPageState extends State<RegisterPage> with Validation {
           decoration: InputDecoration(
             prefixIcon: Icon(Icons.home, color: Colors.green[900]),
             hintText: 'Alamat',
-            labelStyle:
-                TextStyle(color: Colors.white, fontFamily: "Montserrat"),
+            hintStyle: TextStyle(
+                color: Colors.black, fontFamily: "kohi", fontSize: 15),
+            labelStyle: TextStyle(color: Colors.white, fontFamily: "kohi"),
             contentPadding: EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
             border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(32.0),
+                borderRadius: BorderRadius.circular(10.0),
                 borderSide: BorderSide(color: Colors.green[900])),
           ),
         ));
@@ -449,7 +455,7 @@ class _RegisterPageState extends State<RegisterPage> with Validation {
 
   Widget telpField() {
     return Padding(
-        padding: EdgeInsets.symmetric(horizontal: 50.0),
+        padding: EdgeInsets.symmetric(horizontal: 20.0),
         child: TextFormField(
           validator: (value) {
             String patttern = r'(^(?:[+0]9)?[0-9]{10,12}$)';
@@ -467,13 +473,14 @@ class _RegisterPageState extends State<RegisterPage> with Validation {
           autofocus: false,
           autovalidateMode: AutovalidateMode.onUserInteraction,
           decoration: InputDecoration(
-            prefixIcon: Icon(Icons.phone, color: Colors.green[900]),
+            prefixIcon: Icon(Icons.phone_android, color: Colors.green[900]),
             hintText: 'Nomor Telpon',
-            labelStyle:
-                TextStyle(color: Colors.white, fontFamily: "Montserrat"),
+            hintStyle: TextStyle(
+                color: Colors.black, fontFamily: "kohi", fontSize: 15),
+            labelStyle: TextStyle(color: Colors.white, fontFamily: "kohi"),
             contentPadding: EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
             border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(32.0),
+                borderRadius: BorderRadius.circular(10.0),
                 borderSide: BorderSide(color: Colors.green[900])),
           ),
         ));
@@ -507,7 +514,7 @@ class _RegisterPageState extends State<RegisterPage> with Validation {
             },
             child: Text(
               "Daftar",
-              style: TextStyle(color: Colors.white, fontFamily: "Montserrat"),
+              style: TextStyle(color: Colors.white, fontFamily: "kohi"),
             ),
           ),
         ));
@@ -518,9 +525,9 @@ class _RegisterPageState extends State<RegisterPage> with Validation {
         padding: EdgeInsets.symmetric(vertical: 5.0),
         child: Material(
           color: Colors.green[900],
-          borderRadius: BorderRadius.circular(20.0),
+          borderRadius: BorderRadius.circular(10.0),
           child: MaterialButton(
-            minWidth: 200.0,
+            minWidth: MediaQuery.of(context).size.width * 0.9,
             height: 42.0,
             onPressed: () {
               // if ((username.text?.isEmpty ?? true) ||
@@ -548,7 +555,7 @@ class _RegisterPageState extends State<RegisterPage> with Validation {
             },
             child: Text(
               "Daftar",
-              style: TextStyle(color: Colors.white, fontFamily: "Montserrat"),
+              style: TextStyle(color: Colors.white, fontFamily: "kohi"),
             ),
           ),
         ));

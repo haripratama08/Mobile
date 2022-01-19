@@ -239,7 +239,7 @@ class _MonitorIndoorState extends State<MonitorIndoor> with Validation {
                                       '${listnama[index]}',
                                       textDirection: TextDirection.ltr,
                                       style: TextStyle(
-                                          fontFamily: 'Mont', fontSize: 14),
+                                          fontFamily: 'kohi', fontSize: 14),
                                     ),
                                     eventdev[index] == 'disconnected'
                                         ? new Text(
@@ -267,11 +267,19 @@ class _MonitorIndoorState extends State<MonitorIndoor> with Validation {
                             width: MediaQuery.of(context).size.width * 4 / 5,
                             padding: const EdgeInsets.all(10),
                             decoration: BoxDecoration(
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Color(0xB1AFAF).withOpacity(0.3),
+                                    spreadRadius: 1,
+                                    offset: Offset(
+                                        0, 2), // changes position of shadow
+                                  ),
+                                ],
                                 color: warna,
-                                border: Border.all(
-                                  width: 2.0,
-                                  color: Colors.black,
-                                ),
+                                // border: Border.all(
+                                //   width: 2.0,
+                                //   color: Colors.black,
+                                // ),
                                 borderRadius: BorderRadius.circular(10))),
                       ));
                 }),
@@ -294,7 +302,7 @@ class _MonitorIndoorState extends State<MonitorIndoor> with Validation {
                     padding: const EdgeInsets.fromLTRB(100, 5, 100, 5),
                     child: new Text(
                       "Nama Baru",
-                      style: TextStyle(fontFamily: 'Mont', fontSize: 15),
+                      style: TextStyle(fontFamily: 'kohi', fontSize: 15),
                     )),
                 Container(
                     width: 150,
@@ -334,7 +342,7 @@ class _MonitorIndoorState extends State<MonitorIndoor> with Validation {
                       child: Center(
                           child: Text("Terapkan",
                               style: TextStyle(
-                                  color: Colors.white, fontFamily: 'Mont'))),
+                                  color: Colors.white, fontFamily: 'kohi'))),
                     ),
                   ),
                 )

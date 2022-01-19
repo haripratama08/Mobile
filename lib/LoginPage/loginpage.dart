@@ -146,7 +146,7 @@ class _LoginPageState extends State<LoginPage> {
       tag: 'hero',
       child: CircleAvatar(
         backgroundColor: Colors.transparent,
-        radius: 55.0,
+        radius: (112 + 103) / 4,
         child: Image.asset('asset/img/ch.png'),
       ),
     );
@@ -154,6 +154,7 @@ class _LoginPageState extends State<LoginPage> {
     final usernameForm = Padding(
         padding: EdgeInsets.symmetric(horizontal: 20.0),
         child: TextFormField(
+          style: TextStyle(fontFamily: "kohi", fontSize: 12),
           validator: (value) {
             if (value.isEmpty) {
               return ' please enter username';
@@ -166,11 +167,12 @@ class _LoginPageState extends State<LoginPage> {
           decoration: InputDecoration(
             prefixIcon: Icon(Icons.person, color: Colors.green[900]),
             hintText: 'Username',
-            labelStyle:
-                TextStyle(color: Colors.white, fontFamily: "Montserrat"),
+            hintStyle: TextStyle(
+                color: Colors.black, fontFamily: "kohi", fontSize: 15),
+            labelStyle: TextStyle(color: Colors.white, fontFamily: "kohi"),
             contentPadding: EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
             border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(32.0),
+                borderRadius: BorderRadius.circular(10.0),
                 borderSide: BorderSide(color: Colors.green[900])),
           ),
         ));
@@ -180,7 +182,7 @@ class _LoginPageState extends State<LoginPage> {
         child: TextFormField(
           validator: (value) {
             if (value.isEmpty) {
-              return ' please enter password';
+              return 'please enter password';
             }
             return null;
           },
@@ -202,26 +204,24 @@ class _LoginPageState extends State<LoginPage> {
               color: Colors.green[900],
             ),
             hintText: 'Password',
-            labelStyle:
-                TextStyle(color: Colors.white, fontFamily: "Montserrat"),
+            hintStyle: TextStyle(
+                color: Colors.black, fontFamily: "kohi", fontSize: 15),
+            labelStyle: TextStyle(color: Colors.white, fontFamily: "kohi"),
             contentPadding: EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
             border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(32.0),
+                borderRadius: BorderRadius.circular(10.0),
                 borderSide: BorderSide(color: Colors.green[900])),
           ),
         ));
 
     final loginButton = Padding(
-      padding: EdgeInsets.symmetric(
-        vertical: 16.0,
-      ),
+      padding: EdgeInsets.symmetric(horizontal: 20.0),
       child: Material(
         color: Colors.green[900],
-        borderRadius: BorderRadius.circular(30.0),
+        borderRadius: BorderRadius.circular(10.0),
         elevation: 5.0,
         child: MaterialButton(
-          minWidth: 200.0,
-          height: 42.0,
+          minWidth: MediaQuery.of(context).size.width * 0.9,
           onPressed: () {
             msg = '';
             FocusScope.of(context).requestFocus(FocusNode());
@@ -229,7 +229,7 @@ class _LoginPageState extends State<LoginPage> {
             check();
           },
           child: Text('Masuk',
-              style: TextStyle(color: Colors.white, fontFamily: "Montserrat")),
+              style: TextStyle(color: Colors.white, fontFamily: "kohi")),
         ),
       ),
     );
@@ -244,13 +244,17 @@ class _LoginPageState extends State<LoginPage> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             Text("Jika belum memiliki akun?",
-                style:
-                    TextStyle(fontFamily: "Montserrat", color: Colors.black)),
+                style: TextStyle(fontFamily: "kohi", color: Colors.black)),
+            SizedBox(
+              width: 5,
+            ),
             Text(
               "Daftar",
               textAlign: TextAlign.left,
-              style:
-                  TextStyle(color: Color(0xFF17451A), fontFamily: "Montserrat"),
+              style: TextStyle(
+                  color: Colors.black,
+                  fontFamily: "kohi",
+                  fontWeight: FontWeight.bold),
             ),
           ],
         )));
@@ -280,7 +284,7 @@ class _LoginPageState extends State<LoginPage> {
                   child: Text(
                     msg,
                     style: TextStyle(
-                        color: Colors.red, fontFamily: "Mont", fontSize: 12),
+                        color: Colors.red, fontFamily: "kohi", fontSize: 12),
                   ),
                 ),
                 loading == true

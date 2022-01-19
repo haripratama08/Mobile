@@ -114,15 +114,10 @@ class _MenuState extends State<Menu> with SingleTickerProviderStateMixin {
               child: new Padding(
                 padding:
                     const EdgeInsets.only(left: 30.0, top: 20.0, bottom: 20.0),
-                child: new Text(
-                  '$user'.inCaps,
-                  style: new TextStyle(
-                    fontSize: 20.0,
-                    fontFamily: 'Mont',
-                    fontWeight: FontWeight.w500,
-                    color: Colors.green[900],
-                  ),
-                ),
+                child: Container(
+                    alignment: Alignment.centerLeft,
+                    height: 18,
+                    child: Image.asset('asset/img/logocrophero.png')),
               ),
               decoration: new BoxDecoration(
                 color: Colors.white,
@@ -139,7 +134,7 @@ class _MenuState extends State<Menu> with SingleTickerProviderStateMixin {
           body: route,
           bottomNavigationBar: Container(
             decoration: BoxDecoration(
-              color: Colors.white,
+              color: Colors.white10,
               boxShadow: [
                 BoxShadow(
                   spreadRadius: 1.5,
@@ -148,21 +143,22 @@ class _MenuState extends State<Menu> with SingleTickerProviderStateMixin {
               ],
             ),
             child: BottomNavigationBar(
+                iconSize: 35,
                 showSelectedLabels: true,
                 unselectedItemColor: Colors.green[900],
                 selectedItemColor: Color(0xFFF7931E),
                 items: <BottomNavigationBarItem>[
                   BottomNavigationBarItem(
-                    icon: Icon(Icons.desktop_windows),
-                    label: "Monitor",
+                    icon: Icon(Icons.insert_chart),
+                    title: Text("", style: TextStyle(fontSize: 0)),
                   ),
                   BottomNavigationBarItem(
-                    icon: Icon(Icons.settings_remote_rounded),
-                    label: "Kontrol",
+                    icon: Icon(Icons.control_camera),
+                    title: Text("", style: TextStyle(fontSize: 0)),
                   ),
                   BottomNavigationBarItem(
+                    title: Text("", style: TextStyle(fontSize: 0)),
                     icon: Icon(Icons.account_circle),
-                    label: "Akun",
                   ),
                 ],
                 selectedLabelStyle: TextStyle(

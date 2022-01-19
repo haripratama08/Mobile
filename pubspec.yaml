@@ -51,3 +51,6 @@ flutter:
     - family: Montserrat
       fonts:
         - asset: asset/font/Montserrat.otf
+    - family: kohi
+      fonts:
+        - asset: asset/font/Kohinoor.ttc
