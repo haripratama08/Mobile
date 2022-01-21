@@ -1,4 +1,3 @@
-import 'package:ch_v2_1/LoginPage/loginpage.dart';
 import 'package:ch_v2_1/Menu/Kontrol/kontrol_utama.dart';
 import 'package:flutter/material.dart';
 import 'package:ch_v2_1/Menu/Akun/logout.dart';
@@ -9,9 +8,11 @@ int _selectedIndex;
 int count = 0;
 int index = 0;
 String namaalat;
+String title;
 
 class Menu extends StatefulWidget {
   final namaalat;
+
   final int count;
   final int index;
   final String nama;
@@ -67,6 +68,7 @@ class _MenuState extends State<Menu> with SingleTickerProviderStateMixin {
       _selectedIndex = index;
     });
     setState(() {
+      title = 'Monitoring';
       if (index == 0 && widget.index == null ||
           index == 0 && widget.index == 0 ||
           index == null && widget.index == null ||
@@ -92,10 +94,12 @@ class _MenuState extends State<Menu> with SingleTickerProviderStateMixin {
         }
       } else if (index == 1) {
         setState(() {
+          title = 'Kontroling';
           route = KontrolUtama();
         });
       } else if (index == 2) {
         setState(() {
+          title = 'Akun';
           route = Logout();
         });
       }
@@ -114,10 +118,23 @@ class _MenuState extends State<Menu> with SingleTickerProviderStateMixin {
               child: new Padding(
                 padding:
                     const EdgeInsets.only(left: 30.0, top: 20.0, bottom: 20.0),
-                child: Container(
-                    alignment: Alignment.centerLeft,
-                    height: 18,
-                    child: Image.asset('asset/img/logocrophero.png')),
+                child: Row(
+                  children: [
+                    Container(
+                        alignment: Alignment.centerLeft,
+                        height: 18,
+                        child: Image.asset('asset/img/logocrophero.png')),
+                    SizedBox(
+                      width: 5,
+                    ),
+                    Text('${title.inCaps}',
+                        style: TextStyle(
+                            color: Colors.green[900],
+                            fontFamily: 'kohi',
+                            fontWeight: FontWeight.bold,
+                            fontSize: 18))
+                  ],
+                ),
               ),
               decoration: new BoxDecoration(
                 color: Colors.white,
@@ -145,8 +162,8 @@ class _MenuState extends State<Menu> with SingleTickerProviderStateMixin {
             child: BottomNavigationBar(
                 iconSize: 35,
                 showSelectedLabels: true,
-                unselectedItemColor: Colors.green[900],
-                selectedItemColor: Color(0xFFF7931E),
+                unselectedItemColor: Colors.grey,
+                selectedItemColor: Colors.green[400],
                 items: <BottomNavigationBarItem>[
                   BottomNavigationBarItem(
                     icon: Icon(Icons.insert_chart),

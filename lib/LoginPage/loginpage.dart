@@ -280,11 +280,14 @@ class _LoginPageState extends State<LoginPage> {
                 SizedBox(height: 24.0),
                 passwordForm,
                 Padding(
-                  padding: const EdgeInsets.only(top: 20.0),
+                  padding: const EdgeInsets.symmetric(vertical: 20),
                   child: Text(
                     msg,
                     style: TextStyle(
-                        color: Colors.red, fontFamily: "kohi", fontSize: 12),
+                        color: Colors.red,
+                        fontFamily: "kohi",
+                        fontSize: 15,
+                        fontWeight: FontWeight.bold),
                   ),
                 ),
                 loading == true

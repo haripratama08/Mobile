@@ -33,6 +33,7 @@ class _SemuaState extends State<Semua> with Validation {
   int idkontrol;
   String kontrolnamechoosen;
   List<String> kontrolnamelist = [];
+  List<String> timelist = [];
   List<String> eventlist = [];
   List<String> reasonlist = [];
   List<String> listname = [];
@@ -98,12 +99,18 @@ class _SemuaState extends State<Semua> with Validation {
                       .data.lokasi[i].hub[j].alat[k].kontrol[l].event;
                   String reason = jeniskontrol
                       .data.lokasi[i].hub[j].alat[k].kontrol[l].reason;
+                  String time = jeniskontrol
+                      .data.lokasi[i].hub[j].alat[k].kontrol[l].time;
                   int idkontrol =
                       jeniskontrol.data.lokasi[i].hub[j].alat[k].kontrol[l].id;
 
                   eventlist.length == panjangkontrol
                       ? print("")
                       : eventlist.add(event);
+
+                  timelist.length == panjangkontrol
+                      ? print("")
+                      : timelist.add(time);
 
                   reasonlist.length == panjangkontrol
                       ? print("")
@@ -230,68 +237,163 @@ class _SemuaState extends State<Semua> with Validation {
                               });
                             },
                             child: Padding(
-                              padding: const EdgeInsets.all(10),
+                              padding: const EdgeInsets.fromLTRB(20, 10, 20, 5),
                               child: Container(
-                                  child: Center(
-                                      child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: <Widget>[
-                                      Image.asset(
-                                        'asset/img/ghico.png',
-                                        height: 40,
-                                      ),
-                                      SizedBox(
-                                        width:
-                                            MediaQuery.of(context).size.width /
-                                                7,
-                                      ),
-                                      Column(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        children: <Widget>[
-                                          new Text(
-                                            '${listkontrol[index]}',
-                                            textDirection: TextDirection.ltr,
-                                            style: TextStyle(
-                                                fontFamily: 'Mont',
-                                                fontSize: 14),
-                                          ),
-                                          eventlist[index] == 'disconnected'
-                                              ? new Text(
-                                                  '${reasonlist[index]}',
-                                                  style:
-                                                      TextStyle(fontSize: 10),
-                                                )
-                                              : new Text(''),
-                                        ],
-                                      ),
-                                      SizedBox(
-                                        width:
-                                            MediaQuery.of(context).size.width /
-                                                7,
-                                      ),
-                                      eventlist[index] == 'disconnected'
-                                          ? Image.asset(
-                                              'asset/img/disconnect.png',
-                                              height: 20,
-                                            )
-                                          : Image.asset(
-                                              'asset/img/conect.png',
-                                              height: 20,
+                                  child: Stack(
+                                    children: [
+                                      Positioned.fill(
+                                        child: Align(
+                                          alignment: Alignment.centerLeft,
+                                          child: Container(
+                                            decoration: BoxDecoration(
+                                              boxShadow: [
+                                                BoxShadow(
+                                                  color: Colors.grey
+                                                      .withOpacity(0.2),
+                                                  spreadRadius: 1,
+                                                  blurRadius: 2,
+                                                  offset: Offset(0,
+                                                      3), // changes position of shadow
+                                                ),
+                                              ],
                                             ),
+                                            child: Image.asset(
+                                              'asset/img/toogle.png',
+                                              height: 40,
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                      Positioned.fill(
+                                        child: Align(
+                                          alignment: Alignment.topCenter,
+                                          child: Column(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            children: <Widget>[
+                                              new Text(
+                                                '${listkontrol[index]}',
+                                                textDirection:
+                                                    TextDirection.ltr,
+                                                style: TextStyle(
+                                                    fontFamily: 'kohi',
+                                                    fontSize: 15,
+                                                    fontWeight:
+                                                        FontWeight.bold),
+                                              ),
+                                              eventlist[index] == 'disconnected'
+                                                  ? new Text(
+                                                      '${reasonlist[index]}',
+                                                      style: TextStyle(
+                                                          fontSize: 10),
+                                                    )
+                                                  : new Text(''),
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                      Positioned.fill(
+                                        child: GestureDetector(
+                                          onTap: () {
+                                            if (timelist[index].isEmpty) {
+                                            } else {
+                                              if (eventlist[index] ==
+                                                  'disconnected') {
+                                                AlertDialog alert = AlertDialog(
+                                                  title: Text(
+                                                      "Terkoneksi terakhir pada",
+                                                      textAlign:
+                                                          TextAlign.center,
+                                                      style: TextStyle(
+                                                          fontFamily: 'Kohi')),
+                                                  content: Text(
+                                                      "${timelist[index]}",
+                                                      textAlign:
+                                                          TextAlign.center,
+                                                      style: TextStyle(
+                                                          fontFamily: 'Kohi',
+                                                          fontSize: 20,
+                                                          fontWeight:
+                                                              FontWeight.bold)),
+                                                  actions: [],
+                                                );
+                                                // show the dialog
+                                                showDialog(
+                                                  context: context,
+                                                  builder:
+                                                      (BuildContext context) {
+                                                    return alert;
+                                                  },
+                                                );
+                                              } else {
+                                                AlertDialog alert = AlertDialog(
+                                                  title: Text(
+                                                    "Terhubung kembali pada",
+                                                    textAlign: TextAlign.center,
+                                                    style: TextStyle(
+                                                        fontFamily: 'Kohi'),
+                                                  ),
+                                                  content: Text(
+                                                      "${timelist[index]}",
+                                                      textAlign:
+                                                          TextAlign.center,
+                                                      style: TextStyle(
+                                                          fontFamily: 'Kohi',
+                                                          fontSize: 20,
+                                                          fontWeight:
+                                                              FontWeight.bold)),
+                                                  actions: [],
+                                                );
+                                                // show the dialog
+                                                showDialog(
+                                                  context: context,
+                                                  builder:
+                                                      (BuildContext context) {
+                                                    return alert;
+                                                  },
+                                                );
+                                              }
+                                            }
+
+                                            // set up the AlertDialog
+                                          },
+                                          child: Padding(
+                                            padding: const EdgeInsets.only(
+                                                right: 10),
+                                            child: Align(
+                                              alignment: Alignment.centerRight,
+                                              child: eventlist[index] ==
+                                                      'disconnected'
+                                                  ? Image.asset(
+                                                      'asset/img/disconnected.png',
+                                                      height: 25,
+                                                    )
+                                                  : Image.asset(
+                                                      'asset/img/connected.png',
+                                                      height: 25,
+                                                    ),
+                                            ),
+                                          ),
+                                        ),
+                                      ),
                                     ],
-                                  )),
+                                  ),
                                   height:
                                       MediaQuery.of(context).size.height / 11.5,
                                   width:
                                       MediaQuery.of(context).size.width * 4 / 5,
                                   padding: const EdgeInsets.all(10),
                                   decoration: BoxDecoration(
+                                      boxShadow: [
+                                        BoxShadow(
+                                          color:
+                                              Color(0xB1AFAF).withOpacity(0.3),
+                                          spreadRadius: 1,
+                                          offset: Offset(0,
+                                              2), // changes position of shadow
+                                        ),
+                                      ],
                                       color: warna,
-                                      border: Border.all(
-                                        width: 2.0,
-                                        color: Colors.black,
-                                      ),
                                       borderRadius: BorderRadius.circular(10))),
                             ));
                   }

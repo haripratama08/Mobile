@@ -1,7 +1,6 @@
 import 'package:ch_v2_1/API/api.dart';
 import 'package:ch_v2_1/Menu/Kontrol/kontrol_utama.dart';
 import 'package:ch_v2_1/Menu/Kontrol/kontrol_auto.dart';
-import 'package:ch_v2_1/dialogbox/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
@@ -31,10 +30,11 @@ class _LogoutState extends State<Logout> {
   }
 
   Future loadIdentitas() async {
-    var url = Uri.parse('$endPoint/profile');
+    var url = Uri.parse('$endPoint/user/profile');
     var jsonString = await http
         .get(url, headers: {HttpHeaders.authorizationHeader: '$token'});
     var jsonResponse = json.decode(jsonString.body);
+    print(jsonResponse);
     setState(() {
       size = MediaQuery.of(context).size.width / 2;
       status = jsonResponse['status'];
@@ -60,219 +60,181 @@ class _LogoutState extends State<Logout> {
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: Text("Silahkan Menunggu",
-                  style: TextStyle(fontFamily: 'Mont')),
+                  style: TextStyle(fontFamily: 'Kohi')),
             ),
           ],
         ),
       );
     } else {
       return Column(
+        mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Stack(
-            children: [
-              Padding(
-                padding: EdgeInsets.only(
-                    left: Constants.padding,
-                    top: Constants.avatarRadius + Constants.padding,
-                    right: Constants.padding,
-                    bottom: Constants.padding),
-                child: Container(
-                    height: MediaQuery.of(context).size.height / 4,
-                    width: MediaQuery.of(context).size.height / 1.5,
-                    decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(10),
-                        border: Border.all(width: 2, color: Colors.green[900])),
-                    child: Column(
-                      children: [
-                        SizedBox(
-                          height: 10,
-                        ),
-                        SizedBox(height: 50),
-                        Padding(
-                          padding: const EdgeInsets.only(left: 25),
-                          child: Row(
-                            children: [
-                              Icon(
-                                Icons.person,
-                                color: Colors.green[900],
-                              ),
-                              SizedBox(width: 10),
-                              Text(
-                                "$namas",
-                                style: new TextStyle(
-                                  fontSize: 15,
-                                  color: Colors.black,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        SizedBox(height: 3),
-                        Padding(
-                          padding: const EdgeInsets.only(left: 25),
-                          child: Row(
-                            children: [
-                              Icon(
-                                Icons.mail,
-                                color: Colors.green[900],
-                              ),
-                              SizedBox(width: 10),
-                              Text(
-                                "$email",
-                                style: new TextStyle(
-                                  fontSize: 15,
-                                  color: Colors.black,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        SizedBox(height: 3),
-                        Padding(
-                          padding: const EdgeInsets.only(left: 25),
-                          child: Row(
-                            children: [
-                              Icon(
-                                Icons.phone,
-                                color: Colors.green[900],
-                              ),
-                              SizedBox(width: 10),
-                              Text(
-                                "$telp",
-                                style: new TextStyle(
-                                  fontSize: 15,
-                                  color: Colors.black,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        SizedBox(height: 3),
-                        Padding(
-                          padding: const EdgeInsets.only(left: 25),
-                          child: Row(
-                            children: [
-                              Icon(
-                                Icons.home,
-                                color: Colors.green[900],
-                              ),
-                              SizedBox(width: 10),
-                              Text(
-                                "$alamat",
-                                style: new TextStyle(
-                                  fontSize: 15,
-                                  color: Colors.black,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        SizedBox(height: 5),
-                      ],
-                    )),
-              ),
-              Positioned(
-                top: Constants.padding,
-                left: Constants.padding,
-                right: Constants.padding,
-                child: CircleAvatar(
-                  backgroundColor: Colors.green[900],
-                  radius: Constants.avatarRadius,
-                  child: CircleAvatar(
-                    foregroundColor: Colors.transparent,
-                    backgroundColor: Colors.white,
-                    radius: Constants.avatarRadius - 2,
-                    backgroundImage: NetworkImage(foto),
-                  ),
-                ),
-              ),
-            ],
+          CircleAvatar(
+            foregroundColor: Colors.transparent,
+            backgroundColor: Colors.grey,
+            radius: MediaQuery.of(context).size.height / 10,
+            backgroundImage: NetworkImage(foto),
           ),
-          Padding(
-            padding: const EdgeInsets.only(top: 4.0),
-            child: ListTile(
-              leading: IconButton(
-                color: Colors.green[900],
-                iconSize: 30.0,
-                icon: Icon(Icons.close),
-                onPressed: () async {
-                  size = MediaQuery.of(context).size.width / 2;
-                  Navigator.pushReplacementNamed(
-                    context,
-                    '/login',
-                  );
-                  final pref = await SharedPreferences.getInstance();
-                  await pref.clear();
-
-                  token = null;
-                  uuid = null;
-                  //menghapus isi dari variabel yang ada di a
-                  a.items.clear();
-                  a.idlokasi.clear();
-                  a.idhub.clear();
-                  a.idalat.clear();
-                  a.items.clear();
-                  a.iditems.clear();
-                  a.itemsshadow.clear();
-                  a.listnama.clear();
-                  a.tempatlist.clear();
-                  a.loc.clear();
-                  a.huc.clear();
-                  a.dev.clear();
-
-                  //menghapus isi dari variabel yang ada di kontrol
-                  trial.clear();
-                  listname.clear();
-                  namaalatkontrol = null;
-                  listed.clear();
-                  selectedalat = null;
-                  pilihsensor = null;
-                  listsensor.clear();
-                  selectedkondisi = null;
-                  selectedstate = null;
-                },
-              ),
-              title: new Text(
-                "Keluar",
-                style: new TextStyle(
-                  color: Colors.black,
-                  fontWeight: FontWeight.bold,
-                ),
+          SizedBox(
+            height: 10,
+          ),
+          Text(
+            'Nama Pemilik',
+            style: TextStyle(
+                fontFamily: 'Kohi', fontWeight: FontWeight.bold, fontSize: 18),
+          ),
+          Text(
+            '$namas',
+            style: TextStyle(fontFamily: 'Kohi', fontSize: 18),
+          ),
+          SizedBox(
+            height: 60,
+          ),
+          Align(
+            alignment: Alignment.centerLeft,
+            child: Padding(
+              padding:
+                  EdgeInsets.only(left: MediaQuery.of(context).size.width / 6),
+              child: Row(
+                children: [
+                  Icon(
+                    Icons.email,
+                    color: Colors.green[300],
+                    size: 36,
+                  ),
+                  SizedBox(
+                    width: 20,
+                  ),
+                  Text(
+                    '$email',
+                    style: TextStyle(
+                        fontFamily: 'Kohi',
+                        color: Colors.green[900],
+                        fontSize: 18),
+                  )
+                ],
               ),
             ),
           ),
-          // Padding(
-          //   padding: const EdgeInsets.only(bottom: 4),
-          //   child: ListTile(
-          //     leading: IconButton(
-          //       color: Colors.green[900],
-          //       iconSize: 30.0,
-          //       icon: Icon(Icons.edit),
-          //       onPressed: () async {
-          //         size = MediaQuery.of(context).size.width / 2;
-          //         Navigator.pushReplacementNamed(
-          //           context,
-          //           '/login',
-          //         );
-          //         final pref = await SharedPreferences.getInstance();
-          //         await pref.clear();
-          //         items.clear();
-          //         iditems.clear();
-          //         itemsshadow.clear();
-          //         listnama.clear();
-          //         tempatlist.clear();
-          //       },
-          //     ),
-          //     title: new Text(
-          //       "Edit",
-          //       style: new TextStyle(
-          //         color: Colors.black,
-          //         fontFamily: "Mont",
-          //         fontWeight: FontWeight.bold,
-          //       ),
-          //     ),
-          //   ),
-          // ),
+          SizedBox(
+            height: 10,
+          ),
+          Align(
+            alignment: Alignment.centerLeft,
+            child: Padding(
+              padding:
+                  EdgeInsets.only(left: MediaQuery.of(context).size.width / 6),
+              child: Row(
+                children: [
+                  Icon(
+                    Icons.phone_android,
+                    color: Colors.green[300],
+                    size: 36,
+                  ),
+                  SizedBox(
+                    width: 20,
+                  ),
+                  Text(
+                    '$telp',
+                    style: TextStyle(
+                        fontFamily: 'Kohi',
+                        color: Colors.green[900],
+                        fontSize: 18),
+                  )
+                ],
+              ),
+            ),
+          ),
+          SizedBox(
+            height: 10,
+          ),
+          Align(
+            alignment: Alignment.centerLeft,
+            child: Padding(
+              padding:
+                  EdgeInsets.only(left: MediaQuery.of(context).size.width / 6),
+              child: Row(
+                children: [
+                  Icon(
+                    Icons.home,
+                    color: Colors.green[300],
+                    size: 36,
+                  ),
+                  SizedBox(
+                    width: 20,
+                  ),
+                  Text(
+                    '$alamat',
+                    style: TextStyle(
+                        fontFamily: 'Kohi',
+                        color: Colors.green[900],
+                        fontSize: 18),
+                  )
+                ],
+              ),
+            ),
+          ),
+          SizedBox(
+            height: 60,
+          ),
+          GestureDetector(
+            onTap: () async {
+              size = MediaQuery.of(context).size.width / 2;
+              Navigator.pushReplacementNamed(
+                context,
+                '/login',
+              );
+              final pref = await SharedPreferences.getInstance();
+              await pref.clear();
+
+              token = null;
+              uuid = null;
+              //menghapus isi dari variabel yang ada di a
+              a.items.clear();
+              a.idlokasi.clear();
+              a.idhub.clear();
+              a.idalat.clear();
+              a.items.clear();
+              a.iditems.clear();
+              a.itemsshadow.clear();
+              a.listnama.clear();
+              a.tempatlist.clear();
+              a.loc.clear();
+              a.huc.clear();
+              a.dev.clear();
+
+              //menghapus isi dari variabel yang ada di kontrol
+              trial.clear();
+              listname.clear();
+              namaalatkontrol = null;
+              listed.clear();
+              selectedalat = null;
+              pilihsensor = null;
+              listsensor.clear();
+              selectedkondisi = null;
+              selectedstate = null;
+            },
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Image.asset(
+                  'asset/img/Exit.png',
+                  width: MediaQuery.of(context).size.width / 18,
+                ),
+                SizedBox(
+                  width: 10,
+                ),
+                Text(
+                  'Keluar',
+                  style: TextStyle(
+                      fontFamily: 'Kohi',
+                      fontSize: 18,
+                      color: Colors.grey,
+                      fontWeight: FontWeight.bold),
+                )
+              ],
+            ),
+          )
         ],
       );
     }

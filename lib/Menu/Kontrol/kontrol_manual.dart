@@ -29,6 +29,8 @@ class _KontrolManualState extends State<KontrolManual> {
         "manual": "$state",
         "id_sensor": "null",
       });
+      print(message);
+      print('topic $topic');
       var url = Uri.parse('$kontrol');
       var body = {"topic": topic, "message": message};
       var response = await http.post(url, body: body);
@@ -67,6 +69,7 @@ class _KontrolManualState extends State<KontrolManual> {
               )
             : GestureDetector(
                 onTap: () {
+                  print('mengirim');
                   liststate.clear();
                   FocusScope.of(context).requestFocus(FocusNode());
                   publish("manual", "0", "0", statesend);
@@ -76,13 +79,13 @@ class _KontrolManualState extends State<KontrolManual> {
                       child: Text("$statesend",
                           style: TextStyle(
                               color: Colors.white,
-                              fontFamily: 'Mont',
+                              fontFamily: 'Kohi',
                               fontSize: 15)),
                     ),
                     height: 30,
                     width: 100,
                     decoration: BoxDecoration(
-                        color: Colors.red[900],
+                        color: Colors.green[300],
                         borderRadius: BorderRadius.circular(10)))),
       ),
     );

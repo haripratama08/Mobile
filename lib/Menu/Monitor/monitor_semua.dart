@@ -285,15 +285,6 @@ class _SemuaState extends State<Semua> {
       print(token);
       var jsonResponse = json.decode(jsonString.body);
       MonitoringParse dataparsing = MonitoringParse.fromJson(jsonResponse);
-      // if ((isNumeric("${((((jsonResponse["data"])["data"])[0])["data"])}") ==
-      //     false)) {
-      //   if (this.mounted) {
-      //     setState(() {
-      //       zerodata = true;
-      //       print(zerodata);
-      //     });
-      //   }
-      // } else {
       if (this.mounted) {
         setState(() {
           try {
@@ -604,10 +595,14 @@ class _SemuaState extends State<Semua> {
                     width: MediaQuery.of(context).size.width / 5,
                     child: Image.asset("asset/img/loading.gif")),
                 Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Text("Silahkan Menunggu",
-                      style: TextStyle(fontFamily: 'Mont')),
-                ),
+                    padding: const EdgeInsets.all(8.0),
+                    child: Text(
+                      "Silahkan Menunggu",
+                      style: TextStyle(
+                          fontFamily: 'Kohi',
+                          fontWeight: FontWeight.bold,
+                          color: Colors.green[900]),
+                    )),
               ],
             )),
       );
@@ -657,8 +652,10 @@ class _SemuaState extends State<Semua> {
                                       Padding(
                                         padding: const EdgeInsets.all(25),
                                         child: Text("Silahkan Menunggu",
-                                            style:
-                                                TextStyle(fontFamily: 'Mont')),
+                                            style: TextStyle(
+                                                fontFamily: 'Kohi',
+                                                fontWeight: FontWeight.bold,
+                                                color: Colors.green[900])),
                                       ),
                                     ],
                                   )),
@@ -690,7 +687,9 @@ class _SemuaState extends State<Semua> {
                                             padding: const EdgeInsets.all(25),
                                             child: Text("Silahkan Menunggu",
                                                 style: TextStyle(
-                                                    fontFamily: 'Mont')),
+                                                    fontFamily: 'Kohi',
+                                                    fontWeight: FontWeight.bold,
+                                                    color: Colors.green[900])),
                                           ),
                                         ],
                                       )),
@@ -752,64 +751,22 @@ class _SemuaState extends State<Semua> {
                                                         MediaQuery.of(context)
                                                                 .size
                                                                 .height *
-                                                            0.55,
+                                                            0.525,
                                                     child: Column(
                                                       mainAxisAlignment:
                                                           MainAxisAlignment
                                                               .center,
                                                       children: [
-                                                        Row(
-                                                          mainAxisAlignment:
-                                                              MainAxisAlignment
-                                                                  .center,
-                                                          children: [
-                                                            Container(
-                                                              width: MediaQuery.of(
-                                                                          context)
-                                                                      .size
-                                                                      .width /
-                                                                  2,
-                                                              padding:
-                                                                  EdgeInsets
-                                                                      .fromLTRB(
-                                                                          20,
-                                                                          30,
-                                                                          0,
-                                                                          0),
-                                                              height: MediaQuery.of(
-                                                                          context)
-                                                                      .size
-                                                                      .height *
-                                                                  0.07,
-                                                              child: nil.length ==
-                                                                      null
-                                                                  ? Text("")
-                                                                  : Text(
-                                                                      "$namaalat",
-                                                                      style: TextStyle(
-                                                                          fontSize:
-                                                                              MediaQuery.of(context).size.height / 50)),
-                                                            ),
-                                                            Container(
-                                                              padding:
-                                                                  EdgeInsets
-                                                                      .fromLTRB(
-                                                                          30,
-                                                                          5,
-                                                                          0,
-                                                                          0),
-                                                              width: MediaQuery.of(
-                                                                          context)
-                                                                      .size
-                                                                      .width /
-                                                                  4,
-                                                              height: MediaQuery.of(
-                                                                          context)
-                                                                      .size
-                                                                      .height *
-                                                                  0.07,
-                                                            ),
-                                                          ],
+                                                        Text('$namaalat',
+                                                            style: TextStyle(
+                                                                fontFamily:
+                                                                    'Kohi',
+                                                                fontSize: 20,
+                                                                color: Colors
+                                                                        .green[
+                                                                    900])),
+                                                        SizedBox(
+                                                          height: 15,
                                                         ),
                                                         (MediaQuery.of(context)
                                                                         .size
@@ -1074,8 +1031,9 @@ class _SemuaState extends State<Semua> {
                                             child: Text("Semua",
                                                 style: TextStyle(
                                                     color: Colors.black,
-                                                    fontFamily: 'Mont',
-                                                    fontSize: 13))))),
+                                                    fontWeight: FontWeight.bold,
+                                                    fontFamily: 'kohi',
+                                                    fontSize: 15))))),
                                 for (i = 0; i < panjangtempat; i++)
                                   Tab(
                                       child: Container(
@@ -1090,9 +1048,11 @@ class _SemuaState extends State<Semua> {
                                           child: Center(
                                               child: Text("${tempatlist[i]}",
                                                   style: TextStyle(
+                                                      fontWeight:
+                                                          FontWeight.bold,
                                                       color: Colors.black,
-                                                      fontFamily: 'Mont',
-                                                      fontSize: 13))))),
+                                                      fontFamily: 'Kohi',
+                                                      fontSize: 15))))),
                               ])),
                     ),
                   ),
@@ -1128,15 +1088,8 @@ class _SemuaState extends State<Semua> {
                 child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
-                Text(
-                  jenissensor.inCaps,
-                  style: TextStyle(
-                      fontFamily: 'Mont',
-                      fontSize: MediaQuery.of(context).size.height / 35),
-                ),
-                SizedBox(
-                  height: 10,
-                ),
+                // Text('$namaalat',style:TextStyle(fontFamily: 'Kohi',fontSize: 20)),
+                // SizedBox(height: 15,),
                 img == "0"
                     ? Center(
                         child: Container(
@@ -1146,10 +1099,19 @@ class _SemuaState extends State<Semua> {
                     : Center(
                         child: Image.network(
                           img,
-                          height: MediaQuery.of(context).size.height / 15,
+                          height: MediaQuery.of(context).size.height / 9,
                         ),
                       ),
-                SizedBox(height: 10),
+                SizedBox(height: 15),
+                Text(
+                  jenissensor.inCaps,
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    color: Colors.green[900],
+                    fontFamily: 'Kohi',
+                    fontSize: MediaQuery.of(context).size.height / 35,
+                  ),
+                ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
@@ -1161,14 +1123,17 @@ class _SemuaState extends State<Semua> {
                             "$nilai",
                             style: TextStyle(
                                 fontSize:
-                                    MediaQuery.of(context).size.height / 20,
-                                fontFamily: "Mont"),
+                                    MediaQuery.of(context).size.height / 15,
+                                fontFamily: "Kohi",
+                                fontWeight: FontWeight.bold),
                           ),
                           new Text(
                             satuan,
                             style: TextStyle(
-                              fontSize: MediaQuery.of(context).size.height / 20,
-                            ),
+                                fontSize:
+                                    MediaQuery.of(context).size.height / 15,
+                                fontFamily: 'Kohi',
+                                fontWeight: FontWeight.bold),
                           ),
                         ],
                       ),
@@ -1254,89 +1219,21 @@ class _SemuaState extends State<Semua> {
                 //     ),
                 //   ],
                 // ),
-                SizedBox(height: 10),
+                SizedBox(height: 5),
                 Center(
                   child: new Text(
                     time,
+                    style: TextStyle(
+                      fontFamily: 'Kohi',
+                      fontSize: 18,
+                    ),
                   ),
                 ),
-                SizedBox(height: 10),
               ],
             )),
           ],
         ),
       ),
-    );
-  }
-
-  void tambahAlat() {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          actions: <Widget>[
-            Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                Padding(
-                    padding: const EdgeInsets.fromLTRB(100, 10, 100, 10),
-                    child: new Text(
-                      "Ganti Nama",
-                      style: TextStyle(fontFamily: 'Mont', fontSize: 18),
-                    )),
-                Padding(
-                    padding: const EdgeInsets.fromLTRB(100, 5, 100, 5),
-                    child: new Text(
-                      "Nama Baru",
-                      style: TextStyle(fontFamily: 'Mont', fontSize: 15),
-                    )),
-                Container(
-                  height: 30,
-                  width: 80,
-                  decoration: BoxDecoration(
-                      border: Border.all(width: 1),
-                      borderRadius: BorderRadius.circular(5)),
-                ),
-                Padding(
-                    padding: const EdgeInsets.fromLTRB(100, 5, 100, 5),
-                    child: new Text(
-                      "Tempat Baru",
-                      style: TextStyle(fontFamily: 'Mont', fontSize: 15),
-                    )),
-                Container(
-                  height: 30,
-                  width: 80,
-                  decoration: BoxDecoration(
-                      border: Border.all(width: 1),
-                      borderRadius: BorderRadius.circular(5)),
-                ),
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(50, 20, 50, 15),
-                  child: GestureDetector(
-                    onTap: () {
-                      FocusScope.of(context).requestFocus(FocusNode());
-                      doGanti();
-                    },
-                    child: Container(
-                      height: 30,
-                      width: 100,
-                      decoration: BoxDecoration(
-                          color: Colors.green[900],
-                          borderRadius: BorderRadius.circular(5)),
-                      child: Center(
-                          child: Text("Terapkan",
-                              style: TextStyle(
-                                  color: Colors.white, fontFamily: 'Mont'))),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ],
-          shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.all(Radius.circular(32.0))),
-        );
-      },
     );
   }
 }

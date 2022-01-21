@@ -115,8 +115,9 @@ class _KontrolAutoState extends State<KontrolAuto> with Validation {
                                       Text(
                                         "Status",
                                         style: TextStyle(
-                                          fontFamily: 'Mont',
-                                          color: Colors.red,
+                                          fontFamily: 'Kohi',
+                                          fontWeight: FontWeight.bold,
+                                          color: Colors.green[900],
                                           fontSize: MediaQuery.of(context)
                                                   .size
                                                   .width /
@@ -131,7 +132,7 @@ class _KontrolAutoState extends State<KontrolAuto> with Validation {
                                             0.0, 0.0, 0.0, 0.0),
                                         child: Container(
                                           height: 32,
-                                          width: 100,
+                                          width: 85 * 3 / 2,
                                           decoration: myBoxDecoration(),
                                           child: DropdownButton(
                                               value: selectedstate,
@@ -157,8 +158,9 @@ class _KontrolAutoState extends State<KontrolAuto> with Validation {
                                                     const EdgeInsets.all(8.0),
                                                 child: Text(
                                                   'Pilih Kondisi',
-                                                  style:
-                                                      TextStyle(fontSize: 13),
+                                                  style: TextStyle(
+                                                      fontSize: 13,
+                                                      fontFamily: 'Kohi'),
                                                 ),
                                               ),
                                               items: statee.map((state) {
@@ -172,7 +174,7 @@ class _KontrolAutoState extends State<KontrolAuto> with Validation {
                                                       "$state",
                                                       style: TextStyle(
                                                         fontSize: 13,
-                                                        fontFamily: "Verdana",
+                                                        fontFamily: "Kohi",
                                                         color: Colors.black,
                                                       ),
                                                     ),
@@ -183,60 +185,68 @@ class _KontrolAutoState extends State<KontrolAuto> with Validation {
                                       ),
                                     ],
                                   ),
-                                  SizedBox(
-                                    height: 5,
-                                  ),
+                                  // SizedBox(
+                                  //   height: 5,
+                                  // ),
                                   Column(
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
                                       Text(
                                         "Batas",
                                         style: TextStyle(
-                                          fontFamily: 'Mont',
-                                          color: Colors.red,
+                                          fontFamily: 'Kohi',
+                                          color: Colors.green[900],
+                                          fontWeight: FontWeight.bold,
                                           fontSize: MediaQuery.of(context)
                                                   .size
                                                   .width /
                                               30,
                                         ),
                                       ),
-                                      Container(
-                                        width:
-                                            MediaQuery.of(context).size.width /
-                                                4,
-                                        height:
-                                            MediaQuery.of(context).size.height /
-                                                22,
-                                        child: Padding(
-                                            padding: EdgeInsets.fromLTRB(
-                                                20, 5, 10, 5),
-                                            child: TextFormField(
-                                              validator: (value) {
-                                                if (value.isEmpty) {
-                                                  return 'isikan batas';
-                                                }
-                                                return null;
-                                              },
-                                              controller: threshold,
-                                              keyboardType:
-                                                  TextInputType.number,
-                                              autofocus: false,
-                                              textAlign: TextAlign.center,
-                                              decoration: InputDecoration(
-                                                hintText: 'Batas',
-                                                labelStyle: TextStyle(
-                                                    color: Colors.white,
-                                                    fontFamily: "Montserrat"),
-                                                contentPadding:
-                                                    EdgeInsets.fromLTRB(
-                                                        0, 5.0, 0, 5.0),
-                                                border: OutlineInputBorder(
-                                                    borderSide: BorderSide(
-                                                        width: 0.5,
-                                                        color:
-                                                            Colors.green[900])),
-                                              ),
-                                            )),
+                                      SizedBox(
+                                        height: 5,
+                                      ),
+                                      Padding(
+                                        padding:
+                                            const EdgeInsets.only(left: 10),
+                                        child: Container(
+                                          height: 32,
+                                          width: 85 * 3 / 2,
+                                          decoration: myBoxDecoration(),
+                                          // width:
+                                          //     MediaQuery.of(context).size.width /
+                                          //         5,
+                                          // height:
+                                          //     MediaQuery.of(context).size.height /
+                                          //         22,
+
+                                          child: TextFormField(
+                                            validator: (value) {
+                                              if (value.isEmpty) {
+                                                return 'isikan batas';
+                                              }
+                                              return null;
+                                            },
+                                            controller: threshold,
+                                            keyboardType: TextInputType.number,
+                                            autofocus: false,
+                                            textAlign: TextAlign.center,
+                                            decoration: InputDecoration(
+                                              hintText: 'Batas',
+                                              labelStyle: TextStyle(
+                                                  color: Colors.white,
+                                                  fontFamily: "Kohi"),
+                                              // contentPadding:
+                                              //     EdgeInsets.fromLTRB(
+                                              //         0, 5.0, 0, 5.0),
+                                              // border: OutlineInputBorder(
+                                              //     borderSide: BorderSide(
+                                              //         width: 0.5,
+                                              //         color:
+                                              //             Colors.green[900])),
+                                            ),
+                                          ),
+                                        ),
                                       ),
                                     ],
                                   ),
@@ -246,7 +256,7 @@ class _KontrolAutoState extends State<KontrolAuto> with Validation {
                           ),
                         ),
                         SizedBox(
-                          height: MediaQuery.of(context).size.height / 100,
+                          height: MediaQuery.of(context).size.height / 70,
                         ),
                         loading == true
                             ? Center(
@@ -265,7 +275,7 @@ class _KontrolAutoState extends State<KontrolAuto> with Validation {
                                           child: Text(" Kirim",
                                               style: TextStyle(
                                                   color: Colors.white,
-                                                  fontFamily: 'Mont',
+                                                  fontFamily: 'Kohi',
                                                   fontSize: 15)),
                                         ),
                                         height: 30,
@@ -292,7 +302,7 @@ class _KontrolAutoState extends State<KontrolAuto> with Validation {
                                         height: 30,
                                         width: 100,
                                         decoration: BoxDecoration(
-                                            color: Colors.red[900],
+                                            color: Colors.green[300],
                                             borderRadius:
                                                 BorderRadius.circular(10))))
                       ],
@@ -335,9 +345,9 @@ class _KontrolAutoState extends State<KontrolAuto> with Validation {
   BoxDecoration myBoxDecoration() {
     return BoxDecoration(
         border: Border.all(
-          width: 1.5,
-          color: Colors.green[900],
+          width: 1,
+          color: Colors.black,
         ),
-        borderRadius: BorderRadius.all(Radius.circular(15)));
+        borderRadius: BorderRadius.all(Radius.circular(10)));
   }
 }

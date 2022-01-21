@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
+import 'package:ch_v2_1/API/parsingmonitoring.dart';
 import 'package:ch_v2_1/API/api.dart';
 import 'package:ch_v2_1/Menu/Kontrol/kontrol_semua.dart';
 import 'package:http/http.dart' as http;
@@ -194,17 +195,18 @@ class _KontrolUtamaState extends State<KontrolUtama>
   }
 
   Future loadMonitor() async {
-    var url = Uri.parse('$endPoint/data?uuid=$uuid');
+    var url = Uri.parse('$endPoint/user/data');
     var jsonString = await http
         .get(url, headers: {HttpHeaders.authorizationHeader: '$token'});
     var jsonResponse = json.decode(jsonString.body);
     Data2 data2 = Data2.fromJson(jsonResponse);
+    print('monitor $jsonResponse');
     if (this.mounted) {
       setState(() {
         List<Widget> list = [];
         for (int i = 0; i < data2.data.lokasi.length; i++) {
           panjangtempat = data2.data.lokasi.length;
-
+          print('panjang $panjangtempat');
           if (tempatlist.length == panjangtempat) {
           } else {
             tempat = data2.data.lokasi[i].nama;
@@ -261,21 +263,23 @@ class _KontrolUtamaState extends State<KontrolUtama>
 
   Future loadSensor(int idlokasienter, int idhubenter, int idalatenter) async {
     var url = Uri.parse(
-        '$endPoint/mobile/sensor?lokasi=$idlokasienter&hub=$idhubenter&alat=$idalatenter');
+        '$endPoint/monitoring/mobile/sensorRev?lokasi=$idlokasienter&hub=$idhubenter&alat=$idalatenter');
     var jsonString = await http
         .get(url, headers: {HttpHeaders.authorizationHeader: '$token'});
     var jsonResponse = json.decode(jsonString.body);
+    MonitoringParse dataparsing = MonitoringParse.fromJson(jsonResponse);
+    print('sensor $jsonResponse');
     if (this.mounted) {
       setState(() {
-        panjang = ((jsonResponse["data"])["data"].length);
+        panjang = dataparsing.data.data.length;
         for (var i = 0; i < panjang; i++) {
           if (listsensors.length == panjang) {
           } else if (listsensors.length > panjang && listed.length > panjang) {
             listsensors.clear();
             listed.clear();
           } else {
-            idjns = (((jsonResponse["data"])["data"])[i])["id"];
-            jnssensor = (((jsonResponse["data"])["data"])[i])["jenis"];
+            idjns = dataparsing.data.data[i].id;
+            jnssensor = dataparsing.data.data[i].jenisSensor.jenis;
             if (listsensors.contains(jnssensor) &&
                 itemsbefore == listsensors.length) {
               listsensors.clear();
@@ -377,7 +381,10 @@ class _KontrolUtamaState extends State<KontrolUtama>
                             Padding(
                               padding: const EdgeInsets.all(8.0),
                               child: Text("Silahkan Menunggu",
-                                  style: TextStyle(fontFamily: 'Mont')),
+                                  style: TextStyle(
+                                      fontFamily: 'Kohi',
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.green[900])),
                             ),
                           ],
                         )),
@@ -395,7 +402,7 @@ class _KontrolUtamaState extends State<KontrolUtama>
                               children: [
                                 Center(
                                   child: Text("Data tidak tersedia ",
-                                      style: TextStyle(fontFamily: 'Mont')),
+                                      style: TextStyle(fontFamily: 'Kohi')),
                                 )
                               ],
                             )),
@@ -420,7 +427,7 @@ class _KontrolUtamaState extends State<KontrolUtama>
                                                         10, 10, 10, 10),
                                                 child: Text("$namaalatkontrol",
                                                     style: TextStyle(
-                                                        fontFamily: "Mont",
+                                                        fontFamily: "Kohi",
                                                         fontSize: MediaQuery.of(
                                                                     context)
                                                                 .size
@@ -430,8 +437,8 @@ class _KontrolUtamaState extends State<KontrolUtama>
                                               SizedBox(
                                                 height: 10,
                                               ),
-                                              Image.network(
-                                                'https://crophero.s3-ap-southeast-1.amazonaws.com/img/pump.png',
+                                              Image.asset(
+                                                'asset/img/kontrol.png',
                                                 height: MediaQuery.of(context)
                                                         .size
                                                         .height /
@@ -447,8 +454,9 @@ class _KontrolUtamaState extends State<KontrolUtama>
                                               new Text(
                                                 "Status",
                                                 style: TextStyle(
-                                                  fontFamily: 'Mont',
-                                                  color: Colors.red,
+                                                  fontFamily: 'Kohi',
+                                                  fontWeight: FontWeight.bold,
+                                                  color: Colors.green[300],
                                                   fontSize:
                                                       MediaQuery.of(context)
                                                               .size
@@ -479,7 +487,7 @@ class _KontrolUtamaState extends State<KontrolUtama>
                                                   : new Text(
                                                       "$status",
                                                       style: TextStyle(
-                                                        fontFamily: 'Mont',
+                                                        fontFamily: 'Kohi',
                                                         fontSize: MediaQuery.of(
                                                                     context)
                                                                 .size
@@ -495,8 +503,9 @@ class _KontrolUtamaState extends State<KontrolUtama>
                                               new Text(
                                                 "Mode",
                                                 style: TextStyle(
-                                                  fontFamily: 'Mont',
-                                                  color: Colors.red,
+                                                  fontFamily: 'Kohi',
+                                                  fontWeight: FontWeight.bold,
+                                                  color: Colors.green[300],
                                                   fontSize:
                                                       MediaQuery.of(context)
                                                               .size
@@ -515,18 +524,20 @@ class _KontrolUtamaState extends State<KontrolUtama>
                                                               .size
                                                               .width /
                                                           30,
-                                                  minHeight: 35,
+                                                  minHeight: 30,
                                                   initialLabelIndex: value,
                                                   changeOnTap: true,
                                                   minWidth: 85.0,
-                                                  cornerRadius: 25.0,
-                                                  borderWidth: 2.0,
+                                                  cornerRadius: 10.0,
+                                                  borderWidth: 1.0,
+                                                  borderColor: [Colors.black],
                                                   activeBgColor: [
                                                     Colors.green[900]
                                                   ],
                                                   activeFgColor: Colors.white,
-                                                  inactiveBgColor: Colors.grey,
-                                                  inactiveFgColor: Colors.white,
+                                                  inactiveBgColor: Colors.white,
+                                                  inactiveFgColor:
+                                                      Colors.green[900],
                                                   labels: [
                                                     'Manual',
                                                     'Auto',
@@ -549,6 +560,7 @@ class _KontrolUtamaState extends State<KontrolUtama>
                                       )
                                     : Column(
                                         children: [
+                                          // memilih auto
                                           value == 1
                                               ? SingleChildScrollView(
                                                   physics: ScrollPhysics(),
@@ -557,8 +569,11 @@ class _KontrolUtamaState extends State<KontrolUtama>
                                                       new Text(
                                                         "Pengaturan",
                                                         style: TextStyle(
-                                                          fontFamily: 'Mont',
-                                                          color: Colors.red,
+                                                          fontFamily: 'Kohi',
+                                                          color:
+                                                              Colors.green[900],
+                                                          fontWeight:
+                                                              FontWeight.bold,
                                                           fontSize: MediaQuery.of(
                                                                       context)
                                                                   .size
@@ -626,6 +641,8 @@ class _KontrolUtamaState extends State<KontrolUtama>
                                                                 child: Text(
                                                                   'Pilih Alat',
                                                                   style: TextStyle(
+                                                                      fontFamily:
+                                                                          'Kohi',
                                                                       fontSize:
                                                                           13),
                                                                 ),
@@ -648,7 +665,7 @@ class _KontrolUtamaState extends State<KontrolUtama>
                                                                         fontSize:
                                                                             13,
                                                                         fontFamily:
-                                                                            "Verdana",
+                                                                            "Kohi",
                                                                         color: Colors
                                                                             .black,
                                                                       ),
@@ -713,7 +730,7 @@ class _KontrolUtamaState extends State<KontrolUtama>
                                                                               Text(
                                                                             'Pilih Sensor',
                                                                             style:
-                                                                                TextStyle(fontSize: 13),
+                                                                                TextStyle(fontSize: 13, fontFamily: 'Kohi'),
                                                                           ),
                                                                         ),
                                                                         items: listed.map((detail) {
@@ -728,7 +745,7 @@ class _KontrolUtamaState extends State<KontrolUtama>
                                                                                 "$detail",
                                                                                 style: TextStyle(
                                                                                   fontSize: 13,
-                                                                                  fontFamily: "Verdana",
+                                                                                  fontFamily: "Kohi",
                                                                                   color: Colors.black,
                                                                                 ),
                                                                               ),
@@ -744,8 +761,9 @@ class _KontrolUtamaState extends State<KontrolUtama>
                                           new Text(
                                             "Kondisi",
                                             style: TextStyle(
-                                              fontFamily: 'Mont',
-                                              color: Colors.red,
+                                              fontFamily: 'Kohi',
+                                              color: Colors.green[900],
+                                              fontWeight: FontWeight.bold,
                                               fontSize: MediaQuery.of(context)
                                                       .size
                                                       .width /
@@ -787,6 +805,7 @@ class _KontrolUtamaState extends State<KontrolUtama>
                                                     child: Text(
                                                       'Pilih Kondisi',
                                                       style: TextStyle(
+                                                          fontFamily: 'Kohi',
                                                           fontSize: 13),
                                                     ),
                                                   ),
@@ -803,8 +822,7 @@ class _KontrolUtamaState extends State<KontrolUtama>
                                                           "$kondisiterkini",
                                                           style: TextStyle(
                                                             fontSize: 13,
-                                                            fontFamily:
-                                                                "Verdana",
+                                                            fontFamily: "Kohi",
                                                             color: Colors.black,
                                                           ),
                                                         ),
@@ -819,8 +837,9 @@ class _KontrolUtamaState extends State<KontrolUtama>
                                           new Text(
                                             "Mode",
                                             style: TextStyle(
-                                              fontFamily: 'Mont',
-                                              color: Colors.red,
+                                              fontFamily: 'Kohi',
+                                              color: Colors.green[900],
+                                              fontWeight: FontWeight.bold,
                                               fontSize: MediaQuery.of(context)
                                                       .size
                                                       .width /
@@ -832,24 +851,25 @@ class _KontrolUtamaState extends State<KontrolUtama>
                                           ),
                                           Center(
                                             child: ToggleSwitch(
+                                              totalSwitches: 2,
                                               fontSize: MediaQuery.of(context)
                                                       .size
                                                       .width /
-                                                  27,
+                                                  30,
                                               minHeight: 30,
                                               initialLabelIndex: value,
                                               changeOnTap: true,
                                               minWidth: 85.0,
-                                              cornerRadius: 25.0,
-                                              borderWidth: 2.0,
+                                              cornerRadius: 10.0,
+                                              borderWidth: 1.0,
+                                              borderColor: [Colors.black],
                                               activeBgColor: [
                                                 Colors.green[900]
                                               ],
-                                              totalSwitches: 2,
-                                              // activeBgColor: Colors.green[900],
                                               activeFgColor: Colors.white,
-                                              inactiveBgColor: Colors.grey,
-                                              inactiveFgColor: Colors.white,
+                                              inactiveBgColor: Colors.white,
+                                              inactiveFgColor:
+                                                  Colors.green[900],
                                               labels: [
                                                 'Manual',
                                                 'Auto',
@@ -906,8 +926,10 @@ class _KontrolUtamaState extends State<KontrolUtama>
                                                   child: Text("Semua",
                                                       style: TextStyle(
                                                           color: Colors.black,
-                                                          fontFamily: 'Mont',
-                                                          fontSize: 13))))),
+                                                          fontWeight:
+                                                              FontWeight.bold,
+                                                          fontFamily: 'Kohi',
+                                                          fontSize: 15))))),
                                       for (i = 0; i < listname.length; i++)
                                         Tab(
                                             child: Container(
@@ -923,9 +945,11 @@ class _KontrolUtamaState extends State<KontrolUtama>
                                                     child: Text(
                                                         "${listname[i]}",
                                                         style: TextStyle(
+                                                            fontWeight:
+                                                                FontWeight.bold,
                                                             color: Colors.black,
-                                                            fontFamily: 'Mont',
-                                                            fontSize: 13))))),
+                                                            fontFamily: 'Kohi',
+                                                            fontSize: 15))))),
                                     ])),
                           ),
                           SizedBox(
@@ -945,10 +969,10 @@ class _KontrolUtamaState extends State<KontrolUtama>
   BoxDecoration myBoxDecoration() {
     return BoxDecoration(
         border: Border.all(
-          width: 1.5,
-          color: Colors.green[900],
+          width: 1,
+          color: Colors.black,
         ),
-        borderRadius: BorderRadius.all(Radius.circular(15)));
+        borderRadius: BorderRadius.all(Radius.circular(10)));
   }
 
   void _selectedmonitor(String value) {
