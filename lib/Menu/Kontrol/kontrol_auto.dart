@@ -35,10 +35,6 @@ class _KontrolAutoState extends State<KontrolAuto> with Validation {
 
   @override
   Widget build(BuildContext context) {
-    print(selectedalat?.isEmpty ?? true);
-    print(pilihsensor?.isEmpty ?? true);
-    print(state?.isEmpty ?? true);
-    print(threshold.text?.isEmpty ?? true);
     Future<http.Response> publish(
         String mode, String threshold, String state) async {
       setState(() {
@@ -69,7 +65,7 @@ class _KontrolAutoState extends State<KontrolAuto> with Validation {
               context: context,
               builder: (ctxt) {
                 Future.delayed(Duration(seconds: 2), () {
-                  Navigator.of(context).pop(true);
+                  // Navigator.of(context).pop(true);
                 });
                 return new AlertDialog(
                   title: Column(

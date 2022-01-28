@@ -94,7 +94,7 @@ class _LogoutState extends State<Logout> {
             alignment: Alignment.centerLeft,
             child: Padding(
               padding:
-                  EdgeInsets.only(left: MediaQuery.of(context).size.width / 6),
+                  EdgeInsets.only(left: MediaQuery.of(context).size.width / 8),
               child: Row(
                 children: [
                   Icon(
@@ -123,7 +123,7 @@ class _LogoutState extends State<Logout> {
             alignment: Alignment.centerLeft,
             child: Padding(
               padding:
-                  EdgeInsets.only(left: MediaQuery.of(context).size.width / 6),
+                  EdgeInsets.only(left: MediaQuery.of(context).size.width / 8),
               child: Row(
                 children: [
                   Icon(
@@ -152,7 +152,7 @@ class _LogoutState extends State<Logout> {
             alignment: Alignment.centerLeft,
             child: Padding(
               padding:
-                  EdgeInsets.only(left: MediaQuery.of(context).size.width / 6),
+                  EdgeInsets.only(left: MediaQuery.of(context).size.width / 8),
               child: Row(
                 children: [
                   Icon(

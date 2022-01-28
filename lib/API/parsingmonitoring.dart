@@ -82,25 +82,32 @@ class DataDatum {
 }
 
 class DatumDatum {
-  DatumDatum({
-    this.tanggalSensor,
-    this.tanggalUpdate,
-    this.nilai,
-  });
+  DatumDatum(
+      {this.tanggalSensor,
+      this.tanggalUpdate,
+      this.nilai,
+      this.dateOnly,
+      this.timeOnly});
 
   String tanggalSensor;
   String tanggalUpdate;
+  String dateOnly;
+  String timeOnly;
   double nilai;
 
   factory DatumDatum.fromJson(Map<String, dynamic> json) => DatumDatum(
         tanggalSensor: json["tanggal_sensor"],
         tanggalUpdate: json["tanggal_update"],
+        dateOnly: json["tanggal_only"],
+        timeOnly: json["waktu_only"],
         nilai: json["nilai"].toDouble(),
       );
 
   Map<String, dynamic> toJson() => {
         "tanggal_sensor": tanggalSensor,
         "tanggal_update": tanggalUpdate,
+        "waktu_only": timeOnly,
+        "tanggal_only": dateOnly,
         "nilai": nilai,
       };
 }

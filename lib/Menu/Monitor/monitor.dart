@@ -110,9 +110,6 @@ class _MonitorIndoorState extends State<MonitorIndoor> with Validation {
                 } else {
                   timeevent.add(time);
                 }
-                print(timeevent);
-                list2.add(
-                    ('{ "idlokasi" : $data1,  "idhub" : $data3,  "idalat" : $data4, "nama" : $data5}'));
               }
             }
           }
@@ -133,7 +130,7 @@ class _MonitorIndoorState extends State<MonitorIndoor> with Validation {
       listnama.clear();
       setState(() {
         loadDevice();
-        print(jsonRes);
+        // print(jsonRes);
       });
       jsonRes['status'] == "OK"
           ? Navigator.push(
@@ -251,27 +248,39 @@ class _MonitorIndoorState extends State<MonitorIndoor> with Validation {
                                 ),
                                 Positioned.fill(
                                   child: Align(
-                                    alignment: Alignment.topCenter,
-                                    child: Column(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: <Widget>[
-                                        new Text(
-                                          '${listnama[index]}',
-                                          textDirection: TextDirection.ltr,
-                                          style: TextStyle(
-                                              fontFamily: 'kohi',
-                                              fontSize: 15,
-                                              fontWeight: FontWeight.bold),
-                                        ),
-                                        eventdev[index] == 'disconnected'
-                                            ? new Text(
-                                                '${reasondev[index]}',
-                                                style: TextStyle(fontSize: 10),
-                                              )
-                                            : new Text(''),
-                                      ],
-                                    ),
+                                    alignment: Alignment.center,
+                                    child: eventdev[index] == 'disconnected'
+                                        ? Column(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            children: <Widget>[
+                                                new Text(
+                                                  '${listnama[index]}',
+                                                  textDirection:
+                                                      TextDirection.ltr,
+                                                  style: TextStyle(
+                                                      fontFamily: 'kohi',
+                                                      fontSize: 15,
+                                                      fontWeight:
+                                                          FontWeight.bold),
+                                                ),
+                                                new Text(
+                                                  '${reasondev[index]}',
+                                                  style:
+                                                      TextStyle(fontSize: 10),
+                                                )
+                                              ])
+                                        : Align(
+                                            alignment: Alignment.center,
+                                            child: new Text(
+                                              '${listnama[index]}',
+                                              textDirection: TextDirection.ltr,
+                                              style: TextStyle(
+                                                  fontFamily: 'kohi',
+                                                  fontSize: 15,
+                                                  fontWeight: FontWeight.bold),
+                                            ),
+                                          ),
                                   ),
                                 ),
                                 Positioned.fill(
@@ -302,7 +311,7 @@ class _MonitorIndoorState extends State<MonitorIndoor> with Validation {
                                       } else {
                                         AlertDialog alert = AlertDialog(
                                           title: Text(
-                                            "Terhubung kembali pada",
+                                            "Terhubung pada",
                                             textAlign: TextAlign.center,
                                             style:
                                                 TextStyle(fontFamily: 'Kohi'),
@@ -323,8 +332,6 @@ class _MonitorIndoorState extends State<MonitorIndoor> with Validation {
                                           },
                                         );
                                       }
-
-                                      // set up the AlertDialog
                                     },
                                     child: Padding(
                                       padding: const EdgeInsets.only(right: 10),

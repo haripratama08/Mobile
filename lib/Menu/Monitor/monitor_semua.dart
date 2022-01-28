@@ -1,7 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
 import 'package:ch_v2_1/API/parsingmonitoring.dart';
-// import 'package:intl/intl.dart';
 import 'dart:async';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:ch_v2_1/API/api.dart';
@@ -14,6 +13,19 @@ import 'package:flutter/material.dart';
 import 'package:ch_v2_1/Menu/tambahan/stringcap.dart';
 import 'package:ch_v2_1/Menu/menu.dart';
 
+num ribuan;
+String jenissensordetail;
+int idalatdetail;
+int idlokasidetail;
+int idhubdetail;
+bool load = true;
+num datamin;
+num datamean;
+num datamax;
+int idAlatChange;
+String namaalat;
+String dateonly;
+String timeonly;
 String imgtry;
 int idalabef;
 int idhubef;
@@ -120,11 +132,38 @@ class _SemuaState extends State<Semua> {
     super.didChangeDependencies();
   }
 
+  Future hitungminmaxmean(int idlokasidetail, int idhubdetail, int idalatdetail,
+      int idsensordetail, String jenissensordetails) async {
+    print("masuk hitung");
+    var jsonString = await http.get(
+        Uri.parse(
+            '$endPoint/monitoring/mobile/minmaxmean?lokasi=$idlokasidetail&hub=$idhubdetail&alat=$idalatdetail&sensor=$idsensordetail'),
+        headers: {HttpHeaders.authorizationHeader: '$token'});
+    var jsonResponse = json.decode(jsonString.body);
+    print("done parse");
+    if (this.mounted) {
+      jsonResponse["status"] == 'OK'
+          ? setState(() {
+              load = false;
+              try {
+                jenissensordetail = jenissensordetails;
+                datamin = (jsonResponse["data"])["min"];
+                datamean = (jsonResponse["data"])["mean"];
+                datamax = (jsonResponse["data"])["max"];
+                loaddialog();
+              } on Exception catch (_) {
+                print('kosong');
+              }
+            })
+          : setState(() {});
+    }
+  }
+
   Future loadDevice2() async {
     var jsonString = await http.get(Uri.parse('$endPoint/user/data'),
         headers: {HttpHeaders.authorizationHeader: '$token'});
     var jsonResponse = json.decode(jsonString.body);
-    print(jsonResponse);
+    // print(jsonResponse);
     Data2 data2 = Data2.fromJson(jsonResponse);
     if (this.mounted) {
       setState(() {
@@ -178,7 +217,6 @@ class _SemuaState extends State<Semua> {
         }
       });
     }
-
     return loadSensor();
   }
 
@@ -203,69 +241,6 @@ class _SemuaState extends State<Semua> {
     });
   }
 
-  Future gantinotif(int sets, int idsensor, String token) async {
-    if (this.mounted) {
-      setState(() {
-        loadSensor();
-        loading = true;
-      });
-    }
-    var jsonString = await http.put(
-        Uri.parse('$endPoint/sensor/notifikasi?set=$sets&id_sensor=$idsensor'),
-        headers: {HttpHeaders.authorizationHeader: '$token'});
-    var jsonResponse = json.decode(jsonString.body);
-    items.clear();
-    itemsshadow.clear();
-    iditems.clear();
-    if (this.mounted) {
-      setState(() {
-        success = jsonResponse['status'];
-        loadSensor();
-      });
-      if (success == "OK") {
-        setState(() {
-          loading = false;
-        });
-        showDialog(
-          context: context,
-          builder: (ctxt) => new AlertDialog(
-            title: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                Container(
-                    width: MediaQuery.of(context).size.width / 3,
-                    height: MediaQuery.of(context).size.width / 3,
-                    child: Image.asset("asset/img/datasent1.png")),
-                Padding(
-                  padding: const EdgeInsets.all(10.0),
-                  child: Text("Telah terganti",
-                      style: TextStyle(fontFamily: 'Mont', fontSize: 20)),
-                ),
-                Align(
-                  alignment: Alignment.bottomRight,
-                  child: TextButton(
-                      onPressed: () {
-                        Navigator.push(
-                            context,
-                            new MaterialPageRoute(
-                                builder: (context) => new Menu()));
-                      },
-                      child: Text(
-                        'kembali',
-                        style: TextStyle(
-                            fontSize: 12,
-                            fontFamily: 'Mont',
-                            color: Colors.black),
-                      )),
-                ),
-              ],
-            ),
-          ),
-        );
-      }
-    }
-  }
-
   bool isNumeric(String s) {
     if (s == null) {
       return false;
@@ -274,15 +249,11 @@ class _SemuaState extends State<Semua> {
   }
 
   Future loadSensor() async {
-    print(loc[0]);
-    print(huc[0]);
-    print(dev[0]);
     if (idlokas == null) {
       var jsonString = await http.get(
           Uri.parse(
               '$endPoint/monitoring/mobile/sensorRev?lokasi=${loc[0]}&hub=${huc[0]}&alat=${dev[0]}'),
           headers: {HttpHeaders.authorizationHeader: '$token'});
-      print(token);
       var jsonResponse = json.decode(jsonString.body);
       MonitoringParse dataparsing = MonitoringParse.fromJson(jsonResponse);
       if (this.mounted) {
@@ -305,6 +276,8 @@ class _SemuaState extends State<Semua> {
                 jnssensor = dataparsing.data.data[i].jenisSensor.jenis;
                 satuan = dataparsing.data.data[i].satuan;
                 satuan == null ? satuan = "" : satuan = satuan;
+                dateonly = dataparsing.data.data[i].data[0].dateOnly;
+                timeonly = dataparsing.data.data[i].data[0].timeOnly;
                 imgtry = dataparsing.data.data[i].jenisSensor.ikon;
                 imgtry == '0'
                     ? img = '0'
@@ -316,17 +289,7 @@ class _SemuaState extends State<Semua> {
                 } else if (notif == 1) {
                   notifikasitoogle = true;
                 }
-                print("------");
-                print(jnssensor);
-                print(satuan);
-                print(img);
-                print(nilai1);
-                print(tanggal1);
-                print(notifikasitoogle);
-                print(idjns);
-                print(i);
-                print(namaalat);
-                print("------");
+
                 if (itemsshadow.contains(jnssensor) &&
                     itemsbefore == items.length) {
                   items.clear();
@@ -339,8 +302,8 @@ class _SemuaState extends State<Semua> {
                     iditems.add(notif);
                     itemsshadow.add(jnssensor);
                     items.add(
-                      parameter(jnssensor, satuan, img, nilai1, tanggal1,
-                          notifikasitoogle, idjns, i, namaalat),
+                      parameter(jnssensor, satuan, img, nilai1, timeonly,
+                          dateonly, notifikasitoogle, idjns, i, namaalat),
                     );
                   });
                 }
@@ -359,118 +322,88 @@ class _SemuaState extends State<Semua> {
     } else {
       var jsonString = await http.get(
           Uri.parse(
-              '$endPoint/mobile/sensor?lokasi=$idlokas&hub=$idhu&alat=$idala'),
+              '$endPoint/monitoring/mobile/sensorRev?lokasi=$idlokas&hub=$idhu&alat=$idala'),
           headers: {HttpHeaders.authorizationHeader: '$token'});
       var jsonResponse = json.decode(jsonString.body);
       MonitoringParse dataparsing = MonitoringParse.fromJson(jsonResponse);
-      if ((isNumeric("${((((jsonResponse["data"])["data"])[0])["data"])}") ==
-          false)) {
-        if (this.mounted) {
-          setState(() {
-            zerodata = true;
-            print(zerodata);
-          });
-        }
-      } else {
-        if (this.mounted) {
-          setState(() {
-            try {
-              panjang = dataparsing.data.data.length;
-              namaalat = dataparsing.data.info.namaAlat;
-              for (var i = 0; i < panjang; i++) {
-                if (items.length == panjang) {
-                } else if (items.length > panjang) {
+      if (this.mounted) {
+        setState(() {
+          try {
+            panjang = dataparsing.data.data.length;
+            namaalat = dataparsing.data.info.namaAlat;
+            for (var i = 0; i < panjang; i++) {
+              if (items.length == panjang) {
+              } else if (items.length > panjang) {
+                items.clear();
+                iditems.clear();
+                itemsshadow.clear();
+              } else {
+                dataparsing.data.data[i].data.isEmpty
+                    ? dateonly = ''
+                    : dateonly = dataparsing.data.data[i].data[0].dateOnly;
+
+                dataparsing.data.data[i].data.isEmpty
+                    ? timeonly = ''
+                    : timeonly = dataparsing.data.data[i].data[0].timeOnly;
+                dataparsing.data.data[i].data.isEmpty
+                    ? nilai1 = ''
+                    : nilai1 = dataparsing.data.data[i].data[0].nilai
+                        .toStringAsFixed(1);
+                idjns = dataparsing.data.data[i].id;
+
+                notif = dataparsing.data.data[i].allowNotifikasi;
+                jnssensor = dataparsing.data.data[i].jenisSensor.jenis;
+                satuan = dataparsing.data.data[i].satuan;
+                satuan == null ? satuan = "" : satuan = satuan;
+                imgtry = dataparsing.data.data[i].jenisSensor.ikon;
+                imgtry == '0'
+                    ? img = '0'
+                    : img =
+                        'https://3tnguegmh6.execute-api.ap-southeast-1.amazonaws.com/dev/icon?icon_name=' +
+                            '${dataparsing.data.data[i].jenisSensor.ikon}';
+                if (notif == 0) {
+                  notifikasitoogle = false;
+                } else if (notif == 1) {
+                  notifikasitoogle = true;
+                }
+
+                if (itemsshadow.contains(jnssensor) &&
+                    itemsbefore == items.length) {
                   items.clear();
                   iditems.clear();
                   itemsshadow.clear();
                 } else {
-                  nilai1 =
-                      dataparsing.data.data[i].data[0].nilai.toStringAsFixed(1);
-                  idjns = dataparsing.data.data[i].id;
-                  tanggal1 = dataparsing.data.data[i].data[0].tanggalUpdate;
-                  notif = dataparsing.data.data[i].allowNotifikasi;
-                  jnssensor = dataparsing.data.data[i].jenisSensor.jenis;
-                  satuan = dataparsing.data.data[i].satuan;
-                  img =
-                      'https://3tnguegmh6.execute-api.ap-southeast-1.amazonaws.com/dev/icon?icon_name=' +
-                          '${dataparsing.data.data[i].jenisSensor.ikon}';
-                  if (itemsshadow.contains(jnssensor) &&
-                      itemsbefore == items.length) {
-                    items.clear();
-                    iditems.clear();
-                    itemsshadow.clear();
-                  } else {
-                    if (notif == 0) {
-                      notifikasitoogle = false;
-                    } else if (notif == 1) {
-                      notifikasitoogle = true;
-                    }
-                    setState(() {
-                      zerodata = false;
-                      noty.add(notifikasitoogle);
-                      iditems.add(notif);
-                      itemsshadow.add(jnssensor);
-                      items.add(
-                        parameter(jnssensor, satuan, img, nilai1, tanggal1,
-                            notifikasitoogle, idjns, i, namaalat),
-                      );
-                    });
-                  }
+                  setState(() {
+                    zerodata = false;
+                    noty.add(notifikasitoogle);
+                    iditems.add(notif);
+                    itemsshadow.add(jnssensor);
+                    items.add(
+                      parameter(jnssensor, satuan, img, nilai1, timeonly,
+                          dateonly, notifikasitoogle, idjns, i, namaalat),
+                    );
+                  });
                 }
               }
-              itemsbefore = items.length;
-            } on Exception catch (_) {
-              print("kosong");
             }
-          });
-          Future.delayed(const Duration(minutes: 1), () {
-            return loadSensor();
-          });
-        }
+            itemsbefore = items.length;
+          } on Exception catch (_) {
+            print("kosong");
+          }
+        });
+        Future.delayed(const Duration(minutes: 1), () {
+          return loadSensor();
+        });
       }
     }
   }
 
+  TextEditingController cName = new TextEditingController();
   TextEditingController alias = new TextEditingController();
   TextEditingController maxvalue = new TextEditingController();
   TextEditingController minvalue = new TextEditingController();
   String msg = '';
   final formKey = GlobalKey<FormState>();
-  PostSetParameter setparameter = PostSetParameter();
-
-  Future dosetparameter(String idsensor) async {
-    try {
-      var rs = await setparameter.dosetparameter(
-          uuid, idsensor, maxvalue.text, minvalue.text, token);
-      var jsonRes = json.decode(rs.body);
-      if (mounted)
-        setState(() {
-          msg = jsonRes['message'];
-          status = jsonRes['status'];
-        });
-      status == "Conflict"
-          ? putsetparameter(idsensor)
-          : Navigator.push(
-              context, new MaterialPageRoute(builder: (context) => new Menu()));
-    } catch (e) {}
-  }
-
-  PutSetParameter ptsetparameter = PutSetParameter();
-
-  Future putsetparameter(String idsensor) async {
-    try {
-      var rs = await ptsetparameter.putsetparameter(
-          idsensor, maxvalue.text, minvalue.text, token);
-      var jsonRes = json.decode(rs.body);
-      if (mounted)
-        setState(() {
-          msg = jsonRes['message'];
-          status = jsonRes['status'];
-        });
-      Navigator.push(
-          context, new MaterialPageRoute(builder: (context) => new Menu()));
-    } catch (e) {}
-  }
 
   double bot;
   int status1 = 0;
@@ -486,8 +419,7 @@ class _SemuaState extends State<Semua> {
         setState(() {
           msg = jsonRes['message'];
         });
-        Navigator.push(
-            context, new MaterialPageRoute(builder: (context) => new Menu()));
+        Navigator.pop(context);
       } catch (e) {}
     }
   }
@@ -611,6 +543,7 @@ class _SemuaState extends State<Semua> {
         initialIndex: 0,
         length: panjangtempat + 1,
         child: Scaffold(
+          resizeToAvoidBottomInset: true,
           key: formKey,
           body: Container(
             child: RefreshIndicator(
@@ -628,121 +561,95 @@ class _SemuaState extends State<Semua> {
               },
               child: Column(
                 children: <Widget>[
-                  Column(
-                    children: [
-                      items.length != panjang && zerodata == false
-                          ? Center(
-                              child: Container(
-                                  height: (MediaQuery.of(context).size.height *
-                                      0.525),
-                                  child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      Container(
-                                          height: MediaQuery.of(context)
-                                                  .size
-                                                  .width /
-                                              5,
-                                          width: MediaQuery.of(context)
-                                                  .size
-                                                  .width /
-                                              5,
-                                          child: Image.asset(
-                                              "asset/img/loading.gif")),
-                                      Padding(
-                                        padding: const EdgeInsets.all(25),
-                                        child: Text("Silahkan Menunggu",
-                                            style: TextStyle(
-                                                fontFamily: 'Kohi',
-                                                fontWeight: FontWeight.bold,
-                                                color: Colors.green[900])),
-                                      ),
-                                    ],
-                                  )),
-                            )
-                          : items.length != panjang &&
-                                  zerodata == false &&
-                                  nama != namaalat
-                              ? Center(
-                                  child: Container(
-                                      height:
-                                          (MediaQuery.of(context).size.height *
-                                              0.525),
-                                      child: Column(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        children: [
-                                          Container(
-                                              height: MediaQuery.of(context)
-                                                      .size
-                                                      .width /
-                                                  5,
-                                              width: MediaQuery.of(context)
-                                                      .size
-                                                      .width /
-                                                  5,
-                                              child: Image.asset(
-                                                  "asset/img/loading.gif")),
-                                          Padding(
-                                            padding: const EdgeInsets.all(25),
-                                            child: Text("Silahkan Menunggu",
-                                                style: TextStyle(
-                                                    fontFamily: 'Kohi',
-                                                    fontWeight: FontWeight.bold,
-                                                    color: Colors.green[900])),
-                                          ),
-                                        ],
-                                      )),
-                                )
-                              : items.length == 0 && zerodata == true
-                                  ? Center(
-                                      child: Container(
-                                          height: (MediaQuery.of(context)
-                                                  .size
-                                                  .height *
-                                              0.525),
-                                          child: Center(
-                                            child: Text("Tidak Ada data",
-                                                style: TextStyle(
-                                                    fontFamily: 'Mont')),
-                                          )),
-                                    )
-                                  : panjang == null
-                                      ? GestureDetector(
-                                          child: Center(
-                                            child: Column(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.center,
-                                              children: [
-                                                Container(
-                                                  height: MediaQuery.of(context)
-                                                          .size
-                                                          .height *
-                                                      0.52,
-                                                  width: MediaQuery.of(context)
-                                                      .size
-                                                      .width,
-                                                )
-                                              ],
+                  SingleChildScrollView(
+                    child: Column(
+                      children: [
+                        items.length != panjang && zerodata == false
+                            ? Center(
+                                child: Container(
+                                    height:
+                                        (MediaQuery.of(context).size.height *
+                                            0.525),
+                                    child: Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        Container(
+                                            height: MediaQuery.of(context)
+                                                    .size
+                                                    .width /
+                                                5,
+                                            width: MediaQuery.of(context)
+                                                    .size
+                                                    .width /
+                                                5,
+                                            child: Image.asset(
+                                                "asset/img/loading.gif")),
+                                        Padding(
+                                          padding: const EdgeInsets.all(25),
+                                          child: Text("Silahkan Menunggu",
+                                              style: TextStyle(
+                                                  fontFamily: 'Kohi',
+                                                  fontWeight: FontWeight.bold,
+                                                  color: Colors.green[900])),
+                                        ),
+                                      ],
+                                    )),
+                              )
+                            : items.length != panjang &&
+                                    zerodata == false &&
+                                    nama != namaalat
+                                ? Center(
+                                    child: Container(
+                                        height: (MediaQuery.of(context)
+                                                .size
+                                                .height *
+                                            0.525),
+                                        child: Column(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: [
+                                            Container(
+                                                height: MediaQuery.of(context)
+                                                        .size
+                                                        .width /
+                                                    5,
+                                                width: MediaQuery.of(context)
+                                                        .size
+                                                        .width /
+                                                    5,
+                                                child: Image.asset(
+                                                    "asset/img/loading.gif")),
+                                            Padding(
+                                              padding: const EdgeInsets.all(25),
+                                              child: Text("Silahkan Menunggu",
+                                                  style: TextStyle(
+                                                      fontFamily: 'Kohi',
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                      color:
+                                                          Colors.green[900])),
                                             ),
-                                          ),
-                                          onVerticalDragUpdate:
-                                              (DragUpdateDetails details) {
-                                            if (details.globalPosition
-                                                        .direction <
-                                                    1 &&
-                                                (details.globalPosition.dy >
-                                                        100 &&
-                                                    details.globalPosition.dy <
-                                                        500)) {
-                                              refreshData();
-                                            }
-                                          },
-                                        )
-                                      : GestureDetector(
-                                          child: Column(
-                                            children: [
-                                              Column(
+                                          ],
+                                        )),
+                                  )
+                                : items.length == 0 && zerodata == true
+                                    ? Center(
+                                        child: Container(
+                                            height: (MediaQuery.of(context)
+                                                    .size
+                                                    .height *
+                                                0.525),
+                                            child: Center(
+                                              child: Text("Tidak Ada data",
+                                                  style: TextStyle(
+                                                      fontFamily: 'Mont')),
+                                            )),
+                                      )
+                                    : panjang == null
+                                        ? GestureDetector(
+                                            child: Center(
+                                              child: Column(
                                                 mainAxisAlignment:
                                                     MainAxisAlignment.center,
                                                 children: [
@@ -751,246 +658,293 @@ class _SemuaState extends State<Semua> {
                                                         MediaQuery.of(context)
                                                                 .size
                                                                 .height *
-                                                            0.525,
-                                                    child: Column(
-                                                      mainAxisAlignment:
-                                                          MainAxisAlignment
-                                                              .center,
-                                                      children: [
-                                                        Text('$namaalat',
-                                                            style: TextStyle(
-                                                                fontFamily:
-                                                                    'Kohi',
-                                                                fontSize: 20,
-                                                                color: Colors
-                                                                        .green[
-                                                                    900])),
-                                                        SizedBox(
-                                                          height: 15,
-                                                        ),
-                                                        (MediaQuery.of(context)
-                                                                        .size
-                                                                        .height /
-                                                                    MediaQuery.of(context)
-                                                                        .size
-                                                                        .width) >=
-                                                                2
-                                                            ? CarouselSlider(
-                                                                items: items,
-                                                                options:
-                                                                    CarouselOptions(
-                                                                        height: MediaQuery.of(context).size.width *
-                                                                            7.7 /
-                                                                            9,
-                                                                        aspectRatio:
-                                                                            7.7 /
-                                                                                9,
-                                                                        viewportFraction:
-                                                                            0.8,
-                                                                        initialPage:
-                                                                            0,
-                                                                        enableInfiniteScroll:
-                                                                            true,
-                                                                        reverse:
-                                                                            false,
-                                                                        autoPlay:
-                                                                            true,
-                                                                        autoPlayInterval: Duration(
-                                                                            seconds:
-                                                                                8),
-                                                                        autoPlayAnimationDuration: Duration(
-                                                                            milliseconds:
-                                                                                800),
-                                                                        autoPlayCurve:
-                                                                            Curves
-                                                                                .fastOutSlowIn,
-                                                                        enlargeCenterPage:
-                                                                            true,
-                                                                        scrollDirection:
-                                                                            Axis
-                                                                                .horizontal,
-                                                                        onPageChanged:
-                                                                            (index,
-                                                                                reason) {
-                                                                          if (mounted)
-                                                                            setState(() {
-                                                                              bot = MediaQuery.of(context).size.width / 9;
-                                                                              _current = index;
-                                                                            });
-                                                                        }),
-                                                              )
-                                                            : ((MediaQuery.of(context).size.height /
-                                                                            MediaQuery.of(context)
-                                                                                .size
-                                                                                .width) >=
-                                                                        1.67 &&
-                                                                    (MediaQuery.of(context).size.height /
-                                                                            MediaQuery.of(context)
-                                                                                .size
-                                                                                .width) <=
-                                                                        1.85)
-                                                                ? CarouselSlider(
-                                                                    items:
-                                                                        items,
-                                                                    options: CarouselOptions(
-                                                                        height: MediaQuery.of(context).size.width * 6.5 / 9,
-                                                                        aspectRatio: 6.5 / 9,
-                                                                        viewportFraction: 0.8,
-                                                                        initialPage: 0,
-                                                                        enableInfiniteScroll: true,
-                                                                        reverse: false,
-                                                                        autoPlay: true,
-                                                                        autoPlayInterval: Duration(seconds: 8),
-                                                                        autoPlayAnimationDuration: Duration(milliseconds: 800),
-                                                                        autoPlayCurve: Curves.fastOutSlowIn,
-                                                                        enlargeCenterPage: true,
-                                                                        scrollDirection: Axis.horizontal,
-                                                                        onPageChanged: (index, reason) {
-                                                                          if (mounted)
-                                                                            setState(() {
-                                                                              bot = MediaQuery.of(context).size.width / 9;
-                                                                              _current = index;
-                                                                            });
-                                                                        }),
-                                                                  )
-                                                                : ((MediaQuery.of(context).size.height / MediaQuery.of(context).size.width) >=
-                                                                            1.85 &&
-                                                                        (MediaQuery.of(context).size.height / MediaQuery.of(context).size.width) <=
-                                                                            2)
-                                                                    ? CarouselSlider(
-                                                                        items:
-                                                                            items,
-                                                                        options: CarouselOptions(
-                                                                            height: MediaQuery.of(context).size.width * 7 / 9,
-                                                                            aspectRatio: 7 / 9,
-                                                                            viewportFraction: 0.8,
-                                                                            initialPage: 0,
-                                                                            enableInfiniteScroll: true,
-                                                                            reverse: false,
-                                                                            autoPlay: true,
-                                                                            autoPlayInterval: Duration(seconds: 8),
-                                                                            autoPlayAnimationDuration: Duration(milliseconds: 800),
-                                                                            autoPlayCurve: Curves.fastOutSlowIn,
-                                                                            enlargeCenterPage: true,
-                                                                            scrollDirection: Axis.horizontal,
-                                                                            onPageChanged: (index, reason) {
-                                                                              if (mounted)
-                                                                                setState(() {
-                                                                                  bot = MediaQuery.of(context).size.width / 9;
-                                                                                  _current = index;
-                                                                                });
-                                                                            }),
-                                                                      )
-                                                                    : ((MediaQuery.of(context).size.height / MediaQuery.of(context).size.width) >= 1.6 &&
-                                                                            (MediaQuery.of(context).size.height / MediaQuery.of(context).size.width) <=
-                                                                                1.67)
-                                                                        ? CarouselSlider(
-                                                                            items:
-                                                                                items,
-                                                                            options: CarouselOptions(
-                                                                                height: MediaQuery.of(context).size.width * 6 / 9,
-                                                                                aspectRatio: 6 / 9,
-                                                                                viewportFraction: 0.8,
-                                                                                initialPage: 0,
-                                                                                enableInfiniteScroll: true,
-                                                                                reverse: false,
-                                                                                autoPlay: true,
-                                                                                autoPlayInterval: Duration(seconds: 8),
-                                                                                autoPlayAnimationDuration: Duration(milliseconds: 800),
-                                                                                autoPlayCurve: Curves.fastOutSlowIn,
-                                                                                enlargeCenterPage: true,
-                                                                                scrollDirection: Axis.horizontal,
-                                                                                onPageChanged: (index, reason) {
-                                                                                  if (mounted)
-                                                                                    setState(() {
-                                                                                      bot = MediaQuery.of(context).size.width / 9;
-                                                                                      _current = index;
-                                                                                    });
-                                                                                }),
-                                                                          )
-                                                                        : CarouselSlider(
-                                                                            items:
-                                                                                items,
-                                                                            options: CarouselOptions(
-                                                                                height: MediaQuery.of(context).size.width * 5.5 / 9,
-                                                                                aspectRatio: 5.5 / 9,
-                                                                                viewportFraction: 0.8,
-                                                                                initialPage: 0,
-                                                                                enableInfiniteScroll: true,
-                                                                                reverse: false,
-                                                                                autoPlay: true,
-                                                                                autoPlayInterval: Duration(seconds: 8),
-                                                                                autoPlayAnimationDuration: Duration(milliseconds: 800),
-                                                                                autoPlayCurve: Curves.fastOutSlowIn,
-                                                                                enlargeCenterPage: true,
-                                                                                scrollDirection: Axis.horizontal,
-                                                                                onPageChanged: (index, reason) {
-                                                                                  if (mounted)
-                                                                                    setState(() {
-                                                                                      bot = MediaQuery.of(context).size.width / 9;
-                                                                                      _current = index;
-                                                                                    });
-                                                                                }),
-                                                                          ),
-                                                        Row(
-                                                          mainAxisAlignment:
-                                                              MainAxisAlignment
-                                                                  .center,
-                                                          children:
-                                                              items.map((url) {
-                                                            int index = items
-                                                                .indexOf(url);
-                                                            return Container(
-                                                              width: 8.0,
-                                                              height: 8.0,
-                                                              margin: EdgeInsets
-                                                                  .symmetric(
-                                                                      vertical:
-                                                                          10.0,
-                                                                      horizontal:
-                                                                          2.0),
-                                                              decoration:
-                                                                  BoxDecoration(
-                                                                shape: BoxShape
-                                                                    .circle,
-                                                                color: _current ==
-                                                                        index
-                                                                    ? Colors.green[
-                                                                        900]
-                                                                    : Color
-                                                                        .fromRGBO(
-                                                                            0,
-                                                                            0,
-                                                                            0,
-                                                                            0.4),
-                                                              ),
-                                                            );
-                                                          }).toList(),
-                                                        ),
-                                                      ],
-                                                    ),
-                                                  ),
+                                                            0.52,
+                                                    width:
+                                                        MediaQuery.of(context)
+                                                            .size
+                                                            .width,
+                                                  )
                                                 ],
                                               ),
-                                            ],
-                                          ),
-                                          onVerticalDragUpdate:
-                                              (DragUpdateDetails details) {
-                                            if (details.globalPosition
-                                                        .direction <
-                                                    1 &&
-                                                (details.globalPosition.dy >
-                                                        100 &&
-                                                    details.globalPosition.dy <
-                                                        500)) {
-                                              refreshData();
-                                            }
-                                          },
-                                        )
-                    ],
+                                            ),
+                                            onVerticalDragUpdate:
+                                                (DragUpdateDetails details) {
+                                              if (details.globalPosition
+                                                          .direction <
+                                                      1 &&
+                                                  (details.globalPosition.dy >
+                                                          100 &&
+                                                      details.globalPosition
+                                                              .dy <
+                                                          500)) {
+                                                refreshData();
+                                              }
+                                            },
+                                          )
+                                        : GestureDetector(
+                                            child: Column(
+                                              children: [
+                                                Column(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment.center,
+                                                  children: [
+                                                    Container(
+                                                      height:
+                                                          MediaQuery.of(context)
+                                                                  .size
+                                                                  .height *
+                                                              0.525,
+                                                      child: Column(
+                                                        mainAxisAlignment:
+                                                            MainAxisAlignment
+                                                                .center,
+                                                        children: [
+                                                          Row(
+                                                            mainAxisAlignment:
+                                                                MainAxisAlignment
+                                                                    .center,
+                                                            children: [
+                                                              Text('$namaalat',
+                                                                  style: TextStyle(
+                                                                      fontFamily:
+                                                                          'Kohi',
+                                                                      fontSize:
+                                                                          20,
+                                                                      color: Colors
+                                                                              .green[
+                                                                          900])),
+                                                              SizedBox(
+                                                                width: 10,
+                                                              ),
+                                                              GestureDetector(
+                                                                onTap: () {
+                                                                  try {
+                                                                    setState(
+                                                                        () {
+                                                                      idala ==
+                                                                              null
+                                                                          ? idAlatChange = dev[
+                                                                              0]
+                                                                          : idAlatChange =
+                                                                              idala;
+                                                                    });
+                                                                  } on Exception catch (e) {
+                                                                    print(e);
+                                                                  }
+                                                                  changeName();
+                                                                },
+                                                                child:
+                                                                    Image.asset(
+                                                                  'asset/img/changeSign.png',
+                                                                  width: MediaQuery.of(
+                                                                              context)
+                                                                          .devicePixelRatio *
+                                                                      10,
+                                                                ),
+                                                              ),
+                                                            ],
+                                                          ),
+                                                          SizedBox(
+                                                            height: 15,
+                                                          ),
+                                                          (MediaQuery.of(context)
+                                                                          .size
+                                                                          .height /
+                                                                      MediaQuery.of(
+                                                                              context)
+                                                                          .size
+                                                                          .width) >=
+                                                                  2
+                                                              ? CarouselSlider(
+                                                                  items: items,
+                                                                  options: CarouselOptions(
+                                                                      height: MediaQuery.of(context).size.width * 7.7 / 9,
+                                                                      aspectRatio: 7.7 / 9,
+                                                                      viewportFraction: 0.8,
+                                                                      initialPage: 0,
+                                                                      enableInfiniteScroll: true,
+                                                                      reverse: false,
+                                                                      autoPlay: true,
+                                                                      autoPlayInterval: Duration(seconds: 8),
+                                                                      autoPlayAnimationDuration: Duration(milliseconds: 800),
+                                                                      autoPlayCurve: Curves.fastOutSlowIn,
+                                                                      enlargeCenterPage: true,
+                                                                      scrollDirection: Axis.horizontal,
+                                                                      onPageChanged: (index, reason) {
+                                                                        if (mounted)
+                                                                          setState(
+                                                                              () {
+                                                                            bot =
+                                                                                MediaQuery.of(context).size.width / 9;
+                                                                            _current =
+                                                                                index;
+                                                                          });
+                                                                      }),
+                                                                )
+                                                              : ((MediaQuery.of(context).size.height / MediaQuery.of(context).size.width) >=
+                                                                          1.67 &&
+                                                                      (MediaQuery.of(context).size.height / MediaQuery.of(context).size.width) <=
+                                                                          1.85)
+                                                                  ? CarouselSlider(
+                                                                      items:
+                                                                          items,
+                                                                      options: CarouselOptions(
+                                                                          height: MediaQuery.of(context).size.width * 6.5 / 9,
+                                                                          aspectRatio: 6.5 / 9,
+                                                                          viewportFraction: 0.8,
+                                                                          initialPage: 0,
+                                                                          enableInfiniteScroll: true,
+                                                                          reverse: false,
+                                                                          autoPlay: true,
+                                                                          autoPlayInterval: Duration(seconds: 8),
+                                                                          autoPlayAnimationDuration: Duration(milliseconds: 800),
+                                                                          autoPlayCurve: Curves.fastOutSlowIn,
+                                                                          enlargeCenterPage: true,
+                                                                          scrollDirection: Axis.horizontal,
+                                                                          onPageChanged: (index, reason) {
+                                                                            if (mounted)
+                                                                              setState(() {
+                                                                                bot = MediaQuery.of(context).size.width / 9;
+                                                                                _current = index;
+                                                                              });
+                                                                          }),
+                                                                    )
+                                                                  : ((MediaQuery.of(context).size.height / MediaQuery.of(context).size.width) >=
+                                                                              1.85 &&
+                                                                          (MediaQuery.of(context).size.height / MediaQuery.of(context).size.width) <=
+                                                                              2)
+                                                                      ? CarouselSlider(
+                                                                          items:
+                                                                              items,
+                                                                          options: CarouselOptions(
+                                                                              height: MediaQuery.of(context).size.width * 7 / 9,
+                                                                              aspectRatio: 7 / 9,
+                                                                              viewportFraction: 0.8,
+                                                                              initialPage: 0,
+                                                                              enableInfiniteScroll: true,
+                                                                              reverse: false,
+                                                                              autoPlay: true,
+                                                                              autoPlayInterval: Duration(seconds: 8),
+                                                                              autoPlayAnimationDuration: Duration(milliseconds: 800),
+                                                                              autoPlayCurve: Curves.fastOutSlowIn,
+                                                                              enlargeCenterPage: true,
+                                                                              scrollDirection: Axis.horizontal,
+                                                                              onPageChanged: (index, reason) {
+                                                                                if (mounted)
+                                                                                  setState(() {
+                                                                                    bot = MediaQuery.of(context).size.width / 9;
+                                                                                    _current = index;
+                                                                                  });
+                                                                              }),
+                                                                        )
+                                                                      : ((MediaQuery.of(context).size.height / MediaQuery.of(context).size.width) >= 1.6 &&
+                                                                              (MediaQuery.of(context).size.height / MediaQuery.of(context).size.width) <= 1.67)
+                                                                          ? CarouselSlider(
+                                                                              items: items,
+                                                                              options: CarouselOptions(
+                                                                                  height: MediaQuery.of(context).size.width * 6 / 9,
+                                                                                  aspectRatio: 6 / 9,
+                                                                                  viewportFraction: 0.8,
+                                                                                  initialPage: 0,
+                                                                                  enableInfiniteScroll: true,
+                                                                                  reverse: false,
+                                                                                  autoPlay: true,
+                                                                                  autoPlayInterval: Duration(seconds: 8),
+                                                                                  autoPlayAnimationDuration: Duration(milliseconds: 800),
+                                                                                  autoPlayCurve: Curves.fastOutSlowIn,
+                                                                                  enlargeCenterPage: true,
+                                                                                  scrollDirection: Axis.horizontal,
+                                                                                  onPageChanged: (index, reason) {
+                                                                                    if (mounted)
+                                                                                      setState(() {
+                                                                                        bot = MediaQuery.of(context).size.width / 9;
+                                                                                        _current = index;
+                                                                                      });
+                                                                                  }),
+                                                                            )
+                                                                          : CarouselSlider(
+                                                                              items: items,
+                                                                              options: CarouselOptions(
+                                                                                  height: MediaQuery.of(context).size.width * 5.5 / 9,
+                                                                                  aspectRatio: 5.5 / 9,
+                                                                                  viewportFraction: 0.8,
+                                                                                  initialPage: 0,
+                                                                                  enableInfiniteScroll: true,
+                                                                                  reverse: false,
+                                                                                  autoPlay: true,
+                                                                                  autoPlayInterval: Duration(seconds: 8),
+                                                                                  autoPlayAnimationDuration: Duration(milliseconds: 800),
+                                                                                  autoPlayCurve: Curves.fastOutSlowIn,
+                                                                                  enlargeCenterPage: true,
+                                                                                  scrollDirection: Axis.horizontal,
+                                                                                  onPageChanged: (index, reason) {
+                                                                                    if (mounted)
+                                                                                      setState(() {
+                                                                                        bot = MediaQuery.of(context).size.width / 9;
+                                                                                        _current = index;
+                                                                                      });
+                                                                                  }),
+                                                                            ),
+                                                          Row(
+                                                            mainAxisAlignment:
+                                                                MainAxisAlignment
+                                                                    .center,
+                                                            children: items
+                                                                .map((url) {
+                                                              int index = items
+                                                                  .indexOf(url);
+                                                              return Container(
+                                                                width: 8.0,
+                                                                height: 8.0,
+                                                                margin: EdgeInsets
+                                                                    .symmetric(
+                                                                        vertical:
+                                                                            10.0,
+                                                                        horizontal:
+                                                                            2.0),
+                                                                decoration:
+                                                                    BoxDecoration(
+                                                                  shape: BoxShape
+                                                                      .circle,
+                                                                  color: _current ==
+                                                                          index
+                                                                      ? Colors.green[
+                                                                          900]
+                                                                      : Color.fromRGBO(
+                                                                          0,
+                                                                          0,
+                                                                          0,
+                                                                          0.4),
+                                                                ),
+                                                              );
+                                                            }).toList(),
+                                                          ),
+                                                        ],
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ],
+                                            ),
+                                            onVerticalDragUpdate:
+                                                (DragUpdateDetails details) {
+                                              if (details.globalPosition
+                                                          .direction <
+                                                      1 &&
+                                                  (details.globalPosition.dy >
+                                                          100 &&
+                                                      details.globalPosition
+                                                              .dy <
+                                                          500)) {
+                                                refreshData();
+                                              }
+                                            },
+                                          )
+                      ],
+                    ),
                   ),
-                  SizedBox(
-                    height: MediaQuery.of(context).size.height * 0.065,
+                  Container(
+                    height: MediaQuery.of(context).size.height * 0.060,
                     child: Container(
                       decoration: BoxDecoration(
                         color: Colors.white,
@@ -1056,7 +1010,8 @@ class _SemuaState extends State<Semua> {
                               ])),
                     ),
                   ),
-                  SizedBox(height: MediaQuery.of(context).size.height / 100),
+
+                  // SizedBox(height: MediaQuery.of(context).size.height / 100),
                   Expanded(
                     child: TabBarView(
                       children: [
@@ -1077,8 +1032,17 @@ class _SemuaState extends State<Semua> {
     }
   }
 
-  Widget parameter(String jenissensor, String satuan, String img, String nilai,
-      String time, bool toogle, int i, int jum, String namaalat) {
+  Widget parameter(
+      String jenissensor,
+      String satuan,
+      String img,
+      String nilai,
+      String timeonly,
+      String dateonly,
+      bool toogle,
+      int i,
+      int jum,
+      String namaalat) {
     return Center(
       child: SizedBox(
         child: Column(
@@ -1112,34 +1076,55 @@ class _SemuaState extends State<Semua> {
                     fontSize: MediaQuery.of(context).size.height / 35,
                   ),
                 ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    Padding(
-                      padding: const EdgeInsets.only(left: 15),
-                      child: Row(
-                        children: <Widget>[
-                          new Text(
-                            "$nilai",
+                nilai.isEmpty
+                    ? Center(
+                        child: Text('Tidak ada data',
                             style: TextStyle(
-                                fontSize:
-                                    MediaQuery.of(context).size.height / 15,
-                                fontFamily: "Kohi",
-                                fontWeight: FontWeight.bold),
-                          ),
-                          new Text(
-                            satuan,
-                            style: TextStyle(
-                                fontSize:
-                                    MediaQuery.of(context).size.height / 15,
                                 fontFamily: 'Kohi',
-                                fontWeight: FontWeight.bold),
-                          ),
+                                color: Colors.red[900],
+                                fontSize: 20)),
+                      )
+                    : Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: <Widget>[
+                          Padding(
+                            padding: const EdgeInsets.only(left: 15),
+                            child: Row(
+                              children: <Widget>[
+                                new Text(
+                                  "$nilai",
+                                  style: TextStyle(
+                                      fontSize:
+                                          MediaQuery.of(context).size.height /
+                                              15,
+                                      fontFamily: "Kohi",
+                                      fontWeight: FontWeight.bold),
+                                ),
+                                new Text(
+                                  satuan,
+                                  style: TextStyle(
+                                    fontSize:
+                                        MediaQuery.of(context).size.height / 20,
+                                    fontFamily: 'Kohi',
+                                  ),
+                                ),
+                                SizedBox(
+                                  width: 10,
+                                ),
+                                GestureDetector(
+                                    onTap: () {
+                                      print(i);
+                                      dataminmaxmean(i, jenissensor);
+                                    },
+                                    child: Image.asset(
+                                      'asset/img/help.png',
+                                      width: 25,
+                                    )),
+                              ],
+                            ),
+                          )
                         ],
                       ),
-                    )
-                  ],
-                ),
                 SizedBox(height: 5),
                 // Row(
                 //   mainAxisAlignment: MainAxisAlignment.center,
@@ -1220,20 +1205,268 @@ class _SemuaState extends State<Semua> {
                 //   ],
                 // ),
                 SizedBox(height: 5),
-                Center(
-                  child: new Text(
-                    time,
-                    style: TextStyle(
-                      fontFamily: 'Kohi',
-                      fontSize: 18,
-                    ),
-                  ),
-                ),
+                nilai.isEmpty
+                    ? Center(
+                        child: Text('',
+                            style: TextStyle(
+                                fontFamily: 'Kohi',
+                                color: Colors.red[900],
+                                fontSize: 25)),
+                      )
+                    : Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            dateonly,
+                            style: TextStyle(
+                              fontFamily: 'Kohi',
+                              fontSize: 18,
+                            ),
+                          ),
+                          SizedBox(width: 20),
+                          Container(
+                            height: 20,
+                            width: 2,
+                            decoration: BoxDecoration(color: Colors.green[300]),
+                          ),
+                          SizedBox(width: 20),
+                          Text(
+                            "$timeonly WIB",
+                            style: TextStyle(
+                              fontFamily: 'Kohi',
+                              fontSize: 18,
+                            ),
+                          ),
+                        ],
+                      ),
               ],
             )),
           ],
         ),
       ),
     );
+  }
+
+  dataminmaxmean(int idsensordetail, String jenissensordetail) {
+    print(loc);
+    print(huc);
+    print(dev);
+
+    idlokas == null ? idlokasidetail = loc[0] : idlokasidetail = idlokas;
+    idhu == null ? idhubdetail = huc[0] : idhubdetail = idhu;
+    idala == null ? idalatdetail = dev[0] : idalatdetail = idala;
+
+    hitungminmaxmean(idlokasidetail, idhubdetail, idalatdetail, idsensordetail,
+        jenissensordetail);
+  }
+
+  loaddialog() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          content: Container(
+            height: MediaQuery.of(context).devicePixelRatio * 10,
+            child: Center(
+              child: Text(
+                "Detail data $jenissensordetail",
+                style:
+                    TextStyle(fontFamily: 'Kohi', fontWeight: FontWeight.bold),
+              ),
+            ),
+          ),
+          actions: [
+            Padding(
+              padding: const EdgeInsets.only(bottom: 20),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  Column(
+                    children: <Widget>[
+                      Text(
+                        "Min",
+                        style: TextStyle(
+                          fontFamily: "Kohi",
+                          fontSize: MediaQuery.of(context).size.height / 60,
+                        ),
+                      ),
+                      Container(
+                          decoration: BoxDecoration(
+                              color: Colors.green[900],
+                              borderRadius: BorderRadius.circular(5)),
+                          child: Center(
+                              child: Text("$datamin",
+                                  style: TextStyle(
+                                      fontFamily: 'Kohi',
+                                      fontSize:
+                                          MediaQuery.of(context).size.height /
+                                              60,
+                                      color: Colors.white))),
+                          height: 40,
+                          width: 50)
+                    ],
+                  ),
+                  SizedBox(width: 5),
+                  Column(
+                    children: <Widget>[
+                      Text("Mean",
+                          style: TextStyle(
+                            fontFamily: "Kohi",
+                            fontSize: MediaQuery.of(context).size.height / 60,
+                          )),
+                      Container(
+                          decoration: BoxDecoration(
+                              color: Colors.green[900],
+                              borderRadius: BorderRadius.circular(5)),
+                          child: Center(
+                              child: Text("$datamean",
+                                  style: TextStyle(
+                                      fontSize:
+                                          MediaQuery.of(context).size.height /
+                                              60,
+                                      fontFamily: 'Kohi',
+                                      color: Colors.white))),
+                          height: 40,
+                          width: 50)
+                    ],
+                  ),
+                  SizedBox(width: 5),
+                  Column(
+                    children: <Widget>[
+                      Text("Max",
+                          style: TextStyle(
+                            fontFamily: "Kohi",
+                            fontSize: MediaQuery.of(context).size.height / 60,
+                          )),
+                      Container(
+                          decoration: BoxDecoration(
+                              color: Colors.green[900],
+                              borderRadius: BorderRadius.circular(5)),
+                          child: Center(
+                              child: Text("$datamax",
+                                  style: TextStyle(
+                                      fontSize:
+                                          MediaQuery.of(context).size.height /
+                                              60,
+                                      fontFamily: 'Kohi',
+                                      color: Colors.white))),
+                          height: 40,
+                          width: 50)
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  changeName() {
+    print(idAlatChange);
+    AlertDialog alert = AlertDialog(
+      title: Text(
+        "Ganti nama alat",
+        style: TextStyle(fontFamily: 'Kohi', fontWeight: FontWeight.bold),
+      ),
+      content: Container(
+        height: MediaQuery.of(context).devicePixelRatio * 30,
+        width: MediaQuery.of(context).devicePixelRatio * 50,
+        child: Column(
+          children: [
+            Padding(
+                padding: const EdgeInsets.only(top: 9.0),
+                child: Container(
+                  height: MediaQuery.of(context).devicePixelRatio * 18,
+                  margin: EdgeInsets.all(10),
+                  padding: EdgeInsets.all(10),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    border: Border.all(
+                        color: Colors.green[300], // set border color
+                        width: 1.5), // set border width
+                    borderRadius: BorderRadius.all(
+                        Radius.circular(10.0)), // set rounded corner radius
+                  ),
+                  child: Center(
+                    child: TextField(
+                      controller: cName,
+                      decoration: InputDecoration(
+                        labelStyle: TextStyle(fontFamily: 'Kohi', fontSize: 12),
+                        hintText: '$namaalat',
+                        hintStyle: TextStyle(fontFamily: 'Kohi', fontSize: 12),
+                        border: InputBorder.none,
+                      ),
+                    ),
+                  ),
+                )),
+          ],
+        ),
+      ),
+      actions: [
+        Padding(
+          padding: const EdgeInsets.fromLTRB(0, 0, 10, 10),
+          child: Container(
+            decoration: BoxDecoration(
+                color: Colors.green[300],
+                borderRadius: BorderRadius.circular(5)),
+            width: MediaQuery.of(context).devicePixelRatio * 35,
+            height: MediaQuery.of(context).devicePixelRatio * 15,
+            child: GestureDetector(
+              onTap: () {
+                gantiAliasAlat(idAlatChange, cName.text, token);
+                print('id_alat = $idAlatChange dan namaganti ${cName.text}');
+              },
+              child: Container(
+                child: Center(
+                  child: Text(
+                    'Ubah',
+                    style: TextStyle(
+                        fontFamily: 'Kohi',
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold),
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ),
+      ],
+    );
+    return showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return alert;
+      },
+    );
+  }
+
+  Future gantiAliasAlat(
+      int idAlatChange, String namaganti, String token) async {
+    refresh = true;
+    var jsonString = await http.put(
+        Uri.parse('$endPoint/alat/edit?id_alat=$idAlatChange'),
+        body: {"alias": "$namaganti"},
+        headers: {HttpHeaders.authorizationHeader: '$token'});
+    var jsonResponse = json.decode(jsonString.body);
+    print(jsonResponse);
+
+    jsonResponse["status"] == "OK"
+        ? setState(() {
+            listnama.clear();
+            items.clear();
+            itemsshadow.clear();
+            iditems.clear();
+            Future.delayed(Duration(seconds: 2), () {
+              if (this.mounted) {
+                setState(() {
+                  refresh = false;
+                  Navigator.pop(context);
+                });
+              }
+            });
+          })
+        : setState(() {});
   }
 }

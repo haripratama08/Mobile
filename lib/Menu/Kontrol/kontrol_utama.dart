@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:ch_v2_1/API/parsingmonitoring.dart';
 import 'package:ch_v2_1/API/api.dart';
+import 'package:ch_v2_1/Menu/Kontrol/kontrol_detail.dart';
 import 'package:ch_v2_1/Menu/Kontrol/kontrol_semua.dart';
 import 'package:http/http.dart' as http;
 import 'package:ch_v2_1/LoginPage/loginpage.dart';
@@ -12,6 +13,7 @@ import 'package:flutter/material.dart';
 import 'package:toggle_switch/toggle_switch.dart';
 import 'package:ch_v2_1/API/parsing.dart';
 
+bool refresh = false;
 List<String> listname = [];
 String selectedkondisi;
 String namaalatkontrol;
@@ -84,6 +86,7 @@ class KontrolUtama extends StatefulWidget {
 
 class _KontrolUtamaState extends State<KontrolUtama>
     with SingleTickerProviderStateMixin {
+  TextEditingController cName = new TextEditingController();
   Repository repo = Repository();
   RepositorySensor rep = RepositorySensor();
   bool loading = false;
@@ -99,7 +102,6 @@ class _KontrolUtamaState extends State<KontrolUtama>
   int idlokasikontrol;
 
   List<String> listkontrol = [];
-  TabController _tabController;
   int index = 1;
   bool isSwitchedkelembapan = false;
   int panjanglokasi = 0;
@@ -126,6 +128,7 @@ class _KontrolUtamaState extends State<KontrolUtama>
     var jsonResponse = json.decode(jsonString.body);
     if (this.mounted) {
       setState(() {
+        print(jsonResponse);
         if ((jsonResponse['status']) == 'OK') {
           panjanglokasi = (((jsonResponse['data'])['lokasi']).length);
           for (int i = 0; i < panjanglokasi; i++) {
@@ -200,62 +203,68 @@ class _KontrolUtamaState extends State<KontrolUtama>
         .get(url, headers: {HttpHeaders.authorizationHeader: '$token'});
     var jsonResponse = json.decode(jsonString.body);
     Data2 data2 = Data2.fromJson(jsonResponse);
-    print('monitor $jsonResponse');
+    // print('monitor $jsonResponse');
     if (this.mounted) {
       setState(() {
-        List<Widget> list = [];
-        for (int i = 0; i < data2.data.lokasi.length; i++) {
-          panjangtempat = data2.data.lokasi.length;
-          print('panjang $panjangtempat');
-          if (tempatlist.length == panjangtempat) {
-          } else {
-            tempat = data2.data.lokasi[i].nama;
-            tempatlist.add(tempat);
-          }
-          for (int j = 0; j < data2.data.lokasi[i].hub.length; j++) {
-            for (int k = 0; k < data2.data.lokasi[i].hub[j].alat.length; k++) {
-              alat = data2.data.lokasi[i].hub[j].alat.length;
-              data1 = data2.data.lokasi[i].id;
-              data3 = data2.data.lokasi[i].hub[j].id;
-              data4 = data2.data.lokasi[i].hub[j].alat[k].id;
-              data5 = data2.data.lokasi[i].hub[j].alat[k].alias;
-              data6 = data2.data.lokasi[i].hub[j].alat[k].nama;
-              //logic untuk membuat sudah ada pada list tidak masuk kembali
-              if (name.contains(data5)) {
-              } else {
-                name.add('$data5');
-              }
-              number = name.length;
-              if (loc.length == number) {
-              } else {
-                loc.add(data1);
-              }
-              if (huc.length == number) {
-              } else {
-                huc.add(data3);
-              }
-              if (dev.length == number) {
-              } else {
-                dev.add(data4);
-              }
-              if (namaalat.length == number) {
-              } else {
-                namaalat.add(data5);
-                Map<String, dynamic> data = {
-                  'idlokasi': data1,
-                  'idhub': data3,
-                  'idalat': data4,
-                  'nama': data5,
-                  'devname': data6
-                };
-                trial.add(data);
+        try {
+          List<Widget> list = [];
+          for (int i = 0; i < data2.data.lokasi.length; i++) {
+            panjangtempat = data2.data.lokasi.length;
+            // print('panjang $panjangtempat');
+            if (tempatlist.length == panjangtempat) {
+            } else {
+              tempat = data2.data.lokasi[i].nama;
+              tempatlist.add(tempat);
+            }
+            for (int j = 0; j < data2.data.lokasi[i].hub.length; j++) {
+              for (int k = 0;
+                  k < data2.data.lokasi[i].hub[j].alat.length;
+                  k++) {
+                alat = data2.data.lokasi[i].hub[j].alat.length;
+                data1 = data2.data.lokasi[i].id;
+                data3 = data2.data.lokasi[i].hub[j].id;
+                data4 = data2.data.lokasi[i].hub[j].alat[k].id;
+                data5 = data2.data.lokasi[i].hub[j].alat[k].alias;
+                data6 = data2.data.lokasi[i].hub[j].alat[k].nama;
+                //logic untuk membuat sudah ada pada list tidak masuk kembali
+                if (name.contains(data5)) {
+                } else {
+                  name.add('$data5');
+                }
+                number = name.length;
+                if (loc.length == number) {
+                } else {
+                  loc.add(data1);
+                }
+                if (huc.length == number) {
+                } else {
+                  huc.add(data3);
+                }
+                if (dev.length == number) {
+                } else {
+                  dev.add(data4);
+                }
+                if (namaalat.length == number) {
+                } else {
+                  namaalat.add(data5);
+                  Map<String, dynamic> data = {
+                    'idlokasi': data1,
+                    'idhub': data3,
+                    'idalat': data4,
+                    'nama': data5,
+                    'devname': data6
+                  };
+                  trial.add(data);
+                }
               }
             }
           }
+          return new Row(
+            children: list,
+          );
+        } on Exception catch (_) {
+          print(_);
         }
-        return new Row(
-          children: list,
-        );
       });
     }
     return loadMonitor();
@@ -268,7 +277,7 @@ class _KontrolUtamaState extends State<KontrolUtama>
         .get(url, headers: {HttpHeaders.authorizationHeader: '$token'});
     var jsonResponse = json.decode(jsonString.body);
     MonitoringParse dataparsing = MonitoringParse.fromJson(jsonResponse);
-    print('sensor $jsonResponse');
+    // print('sensor $jsonResponse');
     if (this.mounted) {
       setState(() {
         panjang = dataparsing.data.data.length;
@@ -306,47 +315,25 @@ class _KontrolUtamaState extends State<KontrolUtama>
         .get(url2, headers: {HttpHeaders.authorizationHeader: '$token'});
     var jsonResponse = json.decode(jsonString.body);
     if (this.mounted) {
-      setState(() {
-        status = jsonResponse['state'];
-      });
+      try {
+        setState(() {
+          status = jsonResponse['state'];
+        });
+      } on Exception catch (error) {
+        print(error);
+      }
     }
     return loadState();
-  }
-
-  int _counter = 10;
-  Timer _timer;
-  void _startTimer() {
-    _counter = 10;
-    if (_timer != null) {
-      _timer.cancel();
-    }
-    _timer = Timer.periodic(Duration(seconds: 1), (timer) {
-      if (this.mounted)
-        setState(() {
-          if (_counter > 0) {
-            _counter--;
-          } else {
-            _timer.cancel();
-          }
-        });
-    });
   }
 
   @override
   void initState() {
     namaalatkontrol = null;
-    _startTimer();
     status1 = 0;
     loadKontrol();
     loadMonitor();
     loadState();
     super.initState();
-  }
-
-  @override
-  void dispose() {
-    _tabController.dispose();
-    super.dispose();
   }
 
   @override
@@ -364,9 +351,10 @@ class _KontrolUtamaState extends State<KontrolUtama>
         initialIndex: 0,
         length: listname.length + 1,
         child: Scaffold(
-            body: (panjanglokasi == null && _counter != 0 ||
-                    panjanglokasi == 0 && _counter != 0 ||
-                    listkontrol == null && _counter != 0)
+            body: (panjanglokasi == null ||
+                    panjanglokasi == 0 ||
+                    listkontrol == null ||
+                    refresh == true)
                 ? Center(
                     child: Container(
                         height:
@@ -389,9 +377,9 @@ class _KontrolUtamaState extends State<KontrolUtama>
                           ],
                         )),
                   )
-                : (panjanglokasi == null && _counter == 0 ||
-                        panjanglokasi == 0 && _counter == 0 ||
-                        listkontrol == null && _counter == 0)
+                : (panjanglokasi == null ||
+                        panjanglokasi == 0 ||
+                        listkontrol == null)
                     ? Center(
                         child: Container(
                             height:
@@ -410,7 +398,7 @@ class _KontrolUtamaState extends State<KontrolUtama>
                     : Column(
                         children: [
                           Container(
-                            height: MediaQuery.of(context).size.height * 0.52,
+                            height: MediaQuery.of(context).size.height * 0.525,
                             child: Column(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
@@ -425,14 +413,47 @@ class _KontrolUtamaState extends State<KontrolUtama>
                                                 padding:
                                                     const EdgeInsets.fromLTRB(
                                                         10, 10, 10, 10),
-                                                child: Text("$namaalatkontrol",
-                                                    style: TextStyle(
-                                                        fontFamily: "Kohi",
-                                                        fontSize: MediaQuery.of(
+                                                child: Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment.center,
+                                                  children: [
+                                                    Text("$namaalatkontrol",
+                                                        style: TextStyle(
+                                                            fontFamily: "Kohi",
+                                                            fontSize: MediaQuery.of(
+                                                                        context)
+                                                                    .size
+                                                                    .width /
+                                                                20)),
+                                                    SizedBox(
+                                                      width: 10,
+                                                    ),
+                                                    GestureDetector(
+                                                      onTap: () {
+                                                        print("ganti nama");
+                                                        try {
+                                                          setState(() {
+                                                            // idala == null
+                                                            //     ? idAlatChange =
+                                                            //         dev[0]
+                                                            //     : idAlatChange =
+                                                            //         idala;
+                                                          });
+                                                        } on Exception catch (e) {
+                                                          print(e);
+                                                        }
+                                                        changeName();
+                                                      },
+                                                      child: Image.asset(
+                                                        'asset/img/changeSign.png',
+                                                        width: MediaQuery.of(
                                                                     context)
-                                                                .size
-                                                                .width /
-                                                            20)),
+                                                                .devicePixelRatio *
+                                                            10,
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
                                               ),
                                               SizedBox(
                                                 height: 10,
@@ -891,46 +912,36 @@ class _KontrolUtamaState extends State<KontrolUtama>
                               ],
                             ),
                           ),
-                          SizedBox(height: 5),
-                          SizedBox(
-                            height: MediaQuery.of(context).size.height / 15,
+                          Container(
+                            height: MediaQuery.of(context).size.height * 0.060,
                             child: Container(
-                                height: 20,
-                                decoration: BoxDecoration(
-                                  color: Colors.lightGreen[50],
-                                  boxShadow: [
-                                    BoxShadow(
-                                      spreadRadius: 1.5,
-                                      color: Colors.green[900],
-                                    ),
-                                  ],
-                                ),
-                                child: TabBar(
-                                    physics: ScrollPhysics(),
-                                    labelColor: Colors.green[900],
-                                    isScrollable: true,
-                                    unselectedLabelColor: Colors.white,
-                                    indicatorColor: Colors.green[900],
-                                    tabs: [
-                                      Tab(
-                                          child: Container(
-                                              width: MediaQuery.of(context)
-                                                      .size
-                                                      .width *
-                                                  0.435,
-                                              height: MediaQuery.of(context)
-                                                      .size
-                                                      .height *
-                                                  0.05,
-                                              child: Center(
-                                                  child: Text("Semua",
-                                                      style: TextStyle(
-                                                          color: Colors.black,
-                                                          fontWeight:
-                                                              FontWeight.bold,
-                                                          fontFamily: 'Kohi',
-                                                          fontSize: 15))))),
-                                      for (i = 0; i < listname.length; i++)
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                boxShadow: [
+                                  BoxShadow(
+                                    spreadRadius: 1.5,
+                                    color: Colors.green[900],
+                                  ),
+                                ],
+                              ),
+                              child: Container(
+                                  height: 20,
+                                  decoration: BoxDecoration(
+                                    color: Colors.lightGreen[50],
+                                    boxShadow: [
+                                      BoxShadow(
+                                        spreadRadius: 1.5,
+                                        color: Colors.green[900],
+                                      ),
+                                    ],
+                                  ),
+                                  child: TabBar(
+                                      physics: ScrollPhysics(),
+                                      labelColor: Colors.green[900],
+                                      isScrollable: true,
+                                      unselectedLabelColor: Colors.white,
+                                      indicatorColor: Colors.green[900],
+                                      tabs: [
                                         Tab(
                                             child: Container(
                                                 width: MediaQuery.of(context)
@@ -942,23 +953,45 @@ class _KontrolUtamaState extends State<KontrolUtama>
                                                         .height *
                                                     0.05,
                                                 child: Center(
-                                                    child: Text(
-                                                        "${listname[i]}",
+                                                    child: Text("Semua",
                                                         style: TextStyle(
+                                                            color: Colors.black,
                                                             fontWeight:
                                                                 FontWeight.bold,
-                                                            color: Colors.black,
-                                                            fontFamily: 'Kohi',
+                                                            fontFamily: 'kohi',
                                                             fontSize: 15))))),
-                                    ])),
+                                        for (i = 0; i < listname.length; i++)
+                                          Tab(
+                                              child: Container(
+                                                  width: MediaQuery.of(context)
+                                                          .size
+                                                          .width *
+                                                      0.435,
+                                                  height: MediaQuery.of(context)
+                                                          .size
+                                                          .height *
+                                                      0.05,
+                                                  child: Center(
+                                                      child: Text(
+                                                          "${listname[i]}",
+                                                          style: TextStyle(
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .bold,
+                                                              color:
+                                                                  Colors.black,
+                                                              fontFamily:
+                                                                  'Kohi',
+                                                              fontSize: 15))))),
+                                      ])),
+                            ),
                           ),
-                          SizedBox(
-                              height: MediaQuery.of(context).size.height / 100),
                           Expanded(
                             child: TabBarView(
                               children: [
                                 Semua(),
-                                for (i = 0; i < listname.length; i++) Semua(),
+                                for (i = 0; i < listname.length; i++)
+                                  Detail(ind: i),
                               ],
                             ),
                           ),
@@ -998,5 +1031,116 @@ class _KontrolUtamaState extends State<KontrolUtama>
         var prin = rep.getidsensorbynama(value);
         idsensor = prin[0];
       });
+  }
+
+  changeName() {
+    print("idkontrol = $iDkontrol");
+    AlertDialog alert = AlertDialog(
+      title: Text(
+        "Ganti nama alat",
+        style: TextStyle(fontFamily: 'Kohi', fontWeight: FontWeight.bold),
+      ),
+      content: Container(
+        height: MediaQuery.of(context).devicePixelRatio * 30,
+        width: MediaQuery.of(context).devicePixelRatio * 50,
+        child: Column(
+          children: [
+            Padding(
+                padding: const EdgeInsets.only(top: 9.0),
+                child: Container(
+                  height: MediaQuery.of(context).devicePixelRatio * 18,
+                  margin: EdgeInsets.all(10),
+                  padding: EdgeInsets.all(10),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    border: Border.all(
+                        color: Colors.green[300], // set border color
+                        width: 1.5), // set border width
+                    borderRadius: BorderRadius.all(
+                        Radius.circular(10.0)), // set rounded corner radius
+                  ),
+                  child: Center(
+                    child: TextField(
+                      controller: cName,
+                      decoration: InputDecoration(
+                        labelStyle: TextStyle(fontFamily: 'Kohi', fontSize: 12),
+                        hintText: '$namaalatkontrol',
+                        hintStyle: TextStyle(fontFamily: 'Kohi', fontSize: 12),
+                        border: InputBorder.none,
+                      ),
+                    ),
+                  ),
+                )),
+          ],
+        ),
+      ),
+      actions: [
+        Padding(
+          padding: const EdgeInsets.fromLTRB(0, 0, 10, 10),
+          child: Container(
+            decoration: BoxDecoration(
+                color: Colors.green[300],
+                borderRadius: BorderRadius.circular(5)),
+            width: MediaQuery.of(context).devicePixelRatio * 35,
+            height: MediaQuery.of(context).devicePixelRatio * 15,
+            child: GestureDetector(
+              onTap: () {
+                gantiAliasAlat(iDkontrol, cName.text, token);
+                // print('id_alat = $idAlatChange dan namaganti ${cName.text}');
+              },
+              child: Container(
+                child: Center(
+                  child: Text(
+                    'Ubah',
+                    style: TextStyle(
+                        fontFamily: 'Kohi',
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold),
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ),
+      ],
+    );
+    return showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return alert;
+      },
+    );
+  }
+
+  Future gantiAliasAlat(
+      int idAlatChange, String namaganti, String token) async {
+    var jsonString = await http.put(
+        Uri.parse('$endPoint/alat/kontrol/edit?id_kontrol=$idAlatChange'),
+        body: {"alias": "$namaganti"},
+        headers: {HttpHeaders.authorizationHeader: '$token'});
+    var jsonResponse = json.decode(jsonString.body);
+    print(jsonResponse);
+
+    jsonResponse["status"] == "OK"
+        ? setState(() {
+            listkontrol.clear();
+            refresh = true;
+            namaalatkontrol = null;
+            // listnama.clear();
+            // items.clear();
+            // itemsshadow.clear();
+            // iditems.clear();
+            Future.delayed(Duration(seconds: 2), () {
+              if (this.mounted) {
+                setState(() {
+                  panjangkontrol = null;
+                  // refresh = false;
+                  Navigator.pop(context);
+                  refresh = false;
+                });
+              }
+            });
+          })
+        : setState(() {});
   }
 }

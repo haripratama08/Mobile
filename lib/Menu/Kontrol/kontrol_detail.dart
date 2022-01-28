@@ -11,12 +11,14 @@ import 'package:ch_v2_1/Menu/Kontrol/kontrol_utama.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-class Semua extends StatefulWidget {
+class Detail extends StatefulWidget {
+  final int ind;
+  const Detail({this.ind});
   @override
-  _SemuaState createState() => _SemuaState();
+  _DetailState createState() => _DetailState();
 }
 
-class _SemuaState extends State<Semua> with Validation {
+class _DetailState extends State<Detail> with Validation {
   TextEditingController alias = new TextEditingController();
   String msg = '';
   final formKey = GlobalKey<FormState>();
@@ -64,45 +66,51 @@ class _SemuaState extends State<Semua> with Validation {
     if (this.mounted) {
       setState(() {
         if (jeniskontrol.status == 'OK') {
-          panjanglokasi = jeniskontrol.data.lokasi.length;
-          for (int i = 0; i < panjanglokasi; i++) {
-            String hub = jeniskontrol.data.lokasi[i].nama;
-            idlokasikontrol = jeniskontrol.data.lokasi[i].id;
-            listname.length == panjanglokasi ? print("") : listname.add(hub);
-            listidlokasi.length == panjanglokasi
-                ? print("")
-                : listidlokasi.add(idlokasikontrol);
-            var panjanghub = jeniskontrol.data.lokasi[i].hub.length;
+          panjanglokasi = jeniskontrol.data.lokasi[widget.ind].hub.length;
+          print(jeniskontrol.data.lokasi[widget.ind].hub.length);
+          if (jeniskontrol.data.lokasi[widget.ind].hub.length == 0) {
+            msg = "Tidak Ada Alat";
+          } else {
+            String hub = jeniskontrol.data.lokasi[widget.ind].nama;
+            print(hub);
+            // idlokasikontrol = jeniskontrol.data.lokasi[widget.ind].id;
+            // listname.length == panjanglokasi ? print("") : listname.add(hub);
+            // listidlokasi.length == panjanglokasi
+            //     ? print("")
+            //     : listidlokasi.add(idlokasikontrol);
+            var panjanghub = jeniskontrol.data.lokasi[widget.ind].hub.length;
+            print(panjanghub);
 //----------------------------------------------------------------------//
             for (int j = 0; j < panjanghub; j++) {
-              var panjangalat = jeniskontrol.data.lokasi[i].hub[j].alat.length;
-              int idhubkontrol = jeniskontrol.data.lokasi[i].hub[j].id;
+              var panjangalat =
+                  jeniskontrol.data.lokasi[widget.ind].hub[j].alat.length;
+              int idhubkontrol = jeniskontrol.data.lokasi[widget.ind].hub[j].id;
               listidhub.length == panjanghub
                   ? print("")
                   : listidhub.add(idhubkontrol);
 //----------------------------------------------------------------------//
               for (int k = 0; k < panjangalat; k++) {
-                panjangkontrol =
-                    jeniskontrol.data.lokasi[i].hub[j].alat[k].kontrol.length;
+                panjangkontrol = jeniskontrol
+                    .data.lokasi[widget.ind].hub[j].alat[k].kontrol.length;
                 int idalatkontrol =
-                    jeniskontrol.data.lokasi[i].hub[j].alat[k].id;
+                    jeniskontrol.data.lokasi[widget.ind].hub[j].alat[k].id;
                 listidalat.length == panjangalat
                     ? print("")
                     : listidalat.add(idalatkontrol);
 //---------------------------------------------------------------------//
                 for (int l = 0; l < panjangkontrol; l++) {
                   String kontrol = jeniskontrol
-                      .data.lokasi[i].hub[j].alat[k].kontrol[l].alias;
+                      .data.lokasi[widget.ind].hub[j].alat[k].kontrol[l].alias;
                   String kontrolname = jeniskontrol
-                      .data.lokasi[i].hub[j].alat[k].kontrol[l].nama;
+                      .data.lokasi[widget.ind].hub[j].alat[k].kontrol[l].nama;
                   String event = jeniskontrol
-                      .data.lokasi[i].hub[j].alat[k].kontrol[l].event;
+                      .data.lokasi[widget.ind].hub[j].alat[k].kontrol[l].event;
                   String reason = jeniskontrol
-                      .data.lokasi[i].hub[j].alat[k].kontrol[l].reason;
+                      .data.lokasi[widget.ind].hub[j].alat[k].kontrol[l].reason;
                   String time = jeniskontrol
-                      .data.lokasi[i].hub[j].alat[k].kontrol[l].time;
-                  int idkontrol =
-                      jeniskontrol.data.lokasi[i].hub[j].alat[k].kontrol[l].id;
+                      .data.lokasi[widget.ind].hub[j].alat[k].kontrol[l].time;
+                  int idkontrol = jeniskontrol
+                      .data.lokasi[widget.ind].hub[j].alat[k].kontrol[l].id;
 
                   eventlist.length == panjangkontrol
                       ? print("")
@@ -365,6 +373,7 @@ class _SemuaState extends State<Semua> with Validation {
                                                 );
                                               }
                                             }
+
                                             // set up the AlertDialog
                                           },
                                           child: Padding(

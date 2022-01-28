@@ -54,7 +54,7 @@ class _CustomDialogBoxState extends State<CustomDialogBox> {
                 style: TextStyle(
                     fontSize: 18,
                     fontWeight: FontWeight.w600,
-                    fontFamily: 'Mont'),
+                    fontFamily: 'Kohi'),
               ),
               SizedBox(
                 height: 15,
@@ -70,7 +70,7 @@ class _CustomDialogBoxState extends State<CustomDialogBox> {
                     },
                     child: Text(
                       widget.text,
-                      style: TextStyle(fontSize: 12, fontFamily: 'Mont'),
+                      style: TextStyle(fontSize: 12, fontFamily: 'Kohi'),
                     )),
               ),
             ],

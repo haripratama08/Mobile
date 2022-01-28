@@ -1,8 +1,8 @@
 import 'dart:async';
+import 'package:ch_v2_1/API/jenismonitoring.dart';
 import 'package:ch_v2_1/Menu/Monitor/monitor_semua.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'package:ch_v2_1/API/parsing.dart';
 import 'dart:convert';
 import 'package:ch_v2_1/LoginPage/loginpage.dart';
 import 'dart:io';
@@ -10,6 +10,12 @@ import 'package:ch_v2_1/Validator/validation.dart';
 import 'package:ch_v2_1/API/api.dart';
 import 'package:ch_v2_1/Menu/menu.dart';
 
+String eventalat;
+String time;
+String reason;
+List<dynamic> eventdev = [];
+List<dynamic> reasondev = [];
+List<dynamic> timeevent = [];
 List<dynamic> list2 = [];
 int status1 = 0;
 List<dynamic> idlokasi = [];
@@ -54,11 +60,11 @@ class MonitorIndoorRouteState extends State<MonitorIndoorRoute>
   GantiAlias ganti = GantiAlias();
 
   Future loadDevice() async {
-    var url = Uri.parse('$endPoint/data?uuid=$uuid');
+    var url = Uri.parse('$endPoint/user/data');
     var jsonString = await http
         .get(url, headers: {HttpHeaders.authorizationHeader: '$token'});
     var jsonResponse = json.decode(jsonString.body);
-    Data2 data2 = Data2.fromJson(jsonResponse);
+    Jenismonitoring data2 = Jenismonitoring.fromJson(jsonResponse);
     if (this.mounted) {
       setState(() {
         List<Widget> list = [];
@@ -75,9 +81,12 @@ class MonitorIndoorRouteState extends State<MonitorIndoorRoute>
               data3 = data2.data.lokasi[widget.ind].hub[j].id;
               data4 = data2.data.lokasi[widget.ind].hub[j].alat[k].id;
               data5 = data2.data.lokasi[widget.ind].hub[j].alat[k].alias;
+              time = data2.data.lokasi[widget.ind].hub[j].alat[k].time;
+              eventalat = data2.data.lokasi[widget.ind].hub[j].alat[k].event;
+              reason = data2.data.lokasi[widget.ind].hub[j].alat[k].reason;
               if (listnama.contains(data5)) {
               } else {
-                listnama.add('$data5');
+                listnama.add(data5);
               }
               number = listnama.length;
               if (idlokasi.length == number) {
@@ -91,6 +100,18 @@ class MonitorIndoorRouteState extends State<MonitorIndoorRoute>
               if (idalat.length == number) {
               } else {
                 idalat.add(data4);
+              }
+              if (listnama.length == eventdev.length) {
+              } else {
+                eventdev.add(eventalat);
+              }
+              if (listnama.length == reasondev.length) {
+              } else {
+                reasondev.add(reason);
+              }
+              if (listnama.length == timeevent.length) {
+              } else {
+                timeevent.add(time);
               }
               list2.add(
                   ('{ "idlokasi" : $data1,  "idhub" : $data3,  "idalat" : $data4, "nama" : $data5}'));
@@ -234,44 +255,158 @@ class MonitorIndoorRouteState extends State<MonitorIndoorRoute>
                                 });
                               },
                               child: Padding(
-                                padding: const EdgeInsets.all(10),
+                                padding:
+                                    const EdgeInsets.fromLTRB(20, 10, 20, 5),
                                 child: Container(
-                                    child: Center(
-                                        child: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: <Widget>[
-                                        Image.asset(
-                                          'asset/img/ghico.png',
-                                          height: 40,
-                                        ),
-                                        SizedBox(
-                                          width: MediaQuery.of(context)
-                                                  .size
-                                                  .width /
-                                              12,
-                                        ),
-                                        Column(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.center,
-                                          children: <Widget>[
-                                            new Text(
-                                              '${listnama[index]}',
-                                              textDirection: TextDirection.ltr,
-                                              style: TextStyle(
-                                                  fontFamily: 'Mont',
-                                                  fontSize: 14),
+                                    child: Stack(
+                                      children: [
+                                        Positioned.fill(
+                                          child: Align(
+                                            alignment: Alignment.centerLeft,
+                                            child: Container(
+                                              decoration: BoxDecoration(
+                                                boxShadow: [
+                                                  BoxShadow(
+                                                    color: Colors.grey
+                                                        .withOpacity(0.2),
+                                                    spreadRadius: 1,
+                                                    blurRadius: 2,
+                                                    offset: Offset(0,
+                                                        3), // changes position of shadow
+                                                  ),
+                                                ],
+                                              ),
+                                              child: Image.asset(
+                                                'asset/img/monitor.png',
+                                                height: 40,
+                                              ),
                                             ),
-                                          ],
+                                          ),
                                         ),
-                                        SizedBox(
-                                          width: MediaQuery.of(context)
-                                                  .size
-                                                  .width /
-                                              12,
+                                        Positioned.fill(
+                                          child: Align(
+                                            alignment: Alignment.center,
+                                            child: eventdev[index] ==
+                                                    'disconnected'
+                                                ? Column(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .center,
+                                                    children: <Widget>[
+                                                        new Text(
+                                                          '${listnama[index]}',
+                                                          textDirection:
+                                                              TextDirection.ltr,
+                                                          style: TextStyle(
+                                                              fontFamily:
+                                                                  'kohi',
+                                                              fontSize: 15,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .bold),
+                                                        ),
+                                                        new Text(
+                                                          '${reasondev[index]}',
+                                                          style: TextStyle(
+                                                              fontSize: 10),
+                                                        )
+                                                      ])
+                                                : new Text(
+                                                    '${listnama[index]}',
+                                                    textDirection:
+                                                        TextDirection.ltr,
+                                                    style: TextStyle(
+                                                        fontFamily: 'kohi',
+                                                        fontSize: 15,
+                                                        fontWeight:
+                                                            FontWeight.bold),
+                                                  ),
+                                          ),
+                                        ),
+                                        Positioned.fill(
+                                          child: GestureDetector(
+                                            onTap: () {
+                                              if (eventdev[index] ==
+                                                  'disconnected') {
+                                                AlertDialog alert = AlertDialog(
+                                                  title: Text(
+                                                      "Terkoneksi terakhir pada",
+                                                      textAlign:
+                                                          TextAlign.center,
+                                                      style: TextStyle(
+                                                          fontFamily: 'Kohi')),
+                                                  content: Text(
+                                                      "${timeevent[index]}",
+                                                      textAlign:
+                                                          TextAlign.center,
+                                                      style: TextStyle(
+                                                          fontFamily: 'Kohi',
+                                                          fontSize: 20,
+                                                          fontWeight:
+                                                              FontWeight.bold)),
+                                                  actions: [],
+                                                );
+                                                // show the dialog
+                                                showDialog(
+                                                  context: context,
+                                                  builder:
+                                                      (BuildContext context) {
+                                                    return alert;
+                                                  },
+                                                );
+                                              } else {
+                                                AlertDialog alert = AlertDialog(
+                                                  title: Text(
+                                                    "Terhubung pada",
+                                                    textAlign: TextAlign.center,
+                                                    style: TextStyle(
+                                                        fontFamily: 'Kohi'),
+                                                  ),
+                                                  content: Text(
+                                                      "${timeevent[index]}",
+                                                      textAlign:
+                                                          TextAlign.center,
+                                                      style: TextStyle(
+                                                          fontFamily: 'Kohi',
+                                                          fontSize: 20,
+                                                          fontWeight:
+                                                              FontWeight.bold)),
+                                                  actions: [],
+                                                );
+                                                // show the dialog
+                                                showDialog(
+                                                  context: context,
+                                                  builder:
+                                                      (BuildContext context) {
+                                                    return alert;
+                                                  },
+                                                );
+                                              }
+
+                                              // set up the AlertDialog
+                                            },
+                                            child: Padding(
+                                              padding: const EdgeInsets.only(
+                                                  right: 10),
+                                              child: Align(
+                                                alignment:
+                                                    Alignment.centerRight,
+                                                child: eventdev[index] ==
+                                                        'disconnected'
+                                                    ? Image.asset(
+                                                        'asset/img/disconnected.png',
+                                                        height: 25,
+                                                      )
+                                                    : Image.asset(
+                                                        'asset/img/connected.png',
+                                                        height: 25,
+                                                      ),
+                                              ),
+                                            ),
+                                          ),
                                         ),
                                       ],
-                                    )),
+                                    ),
                                     height: MediaQuery.of(context).size.height /
                                         11.5,
                                     width: MediaQuery.of(context).size.width *
@@ -279,11 +414,16 @@ class MonitorIndoorRouteState extends State<MonitorIndoorRoute>
                                         5,
                                     padding: const EdgeInsets.all(10),
                                     decoration: BoxDecoration(
+                                        boxShadow: [
+                                          BoxShadow(
+                                            color: Color(0xB1AFAF)
+                                                .withOpacity(0.3),
+                                            spreadRadius: 1,
+                                            offset: Offset(0,
+                                                2), // changes position of shadow
+                                          ),
+                                        ],
                                         color: warna,
-                                        border: Border.all(
-                                          width: 2.0,
-                                          color: Colors.black,
-                                        ),
                                         borderRadius:
                                             BorderRadius.circular(10))),
                               ));

@@ -154,7 +154,7 @@ class _LoginPageState extends State<LoginPage> {
     final usernameForm = Padding(
         padding: EdgeInsets.symmetric(horizontal: 20.0),
         child: TextFormField(
-          style: TextStyle(fontFamily: "kohi", fontSize: 12),
+          style: TextStyle(fontFamily: "kohi", fontSize: 15),
           validator: (value) {
             if (value.isEmpty) {
               return ' please enter username';
@@ -180,6 +180,7 @@ class _LoginPageState extends State<LoginPage> {
     final passwordForm = Padding(
         padding: EdgeInsets.symmetric(horizontal: 20.0),
         child: TextFormField(
+          style: TextStyle(fontFamily: "kohi", fontSize: 15),
           validator: (value) {
             if (value.isEmpty) {
               return 'please enter password';
