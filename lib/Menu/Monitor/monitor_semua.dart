@@ -1,20 +1,33 @@
 import 'dart:convert';
+import 'package:flutter/rendering.dart';
+import 'package:syncfusion_flutter_charts/charts.dart';
 import 'dart:io';
+import 'package:ch_v2_1/API/parsinggrafik.dart';
 import 'package:ch_v2_1/API/parsingmonitoring.dart';
 import 'dart:async';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:ch_v2_1/API/api.dart';
 import 'package:ch_v2_1/Menu/Monitor/monitor.dart';
 import 'package:ch_v2_1/Menu/Monitor/monitor_indoor_route.dart';
+import 'package:ch_v2_1/process/size_config.dart';
 import 'package:http/http.dart' as http;
 import 'package:ch_v2_1/API/parsing.dart';
 import 'package:ch_v2_1/LoginPage/loginpage.dart';
 import 'package:flutter/material.dart';
 import 'package:ch_v2_1/Menu/tambahan/stringcap.dart';
 import 'package:ch_v2_1/Menu/menu.dart';
+import 'package:toggle_switch/toggle_switch.dart';
+import 'package:intl/intl.dart';
+import 'package:syncfusion_flutter_datepicker/datepicker.dart';
 
+int indexFilter = 0;
+int indexPlot = 0;
+List<_SensorData> datasensor = [];
+List<int> ni = [];
 num ribuan;
+int idsensorgrafik;
 String jenissensordetail;
+int idsensordetail;
 int idalatdetail;
 int idlokasidetail;
 int idhubdetail;
@@ -114,6 +127,35 @@ class Semua extends StatefulWidget {
 }
 
 class _SemuaState extends State<Semua> {
+  String selectedDate;
+  String dateCount;
+  String range;
+  String rangeCount;
+  String start;
+  String end;
+
+  void _onSelectionChanged(DateRangePickerSelectionChangedArgs args) {
+    setState(() {
+      if (args.value is PickerDateRange) {
+        start = '${DateFormat('dd/MM/yyyy').format(args.value.startDate)}';
+        end =
+            '${DateFormat('dd/MM/yyyy').format(args.value.endDate ?? args.value.startDate)}';
+        print(args.value.startDate);
+        print(args.value.endDate);
+        range = '${DateFormat('dd/MM/yyyy').format(args.value.startDate)} -'
+
+            // ignore: lines_longer_than_80_chars
+            ' ${DateFormat('dd/MM/yyyy').format(args.value.endDate ?? args.value.startDate)}';
+      } else if (args.value is DateTime) {
+        selectedDate = args.value.toString();
+      } else if (args.value is List<DateTime>) {
+        // _dateCount = args.value.length.toString();
+      } else {
+        rangeCount = args.value.length.toString();
+      }
+    });
+  }
+
   @override
   void dispose() {
     loadDevice2();
@@ -134,16 +176,16 @@ class _SemuaState extends State<Semua> {
 
   Future hitungminmaxmean(int idlokasidetail, int idhubdetail, int idalatdetail,
       int idsensordetail, String jenissensordetails) async {
-    print("masuk hitung");
     var jsonString = await http.get(
         Uri.parse(
             '$endPoint/monitoring/mobile/minmaxmean?lokasi=$idlokasidetail&hub=$idhubdetail&alat=$idalatdetail&sensor=$idsensordetail'),
         headers: {HttpHeaders.authorizationHeader: '$token'});
     var jsonResponse = json.decode(jsonString.body);
-    print("done parse");
     if (this.mounted) {
       jsonResponse["status"] == 'OK'
           ? setState(() {
+              idsensorgrafik = idsensordetail;
+              jenissensordetails = jenissensordetails;
               load = false;
               try {
                 jenissensordetail = jenissensordetails;
@@ -163,7 +205,6 @@ class _SemuaState extends State<Semua> {
     var jsonString = await http.get(Uri.parse('$endPoint/user/data'),
         headers: {HttpHeaders.authorizationHeader: '$token'});
     var jsonResponse = json.decode(jsonString.body);
-    // print(jsonResponse);
     Data2 data2 = Data2.fromJson(jsonResponse);
     if (this.mounted) {
       setState(() {
@@ -404,11 +445,10 @@ class _SemuaState extends State<Semua> {
   TextEditingController minvalue = new TextEditingController();
   String msg = '';
   final formKey = GlobalKey<FormState>();
-
+  GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
   double bot;
   int status1 = 0;
   int _current = 0;
-
   GantiAlias ganti = GantiAlias();
   Future doGanti() async {
     if (formKey.currentState.validate()) {
@@ -502,7 +542,6 @@ class _SemuaState extends State<Semua> {
   @override
   Widget build(BuildContext context) {
     if (idlokas != idlokasbef && idala != idalabef && idhu != idhubef) {
-      print("ganti ke idlokasi : $idlokas, idalat : $idala dan idhub $idhu");
       items.clear();
       loadSensor();
     } else {}
@@ -529,7 +568,7 @@ class _SemuaState extends State<Semua> {
                 Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: Text(
-                      "Silahkan Menunggu",
+                      "Sedang dalam proses",
                       style: TextStyle(
                           fontFamily: 'Kohi',
                           fontWeight: FontWeight.bold,
@@ -587,7 +626,7 @@ class _SemuaState extends State<Semua> {
                                                 "asset/img/loading.gif")),
                                         Padding(
                                           padding: const EdgeInsets.all(25),
-                                          child: Text("Silahkan Menunggu",
+                                          child: Text("Sedang dalam proses",
                                               style: TextStyle(
                                                   fontFamily: 'Kohi',
                                                   fontWeight: FontWeight.bold,
@@ -643,7 +682,7 @@ class _SemuaState extends State<Semua> {
                                             child: Center(
                                               child: Text("Tidak Ada data",
                                                   style: TextStyle(
-                                                      fontFamily: 'Mont')),
+                                                      fontFamily: 'Kohi')),
                                             )),
                                       )
                                     : panjang == null
@@ -709,7 +748,8 @@ class _SemuaState extends State<Semua> {
                                                                       fontFamily:
                                                                           'Kohi',
                                                                       fontSize:
-                                                                          20,
+                                                                          getHeight(
+                                                                              19),
                                                                       color: Colors
                                                                               .green[
                                                                           900])),
@@ -736,10 +776,9 @@ class _SemuaState extends State<Semua> {
                                                                 child:
                                                                     Image.asset(
                                                                   'asset/img/changeSign.png',
-                                                                  width: MediaQuery.of(
-                                                                              context)
-                                                                          .devicePixelRatio *
-                                                                      10,
+                                                                  width:
+                                                                      getHeight(
+                                                                          25),
                                                                 ),
                                                               ),
                                                             ],
@@ -944,7 +983,7 @@ class _SemuaState extends State<Semua> {
                     ),
                   ),
                   Container(
-                    height: MediaQuery.of(context).size.height * 0.060,
+                    height: MediaQuery.of(context).size.height * 0.055,
                     child: Container(
                       decoration: BoxDecoration(
                         color: Colors.white,
@@ -956,7 +995,7 @@ class _SemuaState extends State<Semua> {
                         ],
                       ),
                       child: Container(
-                          height: 20,
+                          height: SizeConfigs.screenHeight / 50,
                           decoration: BoxDecoration(
                             color: Colors.lightGreen[50],
                             boxShadow: [
@@ -987,7 +1026,8 @@ class _SemuaState extends State<Semua> {
                                                     color: Colors.black,
                                                     fontWeight: FontWeight.bold,
                                                     fontFamily: 'kohi',
-                                                    fontSize: 15))))),
+                                                    fontSize:
+                                                        getHeight(15)))))),
                                 for (i = 0; i < panjangtempat; i++)
                                   Tab(
                                       child: Container(
@@ -1006,12 +1046,11 @@ class _SemuaState extends State<Semua> {
                                                           FontWeight.bold,
                                                       color: Colors.black,
                                                       fontFamily: 'Kohi',
-                                                      fontSize: 15))))),
+                                                      fontSize:
+                                                          getHeight(15)))))),
                               ])),
                     ),
                   ),
-
-                  // SizedBox(height: MediaQuery.of(context).size.height / 100),
                   Expanded(
                     child: TabBarView(
                       children: [
@@ -1052,8 +1091,6 @@ class _SemuaState extends State<Semua> {
                 child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
-                // Text('$namaalat',style:TextStyle(fontFamily: 'Kohi',fontSize: 20)),
-                // SizedBox(height: 15,),
                 img == "0"
                     ? Center(
                         child: Container(
@@ -1126,84 +1163,6 @@ class _SemuaState extends State<Semua> {
                         ],
                       ),
                 SizedBox(height: 5),
-                // Row(
-                //   mainAxisAlignment: MainAxisAlignment.center,
-                //   children: <Widget>[
-                //     Column(
-                //       children: <Widget>[
-                //         Text(
-                //           "Min",
-                //           style: TextStyle(
-                //             fontFamily: "Mont",
-                //             fontSize: MediaQuery.of(context).size.height / 60,
-                //           ),
-                //         ),
-                //         Container(
-                //             decoration: BoxDecoration(
-                //                 color: Colors.green[900],
-                //                 borderRadius: BorderRadius.circular(5)),
-                //             child: Center(
-                //                 child: Text("$min",
-                //                     style: TextStyle(
-                //                         fontFamily: 'Mont',
-                //                         fontSize:
-                //                             MediaQuery.of(context).size.height /
-                //                                 60,
-                //                         color: Colors.white))),
-                //             height: 40,
-                //             width: 50)
-                //       ],
-                //     ),
-                //     SizedBox(width: 5),
-                //     Column(
-                //       children: <Widget>[
-                //         Text("Mean",
-                //             style: TextStyle(
-                //               fontFamily: "Mont",
-                //               fontSize: MediaQuery.of(context).size.height / 60,
-                //             )),
-                //         Container(
-                //             decoration: BoxDecoration(
-                //                 color: Colors.green[900],
-                //                 borderRadius: BorderRadius.circular(5)),
-                //             child: Center(
-                //                 child: Text("$mean",
-                //                     style: TextStyle(
-                //                         fontSize:
-                //                             MediaQuery.of(context).size.height /
-                //                                 60,
-                //                         fontFamily: 'Mont',
-                //                         color: Colors.white))),
-                //             height: 40,
-                //             width: 50)
-                //       ],
-                //     ),
-                //     SizedBox(width: 5),
-                //     Column(
-                //       children: <Widget>[
-                //         Text("Max",
-                //             style: TextStyle(
-                //               fontFamily: "Mont",
-                //               fontSize: MediaQuery.of(context).size.height / 60,
-                //             )),
-                //         Container(
-                //             decoration: BoxDecoration(
-                //                 color: Colors.green[900],
-                //                 borderRadius: BorderRadius.circular(5)),
-                //             child: Center(
-                //                 child: Text("$max",
-                //                     style: TextStyle(
-                //                         fontSize:
-                //                             MediaQuery.of(context).size.height /
-                //                                 60,
-                //                         fontFamily: 'Mont',
-                //                         color: Colors.white))),
-                //             height: 40,
-                //             width: 50)
-                //       ],
-                //     ),
-                //   ],
-                // ),
                 SizedBox(height: 5),
                 nilai.isEmpty
                     ? Center(
@@ -1220,7 +1179,7 @@ class _SemuaState extends State<Semua> {
                             dateonly,
                             style: TextStyle(
                               fontFamily: 'Kohi',
-                              fontSize: 18,
+                              fontSize: getHeight(17),
                             ),
                           ),
                           SizedBox(width: 20),
@@ -1234,7 +1193,7 @@ class _SemuaState extends State<Semua> {
                             "$timeonly WIB",
                             style: TextStyle(
                               fontFamily: 'Kohi',
-                              fontSize: 18,
+                              fontSize: getHeight(17),
                             ),
                           ),
                         ],
@@ -1248,14 +1207,9 @@ class _SemuaState extends State<Semua> {
   }
 
   dataminmaxmean(int idsensordetail, String jenissensordetail) {
-    print(loc);
-    print(huc);
-    print(dev);
-
     idlokas == null ? idlokasidetail = loc[0] : idlokasidetail = idlokas;
     idhu == null ? idhubdetail = huc[0] : idhubdetail = idhu;
     idala == null ? idalatdetail = dev[0] : idalatdetail = idala;
-
     hitungminmaxmean(idlokasidetail, idhubdetail, idalatdetail, idsensordetail,
         jenissensordetail);
   }
@@ -1266,12 +1220,15 @@ class _SemuaState extends State<Semua> {
       builder: (BuildContext context) {
         return AlertDialog(
           content: Container(
-            height: MediaQuery.of(context).devicePixelRatio * 10,
+            height: getHeight(20),
             child: Center(
               child: Text(
                 "Detail data $jenissensordetail",
-                style:
-                    TextStyle(fontFamily: 'Kohi', fontWeight: FontWeight.bold),
+                style: TextStyle(
+                  fontFamily: 'Kohi',
+                  fontWeight: FontWeight.bold,
+                  fontSize: getHeight(20),
+                ),
               ),
             ),
           ),
@@ -1357,8 +1314,310 @@ class _SemuaState extends State<Semua> {
                 ],
               ),
             ),
+            Center(
+              child: GestureDetector(
+                  onTap: (() {
+                    getGraphData(idlokasidetail, idhubdetail, idalatdetail,
+                        idsensorgrafik, null, null);
+                    print('masuk graph');
+                  }),
+                  child: Image.asset(
+                    'asset/img/graph.png',
+                    height: SizeConfigs.screenHeight * 0.05,
+                  )),
+            )
           ],
         );
+      },
+    );
+  }
+
+  Future getGraphData(int idlokasidetail, int idhubdetail, idalatdetail,
+      int idsensorgrafik, String startdate, String enddate) async {
+    print(startdate);
+    var jsonString = startdate == null && enddate == null
+        ? await http.get(
+            Uri.parse(
+                '$endPoint/monitoring/sensor?mode=grafik&lokasi=$idlokasidetail&hub=$idhubdetail&alat=$idalatdetail&sensor=$idsensorgrafik'),
+            headers: {
+                HttpHeaders.authorizationHeader: '$token'
+              })
+        : await http.get(
+            Uri.parse(
+                '$endPoint/monitoring/sensor?mode=grafik&lokasi=$idlokasidetail&hub=$idhubdetail&alat=$idalatdetail&sensor=$idsensorgrafik&startDate=$startdate&endDate=$enddate'),
+            headers: {HttpHeaders.authorizationHeader: '$token'});
+    var jsonResponse = json.decode(jsonString.body);
+    Grafik grafik = Grafik.fromJson(jsonResponse);
+    grafik.status == "OK"
+        ? setState(() {
+            for (int i = 99; i > 89; i--) {
+              num nilai = grafik.data.sensor.dataRaw[i].nilai;
+              String waktu = grafik.data.sensor.dataRaw[i].tanggalSensor;
+              String namaalat = grafik.data.info.alat.alias;
+              String namasensor = grafik.data.sensor.jenisSensor;
+              datasensor.length <= 10
+                  ? datasensor.add(_SensorData(waktu, nilai))
+                  : datasensor.length > 10
+                      ? datasensor.clear()
+                      : print(datasensor);
+              print(datasensor[0].nilai);
+              datasensor.length == 10
+                  ? getGraph(namaalat, namasensor, datasensor)
+                  : print("");
+            }
+          })
+        : print("data tidak ada");
+  }
+
+  getGraph(String namaalat, String namasensor, List<_SensorData> datasensor) {
+    AlertDialog alert = AlertDialog(
+        shape:
+            RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
+        titlePadding: const EdgeInsets.all(0),
+        title: Container(
+          color: Colors.green[600],
+          height: SizeConfigs.screenHeight * 0.04,
+        ),
+        content: StatefulBuilder(
+            builder: (BuildContext context, StateSetter setState) {
+          print(indexFilter);
+          print(indexPlot);
+          return Container(
+            height: indexFilter == 1
+                ? SizeConfigs.screenHeight * 0.7
+                : SizeConfigs.screenHeight * 0.45,
+            width: SizeConfigs.screenWidth * 0.9,
+            child: Column(
+              children: [
+                Text(
+                  'Grafik sensor $namasensor pada alat $namaalat',
+                  style: TextStyle(
+                      fontFamily: 'Kohi',
+                      fontSize: getHeight(18),
+                      fontWeight: FontWeight.bold),
+                ),
+                SizedBox(
+                  height: SizeConfigs.screenHeight * 0.01,
+                ),
+                Container(
+                  height: SizeConfigs.screenHeight * 0.25,
+                  width: SizeConfigs.screenWidth,
+                  child: SfCartesianChart(
+                      enableAxisAnimation: true,
+                      zoomPanBehavior: ZoomPanBehavior(
+                        enablePinching: true,
+                        enableDoubleTapZooming: true,
+                      ),
+                      crosshairBehavior: CrosshairBehavior(
+                          enable: true,
+                          lineType: CrosshairLineType.both,
+                          activationMode: ActivationMode.longPress),
+                      primaryXAxis: CategoryAxis(
+                        labelRotation: 90,
+                        minimum: 5,
+                        maximum: 10,
+                      ),
+                      primaryYAxis: NumericAxis(
+                          anchorRangeToVisiblePoints: false,
+                          plotBands: <PlotBand>[
+                            PlotBand(
+                                verticalTextPadding: '5%',
+                                horizontalTextPadding: '5%',
+                                text: 'Average',
+                                textAngle: 0,
+                                start: 30,
+                                end: 31,
+                                textStyle: TextStyle(
+                                    color: Colors.deepOrange, fontSize: 16),
+                                borderColor: Colors.red,
+                                borderWidth: 2)
+                          ]),
+                      tooltipBehavior: TooltipBehavior(enable: true),
+                      series: <ChartSeries<_SensorData, String>>[
+                        LineSeries<_SensorData, String>(
+                            dataSource: datasensor,
+                            xValueMapper: (_SensorData data, _) =>
+                                data.waktu.substring(0, 5),
+                            yValueMapper: (_SensorData data, _) => data.nilai,
+                            markerSettings: MarkerSettings(isVisible: true),
+                            name: '$namasensor',
+                            dataLabelSettings: DataLabelSettings(angle: 0))
+                      ]),
+                ),
+                SizedBox(
+                  height: SizeConfigs.screenHeight * 0.01,
+                ),
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Align(
+                            alignment: Alignment.centerLeft,
+                            child: Center(
+                                child: Text("Filter Data",
+                                    style: TextStyle(
+                                        fontFamily: 'Kohi',
+                                        fontWeight: FontWeight.w900,
+                                        fontSize: getHeight(15))))),
+                        SizedBox(
+                          width: SizeConfigs.screenWidth * 0.05,
+                        ),
+                        Align(
+                          alignment: Alignment.centerRight,
+                          child: ToggleSwitch(
+                            totalSwitches: 2,
+                            fontSize: getHeight(12),
+                            minHeight: SizeConfigs.screenHeight * 0.03,
+                            initialLabelIndex: indexFilter,
+                            changeOnTap: true,
+                            minWidth: SizeConfigs.screenWidth * 0.15,
+                            cornerRadius: 5.0,
+                            borderWidth: 0.5,
+                            borderColor: [Colors.black],
+                            activeBgColor: [Colors.green[900]],
+                            activeFgColor: Colors.white,
+                            inactiveBgColor: Colors.white,
+                            inactiveFgColor: Colors.green[900],
+                            labels: [
+                              'OFF',
+                              'ON',
+                            ],
+                            onToggle: (index) {
+                              if (mounted)
+                                setState(() {
+                                  indexFilter = index;
+                                  print(indexFilter);
+                                });
+                            },
+                          ),
+                        ),
+                        SizedBox(
+                          width: SizeConfigs.screenWidth * 0.05,
+                        ),
+                        GestureDetector(
+                          onTap: (() {
+                             Navigator.pop(context);
+                            String startdate = start;
+                            String enddate = end;
+                            print(start);
+                            datasensor.clear();
+                            print(end);
+                            getGraphData(
+                                idlokasidetail,
+                                idhubdetail,
+                                idalatdetail,
+                                idsensorgrafik,
+                                startdate,
+                                enddate);
+                          }),
+                          child: Icon(Icons.refresh,
+                              color:
+                                  indexFilter == 1 ? Colors.black : Colors.grey,
+                              size: getHeight(20)),
+                        )
+                      ],
+                    ),
+                  ],
+                ),
+                SizedBox(
+                  height: SizeConfigs.screenHeight * 0.01,
+                ),
+                indexFilter == 1
+                    ? Center(
+                        child: Container(
+                          decoration: BoxDecoration(
+                              color: Colors.white,
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.grey,
+                                  blurRadius: 4,
+                                  offset: Offset(4, 8),
+                                ),
+                              ],
+                              border:
+                                  Border.all(color: Colors.black, width: 0.5),
+                              borderRadius: BorderRadius.circular(5.0)),
+                          height: SizeConfigs.screenHeight * 0.25,
+                          width: SizeConfigs.screenWidth * 0.5,
+                          child: SfDateRangePicker(
+                            onSelectionChanged: _onSelectionChanged,
+                            selectionMode: DateRangePickerSelectionMode.range,
+                            initialSelectedRange: PickerDateRange(
+                                DateTime.now(),
+                                // .subtract(const Duration(days: 4)),
+                                DateTime.now()
+                                // .add(const Duration(days: 3))
+                                ),
+                          ),
+                        ),
+                      )
+                    : SizedBox(
+                        height: 0,
+                      ),
+                SizedBox(
+                  height: SizeConfigs.screenHeight * 0.01,
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Align(
+                        alignment: Alignment.centerLeft,
+                        child: Center(
+                            child: Text("Plot Data  ",
+                                style: TextStyle(
+                                    fontFamily: 'Kohi',
+                                    fontWeight: FontWeight.w900,
+                                    fontSize: getHeight(15))))),
+                    SizedBox(
+                      width: SizeConfigs.screenWidth * 0.05,
+                    ),
+                    Align(
+                      alignment: Alignment.centerRight,
+                      child: ToggleSwitch(
+                        totalSwitches: 2,
+                        fontSize: getHeight(12),
+                        minHeight: SizeConfigs.screenHeight * 0.03,
+                        initialLabelIndex: indexPlot,
+                        changeOnTap: true,
+                        minWidth: SizeConfigs.screenWidth * 0.15,
+                        cornerRadius: 5.0,
+                        borderWidth: 0.5,
+                        borderColor: [Colors.black],
+                        activeBgColor: [Colors.green[900]],
+                        activeFgColor: Colors.white,
+                        inactiveBgColor: Colors.white,
+                        inactiveFgColor: Colors.green[900],
+                        labels: [
+                          'OFF',
+                          'ON',
+                        ],
+                        onToggle: (index) {
+                          if (mounted)
+                            setState(() {
+                              indexPlot = index;
+                            });
+                        },
+                      ),
+                    ),
+                    SizedBox(
+                      width: SizeConfigs.screenWidth * 0.05,
+                    ),
+                    Container(
+                      child: Icon(Icons.refresh,
+                          color: Colors.grey, size: getHeight(20)),
+                    )
+                  ],
+                ),
+              ],
+            ),
+          );
+        }));
+    return showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return alert;
       },
     );
   }
@@ -1366,72 +1625,115 @@ class _SemuaState extends State<Semua> {
   changeName() {
     print(idAlatChange);
     AlertDialog alert = AlertDialog(
-      title: Text(
-        "Ganti nama alat",
-        style: TextStyle(fontFamily: 'Kohi', fontWeight: FontWeight.bold),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
+      title: Column(
+        children: [
+          Container(
+            color: Colors.green[600],
+            height: SizeConfigs.screenHeight * 0.04,
+          ),
+          SizedBox(height: 15),
+          Text(
+            "Ganti Nama Alat",
+            style: TextStyle(
+                fontSize: getHeight(14),
+                fontFamily: 'Kohi',
+                fontWeight: FontWeight.bold),
+          ),
+        ],
       ),
+      titlePadding: const EdgeInsets.all(0),
       content: Container(
-        height: MediaQuery.of(context).devicePixelRatio * 30,
-        width: MediaQuery.of(context).devicePixelRatio * 50,
+        height: SizeConfigs.screenHeight * 0.08,
+        width: SizeConfigs.screenWidth * 0.3,
         child: Column(
           children: [
             Padding(
-                padding: const EdgeInsets.only(top: 9.0),
-                child: Container(
-                  height: MediaQuery.of(context).devicePixelRatio * 18,
-                  margin: EdgeInsets.all(10),
-                  padding: EdgeInsets.all(10),
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    border: Border.all(
-                        color: Colors.green[300], // set border color
-                        width: 1.5), // set border width
-                    borderRadius: BorderRadius.all(
-                        Radius.circular(10.0)), // set rounded corner radius
-                  ),
-                  child: Center(
-                    child: TextField(
-                      controller: cName,
-                      decoration: InputDecoration(
-                        labelStyle: TextStyle(fontFamily: 'Kohi', fontSize: 12),
-                        hintText: '$namaalat',
-                        hintStyle: TextStyle(fontFamily: 'Kohi', fontSize: 12),
-                        border: InputBorder.none,
-                      ),
+              padding: const EdgeInsets.only(top: 20.0),
+              child: Container(
+                  child: Container(
+                height: SizeConfigs.screenHeight * 0.05,
+                width: SizeConfigs.screenWidth * 0.47,
+                child: Center(
+                  child: TextFormField(
+                    autofocus: false,
+                    controller: cName,
+                    decoration: InputDecoration(
+                      labelStyle: TextStyle(
+                          fontFamily: 'Kohi', fontSize: getHeight(12)),
+                      hintText: '$namaalat',
+                      hintStyle: TextStyle(
+                          fontFamily: 'Kohi', fontSize: getHeight(12)),
+                      border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10.0),
+                          borderSide: BorderSide(color: Colors.green[900])),
                     ),
                   ),
-                )),
+                ),
+              )),
+            ),
           ],
         ),
       ),
+      actionsPadding: EdgeInsets.only(bottom: SizeConfigs.screenHeight * 0.03),
       actions: [
-        Padding(
-          padding: const EdgeInsets.fromLTRB(0, 0, 10, 10),
-          child: Container(
-            decoration: BoxDecoration(
-                color: Colors.green[300],
-                borderRadius: BorderRadius.circular(5)),
-            width: MediaQuery.of(context).devicePixelRatio * 35,
-            height: MediaQuery.of(context).devicePixelRatio * 15,
-            child: GestureDetector(
-              onTap: () {
-                gantiAliasAlat(idAlatChange, cName.text, token);
-                print('id_alat = $idAlatChange dan namaganti ${cName.text}');
-              },
-              child: Container(
-                child: Center(
-                  child: Text(
-                    'Ubah',
-                    style: TextStyle(
-                        fontFamily: 'Kohi',
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Container(
+              width: SizeConfigs.screenWidth * 0.2,
+              decoration: BoxDecoration(
+                  color: Colors.grey, borderRadius: BorderRadius.circular(5)),
+              height: SizeConfigs.screenHeight * 0.04,
+              child: GestureDetector(
+                onTap: () {
+                  Navigator.pop(context);
+                },
+                child: Container(
+                  width: SizeConfigs.screenWidth * 0.07,
+                  height: SizeConfigs.screenHeight * 0.01,
+                  child: Center(
+                    child: Text(
+                      'Batalkan',
+                      style: TextStyle(
+                          fontFamily: 'Kohi',
+                          fontSize: getHeight(12),
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold),
+                    ),
                   ),
                 ),
               ),
             ),
-          ),
-        ),
+            SizedBox(width: SizeConfigs.screenWidth * 0.04),
+            Container(
+              decoration: BoxDecoration(
+                  color: Colors.green[300],
+                  borderRadius: BorderRadius.circular(5)),
+              width: SizeConfigs.screenWidth * 0.2,
+              height: SizeConfigs.screenHeight * 0.04,
+              child: GestureDetector(
+                onTap: () {
+                  gantiAliasAlat(idAlatChange, cName.text, token);
+                },
+                child: Container(
+                  width: SizeConfigs.screenWidth * 0.03,
+                  height: SizeConfigs.screenHeight * 0.01,
+                  child: Center(
+                    child: Text(
+                      'Ubah',
+                      style: TextStyle(
+                          fontFamily: 'Kohi',
+                          fontSize: getHeight(12),
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ],
+        )
       ],
     );
     return showDialog(
@@ -1451,7 +1753,6 @@ class _SemuaState extends State<Semua> {
         headers: {HttpHeaders.authorizationHeader: '$token'});
     var jsonResponse = json.decode(jsonString.body);
     print(jsonResponse);
-
     jsonResponse["status"] == "OK"
         ? setState(() {
             listnama.clear();
@@ -1469,4 +1770,11 @@ class _SemuaState extends State<Semua> {
           })
         : setState(() {});
   }
+}
+
+class _SensorData {
+  _SensorData(this.waktu, this.nilai);
+
+  String waktu;
+  num nilai;
 }

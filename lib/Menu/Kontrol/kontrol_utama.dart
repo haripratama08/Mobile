@@ -5,6 +5,7 @@ import 'package:ch_v2_1/API/parsingmonitoring.dart';
 import 'package:ch_v2_1/API/api.dart';
 import 'package:ch_v2_1/Menu/Kontrol/kontrol_detail.dart';
 import 'package:ch_v2_1/Menu/Kontrol/kontrol_semua.dart';
+import 'package:ch_v2_1/process/size_config.dart';
 import 'package:http/http.dart' as http;
 import 'package:ch_v2_1/LoginPage/loginpage.dart';
 import 'package:ch_v2_1/Menu/Kontrol/kontrol_auto.dart';
@@ -203,14 +204,12 @@ class _KontrolUtamaState extends State<KontrolUtama>
         .get(url, headers: {HttpHeaders.authorizationHeader: '$token'});
     var jsonResponse = json.decode(jsonString.body);
     Data2 data2 = Data2.fromJson(jsonResponse);
-    // print('monitor $jsonResponse');
     if (this.mounted) {
       setState(() {
         try {
           List<Widget> list = [];
           for (int i = 0; i < data2.data.lokasi.length; i++) {
             panjangtempat = data2.data.lokasi.length;
-            // print('panjang $panjangtempat');
             if (tempatlist.length == panjangtempat) {
             } else {
               tempat = data2.data.lokasi[i].nama;
@@ -226,7 +225,6 @@ class _KontrolUtamaState extends State<KontrolUtama>
                 data4 = data2.data.lokasi[i].hub[j].alat[k].id;
                 data5 = data2.data.lokasi[i].hub[j].alat[k].alias;
                 data6 = data2.data.lokasi[i].hub[j].alat[k].nama;
-                //logic untuk membuat sudah ada pada list tidak masuk kembali
                 if (name.contains(data5)) {
                 } else {
                   name.add('$data5');
@@ -277,7 +275,6 @@ class _KontrolUtamaState extends State<KontrolUtama>
         .get(url, headers: {HttpHeaders.authorizationHeader: '$token'});
     var jsonResponse = json.decode(jsonString.body);
     MonitoringParse dataparsing = MonitoringParse.fromJson(jsonResponse);
-    // print('sensor $jsonResponse');
     if (this.mounted) {
       setState(() {
         panjang = dataparsing.data.data.length;
@@ -368,7 +365,7 @@ class _KontrolUtamaState extends State<KontrolUtama>
                                 child: Image.asset("asset/img/loading.gif")),
                             Padding(
                               padding: const EdgeInsets.all(8.0),
-                              child: Text("Silahkan Menunggu",
+                              child: Text("Sedang dalam proses",
                                   style: TextStyle(
                                       fontFamily: 'Kohi',
                                       fontWeight: FontWeight.bold,
@@ -420,11 +417,8 @@ class _KontrolUtamaState extends State<KontrolUtama>
                                                     Text("$namaalatkontrol",
                                                         style: TextStyle(
                                                             fontFamily: "Kohi",
-                                                            fontSize: MediaQuery.of(
-                                                                        context)
-                                                                    .size
-                                                                    .width /
-                                                                20)),
+                                                            fontSize:
+                                                                getHeight(19))),
                                                     SizedBox(
                                                       width: 10,
                                                     ),
@@ -432,13 +426,7 @@ class _KontrolUtamaState extends State<KontrolUtama>
                                                       onTap: () {
                                                         print("ganti nama");
                                                         try {
-                                                          setState(() {
-                                                            // idala == null
-                                                            //     ? idAlatChange =
-                                                            //         dev[0]
-                                                            //     : idAlatChange =
-                                                            //         idala;
-                                                          });
+                                                          setState(() {});
                                                         } on Exception catch (e) {
                                                           print(e);
                                                         }
@@ -446,10 +434,7 @@ class _KontrolUtamaState extends State<KontrolUtama>
                                                       },
                                                       child: Image.asset(
                                                         'asset/img/changeSign.png',
-                                                        width: MediaQuery.of(
-                                                                    context)
-                                                                .devicePixelRatio *
-                                                            10,
+                                                        width: getHeight(25),
                                                       ),
                                                     ),
                                                   ],
@@ -581,7 +566,6 @@ class _KontrolUtamaState extends State<KontrolUtama>
                                       )
                                     : Column(
                                         children: [
-                                          // memilih auto
                                           value == 1
                                               ? SingleChildScrollView(
                                                   physics: ScrollPhysics(),
@@ -913,7 +897,7 @@ class _KontrolUtamaState extends State<KontrolUtama>
                             ),
                           ),
                           Container(
-                            height: MediaQuery.of(context).size.height * 0.060,
+                            height: MediaQuery.of(context).size.height * 0.055,
                             child: Container(
                               decoration: BoxDecoration(
                                 color: Colors.white,
@@ -959,7 +943,8 @@ class _KontrolUtamaState extends State<KontrolUtama>
                                                             fontWeight:
                                                                 FontWeight.bold,
                                                             fontFamily: 'kohi',
-                                                            fontSize: 15))))),
+                                                            fontSize: getHeight(
+                                                                15)))))),
                                         for (i = 0; i < listname.length; i++)
                                           Tab(
                                               child: Container(
@@ -982,7 +967,7 @@ class _KontrolUtamaState extends State<KontrolUtama>
                                                                   Colors.black,
                                                               fontFamily:
                                                                   'Kohi',
-                                                              fontSize: 15))))),
+                                                              fontSize: getHeight(15)))))),
                                       ])),
                             ),
                           ),
@@ -1019,8 +1004,6 @@ class _KontrolUtamaState extends State<KontrolUtama>
         idalat = prin3[0];
         var prin4 = repo.getnamaalat(value);
         devname = prin4[0];
-        // print("device name  $devname");
-
         loadSensor(prin[0], prin2[0], prin3[0]);
       });
   }
@@ -1034,74 +1017,117 @@ class _KontrolUtamaState extends State<KontrolUtama>
   }
 
   changeName() {
-    print("idkontrol = $iDkontrol");
     AlertDialog alert = AlertDialog(
-      title: Text(
-        "Ganti nama alat",
-        style: TextStyle(fontFamily: 'Kohi', fontWeight: FontWeight.bold),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
+      title: Column(
+        children: [
+          Container(
+            color: Colors.green[600],
+            height: SizeConfigs.screenHeight * 0.04,
+          ),
+          SizedBox(height: 15),
+          Text(
+            "Ganti Nama Alat",
+            style: TextStyle(
+                fontSize: getHeight(14),
+                fontFamily: 'Kohi',
+                fontWeight: FontWeight.bold),
+          ),
+        ],
       ),
+      titlePadding: const EdgeInsets.all(0),
       content: Container(
-        height: MediaQuery.of(context).devicePixelRatio * 30,
-        width: MediaQuery.of(context).devicePixelRatio * 50,
+        height: SizeConfigs.screenHeight * 0.08,
+        width: SizeConfigs.screenWidth * 0.3,
         child: Column(
           children: [
             Padding(
-                padding: const EdgeInsets.only(top: 9.0),
-                child: Container(
-                  height: MediaQuery.of(context).devicePixelRatio * 18,
-                  margin: EdgeInsets.all(10),
-                  padding: EdgeInsets.all(10),
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    border: Border.all(
-                        color: Colors.green[300], // set border color
-                        width: 1.5), // set border width
-                    borderRadius: BorderRadius.all(
-                        Radius.circular(10.0)), // set rounded corner radius
-                  ),
-                  child: Center(
-                    child: TextField(
-                      controller: cName,
-                      decoration: InputDecoration(
-                        labelStyle: TextStyle(fontFamily: 'Kohi', fontSize: 12),
-                        hintText: '$namaalatkontrol',
-                        hintStyle: TextStyle(fontFamily: 'Kohi', fontSize: 12),
-                        border: InputBorder.none,
-                      ),
+              padding: const EdgeInsets.only(top: 20.0),
+              child: Container(
+                  child: Container(
+                height: SizeConfigs.screenHeight * 0.05,
+                width: SizeConfigs.screenWidth * 0.47,
+                child: Center(
+                  child: TextFormField(
+                    autofocus: false,
+                    controller: cName,
+                    decoration: InputDecoration(
+                      labelStyle: TextStyle(
+                          fontFamily: 'Kohi', fontSize: getHeight(12)),
+                      hintText: '$namaalatkontrol',
+                      hintStyle: TextStyle(
+                          fontFamily: 'Kohi', fontSize: getHeight(12)),
+                      // border: InputBorder.none,
+                      border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10.0),
+                          borderSide: BorderSide(color: Colors.green[900])),
                     ),
                   ),
-                )),
+                ),
+              )),
+            ),
           ],
         ),
       ),
+      actionsPadding: EdgeInsets.only(bottom: SizeConfigs.screenHeight * 0.03),
       actions: [
-        Padding(
-          padding: const EdgeInsets.fromLTRB(0, 0, 10, 10),
-          child: Container(
-            decoration: BoxDecoration(
-                color: Colors.green[300],
-                borderRadius: BorderRadius.circular(5)),
-            width: MediaQuery.of(context).devicePixelRatio * 35,
-            height: MediaQuery.of(context).devicePixelRatio * 15,
-            child: GestureDetector(
-              onTap: () {
-                gantiAliasAlat(iDkontrol, cName.text, token);
-                // print('id_alat = $idAlatChange dan namaganti ${cName.text}');
-              },
-              child: Container(
-                child: Center(
-                  child: Text(
-                    'Ubah',
-                    style: TextStyle(
-                        fontFamily: 'Kohi',
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Container(
+              width: SizeConfigs.screenWidth * 0.2,
+              decoration: BoxDecoration(
+                  color: Colors.grey, borderRadius: BorderRadius.circular(5)),
+              height: SizeConfigs.screenHeight * 0.04,
+              child: GestureDetector(
+                onTap: () {
+                  Navigator.pop(context);
+                },
+                child: Container(
+                  width: SizeConfigs.screenWidth * 0.07,
+                  height: SizeConfigs.screenHeight * 0.01,
+                  child: Center(
+                    child: Text(
+                      'Batalkan',
+                      style: TextStyle(
+                          fontFamily: 'Kohi',
+                          fontSize: getHeight(12),
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold),
+                    ),
                   ),
                 ),
               ),
             ),
-          ),
-        ),
+            SizedBox(width: SizeConfigs.screenWidth * 0.07),
+            Container(
+              decoration: BoxDecoration(
+                  color: Colors.green[300],
+                  borderRadius: BorderRadius.circular(5)),
+              width: SizeConfigs.screenWidth * 0.2,
+              height: SizeConfigs.screenHeight * 0.04,
+              child: GestureDetector(
+                onTap: () {
+                  gantiAliasAlat(iDkontrol, cName.text, token);
+                },
+                child: Container(
+                  width: SizeConfigs.screenWidth * 0.03,
+                  height: SizeConfigs.screenHeight * 0.01,
+                  child: Center(
+                    child: Text(
+                      'Ubah',
+                      style: TextStyle(
+                          fontFamily: 'Kohi',
+                          fontSize: getHeight(12),
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ],
+        )
       ],
     );
     return showDialog(
@@ -1126,15 +1152,10 @@ class _KontrolUtamaState extends State<KontrolUtama>
             listkontrol.clear();
             refresh = true;
             namaalatkontrol = null;
-            // listnama.clear();
-            // items.clear();
-            // itemsshadow.clear();
-            // iditems.clear();
             Future.delayed(Duration(seconds: 2), () {
               if (this.mounted) {
                 setState(() {
                   panjangkontrol = null;
-                  // refresh = false;
                   Navigator.pop(context);
                   refresh = false;
                 });

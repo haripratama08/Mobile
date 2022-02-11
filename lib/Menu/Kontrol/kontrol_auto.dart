@@ -38,11 +38,7 @@ class _KontrolAutoState extends State<KontrolAuto> with Validation {
     Future<http.Response> publish(
         String mode, String threshold, String state) async {
       setState(() {
-        if (selectedkondisi == '>') {
-          namakondisi = 'atas';
-        } else {
-          namakondisi = 'bawah';
-        }
+        selectedkondisi == '>' ? namakondisi = 'atas' : namakondisi = 'bawah';
         thresholdvalue = threshold;
       });
       var message = jsonEncode({
@@ -65,7 +61,7 @@ class _KontrolAutoState extends State<KontrolAuto> with Validation {
               context: context,
               builder: (ctxt) {
                 Future.delayed(Duration(seconds: 2), () {
-                  // Navigator.of(context).pop(true);
+                  Navigator.pop(context);
                 });
                 return new AlertDialog(
                   title: Column(
@@ -181,9 +177,6 @@ class _KontrolAutoState extends State<KontrolAuto> with Validation {
                                       ),
                                     ],
                                   ),
-                                  // SizedBox(
-                                  //   height: 5,
-                                  // ),
                                   Column(
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
@@ -209,13 +202,6 @@ class _KontrolAutoState extends State<KontrolAuto> with Validation {
                                           height: 32,
                                           width: 85 * 3 / 2,
                                           decoration: myBoxDecoration(),
-                                          // width:
-                                          //     MediaQuery.of(context).size.width /
-                                          //         5,
-                                          // height:
-                                          //     MediaQuery.of(context).size.height /
-                                          //         22,
-
                                           child: TextFormField(
                                             validator: (value) {
                                               if (value.isEmpty) {
@@ -232,14 +218,6 @@ class _KontrolAutoState extends State<KontrolAuto> with Validation {
                                               labelStyle: TextStyle(
                                                   color: Colors.white,
                                                   fontFamily: "Kohi"),
-                                              // contentPadding:
-                                              //     EdgeInsets.fromLTRB(
-                                              //         0, 5.0, 0, 5.0),
-                                              // border: OutlineInputBorder(
-                                              //     borderSide: BorderSide(
-                                              //         width: 0.5,
-                                              //         color:
-                                              //             Colors.green[900])),
                                             ),
                                           ),
                                         ),

@@ -4,6 +4,7 @@ import 'package:ch_v2_1/API/parsing.dart';
 import 'package:ch_v2_1/LoginPage/registerpage.dart';
 import 'package:ch_v2_1/Menu/menu.dart';
 import 'package:ch_v2_1/dialogbox/custom_dialog_box.dart';
+import 'package:ch_v2_1/process/size_config.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'dart:io';
@@ -152,9 +153,10 @@ class _LoginPageState extends State<LoginPage> {
     );
 
     final usernameForm = Padding(
-        padding: EdgeInsets.symmetric(horizontal: 20.0),
+        padding:
+            EdgeInsets.symmetric(horizontal: SizeConfigs.screenHeight * 0.05),
         child: TextFormField(
-          style: TextStyle(fontFamily: "kohi", fontSize: 15),
+          style: TextStyle(fontFamily: "kohi", fontSize: getHeight(13)),
           validator: (value) {
             if (value.isEmpty) {
               return ' please enter username';
@@ -168,7 +170,9 @@ class _LoginPageState extends State<LoginPage> {
             prefixIcon: Icon(Icons.person, color: Colors.green[900]),
             hintText: 'Username',
             hintStyle: TextStyle(
-                color: Colors.black, fontFamily: "kohi", fontSize: 15),
+                color: Colors.black,
+                fontFamily: "kohi",
+                fontSize: getHeight(13)),
             labelStyle: TextStyle(color: Colors.white, fontFamily: "kohi"),
             contentPadding: EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
             border: OutlineInputBorder(
@@ -178,9 +182,10 @@ class _LoginPageState extends State<LoginPage> {
         ));
 
     final passwordForm = Padding(
-        padding: EdgeInsets.symmetric(horizontal: 20.0),
+        padding:
+            EdgeInsets.symmetric(horizontal: SizeConfigs.screenHeight * 0.05),
         child: TextFormField(
-          style: TextStyle(fontFamily: "kohi", fontSize: 15),
+          style: TextStyle(fontFamily: "kohi", fontSize: getHeight(13)),
           validator: (value) {
             if (value.isEmpty) {
               return 'please enter password';
@@ -206,7 +211,9 @@ class _LoginPageState extends State<LoginPage> {
             ),
             hintText: 'Password',
             hintStyle: TextStyle(
-                color: Colors.black, fontFamily: "kohi", fontSize: 15),
+                color: Colors.black,
+                fontFamily: "kohi",
+                fontSize: getHeight(13)),
             labelStyle: TextStyle(color: Colors.white, fontFamily: "kohi"),
             contentPadding: EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
             border: OutlineInputBorder(
@@ -216,12 +223,14 @@ class _LoginPageState extends State<LoginPage> {
         ));
 
     final loginButton = Padding(
-      padding: EdgeInsets.symmetric(horizontal: 20.0),
+      padding:
+          EdgeInsets.symmetric(horizontal: SizeConfigs.screenHeight * 0.05),
       child: Material(
         color: Colors.green[900],
         borderRadius: BorderRadius.circular(10.0),
         elevation: 5.0,
         child: MaterialButton(
+          height: SizeConfigs.screenHeight * 0.055,
           minWidth: MediaQuery.of(context).size.width * 0.9,
           onPressed: () {
             msg = '';
@@ -230,7 +239,10 @@ class _LoginPageState extends State<LoginPage> {
             check();
           },
           child: Text('Masuk',
-              style: TextStyle(color: Colors.white, fontFamily: "kohi")),
+              style: TextStyle(
+                  color: Colors.white,
+                  fontFamily: "kohi",
+                  fontSize: getHeight(15))),
         ),
       ),
     );
@@ -302,6 +314,7 @@ class _LoginPageState extends State<LoginPage> {
                         ),
                       )
                     : loginButton,
+                SizedBox(height: 20.0),
                 registerPage,
               ],
             ),

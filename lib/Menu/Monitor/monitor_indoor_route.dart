@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:ch_v2_1/API/jenismonitoring.dart';
 import 'package:ch_v2_1/Menu/Monitor/monitor_semua.dart';
+import 'package:ch_v2_1/process/size_config.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -278,7 +279,9 @@ class MonitorIndoorRouteState extends State<MonitorIndoorRoute>
                                               ),
                                               child: Image.asset(
                                                 'asset/img/monitor.png',
-                                                height: 40,
+                                                height:
+                                                    SizeConfigs.screenHeight *
+                                                        0.04,
                                               ),
                                             ),
                                           ),
@@ -300,7 +303,8 @@ class MonitorIndoorRouteState extends State<MonitorIndoorRoute>
                                                           style: TextStyle(
                                                               fontFamily:
                                                                   'kohi',
-                                                              fontSize: 15,
+                                                              fontSize:
+                                                                  getHeight(14),
                                                               fontWeight:
                                                                   FontWeight
                                                                       .bold),
@@ -308,7 +312,9 @@ class MonitorIndoorRouteState extends State<MonitorIndoorRoute>
                                                         new Text(
                                                           '${reasondev[index]}',
                                                           style: TextStyle(
-                                                              fontSize: 10),
+                                                            fontSize:
+                                                                getHeight(10),
+                                                          ),
                                                         )
                                                       ])
                                                 : new Text(
@@ -317,7 +323,7 @@ class MonitorIndoorRouteState extends State<MonitorIndoorRoute>
                                                         TextDirection.ltr,
                                                     style: TextStyle(
                                                         fontFamily: 'kohi',
-                                                        fontSize: 15,
+                                                        fontSize: getHeight(14),
                                                         fontWeight:
                                                             FontWeight.bold),
                                                   ),
@@ -334,6 +340,8 @@ class MonitorIndoorRouteState extends State<MonitorIndoorRoute>
                                                       textAlign:
                                                           TextAlign.center,
                                                       style: TextStyle(
+                                                          fontSize:
+                                                              getHeight(15),
                                                           fontFamily: 'Kohi')),
                                                   content: Text(
                                                       "${timeevent[index]}",
@@ -341,7 +349,8 @@ class MonitorIndoorRouteState extends State<MonitorIndoorRoute>
                                                           TextAlign.center,
                                                       style: TextStyle(
                                                           fontFamily: 'Kohi',
-                                                          fontSize: 20,
+                                                          fontSize:
+                                                              getHeight(15),
                                                           fontWeight:
                                                               FontWeight.bold)),
                                                   actions: [],
@@ -360,6 +369,7 @@ class MonitorIndoorRouteState extends State<MonitorIndoorRoute>
                                                     "Terhubung pada",
                                                     textAlign: TextAlign.center,
                                                     style: TextStyle(
+                                                        fontSize: getHeight(15),
                                                         fontFamily: 'Kohi'),
                                                   ),
                                                   content: Text(
@@ -368,7 +378,8 @@ class MonitorIndoorRouteState extends State<MonitorIndoorRoute>
                                                           TextAlign.center,
                                                       style: TextStyle(
                                                           fontFamily: 'Kohi',
-                                                          fontSize: 20,
+                                                          fontSize:
+                                                              getHeight(15),
                                                           fontWeight:
                                                               FontWeight.bold)),
                                                   actions: [],
@@ -395,11 +406,15 @@ class MonitorIndoorRouteState extends State<MonitorIndoorRoute>
                                                         'disconnected'
                                                     ? Image.asset(
                                                         'asset/img/disconnected.png',
-                                                        height: 25,
+                                                        height: SizeConfigs
+                                                                .screenHeight *
+                                                            0.03,
                                                       )
                                                     : Image.asset(
                                                         'asset/img/connected.png',
-                                                        height: 25,
+                                                        height: SizeConfigs
+                                                                .screenHeight *
+                                                            0.02,
                                                       ),
                                               ),
                                             ),
@@ -407,8 +422,8 @@ class MonitorIndoorRouteState extends State<MonitorIndoorRoute>
                                         ),
                                       ],
                                     ),
-                                    height: MediaQuery.of(context).size.height /
-                                        11.5,
+                                    height:
+                                        MediaQuery.of(context).size.height / 11,
                                     width: MediaQuery.of(context).size.width *
                                         4 /
                                         5,

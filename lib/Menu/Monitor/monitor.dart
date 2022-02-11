@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:ch_v2_1/API/jenismonitoring.dart';
 import 'package:ch_v2_1/Menu/Monitor/monitor_semua.dart';
+import 'package:ch_v2_1/process/size_config.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -241,7 +242,7 @@ class _MonitorIndoorState extends State<MonitorIndoor> with Validation {
                                       ),
                                       child: Image.asset(
                                         'asset/img/monitor.png',
-                                        height: 40,
+                                        height: SizeConfigs.screenHeight * 0.04,
                                       ),
                                     ),
                                   ),
@@ -260,14 +261,15 @@ class _MonitorIndoorState extends State<MonitorIndoor> with Validation {
                                                       TextDirection.ltr,
                                                   style: TextStyle(
                                                       fontFamily: 'kohi',
-                                                      fontSize: 15,
+                                                      fontSize: getHeight(14),
                                                       fontWeight:
                                                           FontWeight.bold),
                                                 ),
                                                 new Text(
                                                   '${reasondev[index]}',
-                                                  style:
-                                                      TextStyle(fontSize: 10),
+                                                  style: TextStyle(
+                                                    fontSize: getHeight(10),
+                                                  ),
                                                 )
                                               ])
                                         : Align(
@@ -277,7 +279,7 @@ class _MonitorIndoorState extends State<MonitorIndoor> with Validation {
                                               textDirection: TextDirection.ltr,
                                               style: TextStyle(
                                                   fontFamily: 'kohi',
-                                                  fontSize: 15,
+                                                  fontSize: getHeight(14),
                                                   fontWeight: FontWeight.bold),
                                             ),
                                           ),
@@ -292,12 +294,13 @@ class _MonitorIndoorState extends State<MonitorIndoor> with Validation {
                                               "Terkoneksi terakhir pada",
                                               textAlign: TextAlign.center,
                                               style: TextStyle(
+                                                  fontSize: getHeight(15),
                                                   fontFamily: 'Kohi')),
                                           content: Text("${timeevent[index]}",
                                               textAlign: TextAlign.center,
                                               style: TextStyle(
                                                   fontFamily: 'Kohi',
-                                                  fontSize: 20,
+                                                  fontSize: getHeight(15),
                                                   fontWeight: FontWeight.bold)),
                                           actions: [],
                                         );
@@ -313,14 +316,15 @@ class _MonitorIndoorState extends State<MonitorIndoor> with Validation {
                                           title: Text(
                                             "Terhubung pada",
                                             textAlign: TextAlign.center,
-                                            style:
-                                                TextStyle(fontFamily: 'Kohi'),
+                                            style: TextStyle(
+                                                fontSize: getHeight(15),
+                                                fontFamily: 'Kohi'),
                                           ),
                                           content: Text("${timeevent[index]}",
                                               textAlign: TextAlign.center,
                                               style: TextStyle(
                                                   fontFamily: 'Kohi',
-                                                  fontSize: 20,
+                                                  fontSize: getHeight(15),
                                                   fontWeight: FontWeight.bold)),
                                           actions: [],
                                         );
@@ -340,11 +344,15 @@ class _MonitorIndoorState extends State<MonitorIndoor> with Validation {
                                         child: eventdev[index] == 'disconnected'
                                             ? Image.asset(
                                                 'asset/img/disconnected.png',
-                                                height: 25,
+                                                height:
+                                                    SizeConfigs.screenHeight *
+                                                        0.03,
                                               )
                                             : Image.asset(
                                                 'asset/img/connected.png',
-                                                height: 25,
+                                                height:
+                                                    SizeConfigs.screenHeight *
+                                                        0.02,
                                               ),
                                       ),
                                     ),
@@ -352,7 +360,7 @@ class _MonitorIndoorState extends State<MonitorIndoor> with Validation {
                                 ),
                               ],
                             ),
-                            height: MediaQuery.of(context).size.height / 11.5,
+                            height: MediaQuery.of(context).size.height / 11,
                             width: MediaQuery.of(context).size.width * 4 / 5,
                             padding: const EdgeInsets.all(10),
                             decoration: BoxDecoration(

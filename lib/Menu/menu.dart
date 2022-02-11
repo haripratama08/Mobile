@@ -1,4 +1,5 @@
 import 'package:ch_v2_1/Menu/Kontrol/kontrol_utama.dart';
+import 'package:ch_v2_1/process/size_config.dart';
 import 'package:flutter/material.dart';
 import 'package:ch_v2_1/Menu/Akun/logout.dart';
 import 'package:ch_v2_1/Menu/tambahan/stringcap.dart';
@@ -122,7 +123,7 @@ class _MenuState extends State<Menu> with SingleTickerProviderStateMixin {
                   children: [
                     Container(
                         alignment: Alignment.centerLeft,
-                        height: 18,
+                        height: getHeight(18),
                         child: Image.asset('asset/img/logocrophero.png')),
                     SizedBox(
                       width: 5,
@@ -132,7 +133,7 @@ class _MenuState extends State<Menu> with SingleTickerProviderStateMixin {
                             color: Colors.green[900],
                             fontFamily: 'kohi',
                             fontWeight: FontWeight.bold,
-                            fontSize: 18))
+                            fontSize: getHeight(18)))
                   ],
                 ),
               ),
@@ -180,7 +181,7 @@ class _MenuState extends State<Menu> with SingleTickerProviderStateMixin {
                 ],
                 selectedLabelStyle: TextStyle(
                   fontSize: MediaQuery.of(context).size.height / 65,
-                  fontFamily: "Mont",
+                  fontFamily: "Kohi",
                   fontWeight: FontWeight.bold,
                 ),
                 type: BottomNavigationBarType.fixed,

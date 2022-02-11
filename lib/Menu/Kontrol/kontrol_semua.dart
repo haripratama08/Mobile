@@ -5,6 +5,7 @@ import 'package:ch_v2_1/API/api.dart';
 import 'package:ch_v2_1/API/jeniskontrol.dart';
 import 'package:ch_v2_1/Menu/menu.dart';
 import 'package:ch_v2_1/Validator/validation.dart';
+import 'package:ch_v2_1/process/size_config.dart';
 import 'package:http/http.dart' as http;
 import 'package:ch_v2_1/LoginPage/loginpage.dart';
 import 'package:ch_v2_1/Menu/Kontrol/kontrol_utama.dart';
@@ -260,7 +261,8 @@ class _SemuaState extends State<Semua> with Validation {
                                             ),
                                             child: Image.asset(
                                               'asset/img/toogle.png',
-                                              height: 40,
+                                              height: SizeConfigs.screenHeight *
+                                                  0.04,
                                             ),
                                           ),
                                         ),
@@ -280,7 +282,8 @@ class _SemuaState extends State<Semua> with Validation {
                                                             TextDirection.ltr,
                                                         style: TextStyle(
                                                             fontFamily: 'kohi',
-                                                            fontSize: 15,
+                                                            fontSize:
+                                                                getHeight(14),
                                                             fontWeight:
                                                                 FontWeight
                                                                     .bold),
@@ -288,7 +291,9 @@ class _SemuaState extends State<Semua> with Validation {
                                                       new Text(
                                                         '${reasonlist[index]}',
                                                         style: TextStyle(
-                                                            fontSize: 10),
+                                                          fontSize:
+                                                              getHeight(10),
+                                                        ),
                                                       )
                                                     ])
                                               : new Text(
@@ -297,7 +302,7 @@ class _SemuaState extends State<Semua> with Validation {
                                                       TextDirection.ltr,
                                                   style: TextStyle(
                                                       fontFamily: 'kohi',
-                                                      fontSize: 15,
+                                                      fontSize: getHeight(14),
                                                       fontWeight:
                                                           FontWeight.bold),
                                                 ),
@@ -316,6 +321,8 @@ class _SemuaState extends State<Semua> with Validation {
                                                       textAlign:
                                                           TextAlign.center,
                                                       style: TextStyle(
+                                                          fontSize:
+                                                              getHeight(15),
                                                           fontFamily: 'Kohi')),
                                                   content: Text(
                                                       "${timelist[index]}",
@@ -323,7 +330,8 @@ class _SemuaState extends State<Semua> with Validation {
                                                           TextAlign.center,
                                                       style: TextStyle(
                                                           fontFamily: 'Kohi',
-                                                          fontSize: 20,
+                                                          fontSize:
+                                                              getHeight(15),
                                                           fontWeight:
                                                               FontWeight.bold)),
                                                   actions: [],
@@ -342,6 +350,7 @@ class _SemuaState extends State<Semua> with Validation {
                                                     "Terhubung kembali pada",
                                                     textAlign: TextAlign.center,
                                                     style: TextStyle(
+                                                        fontSize: getHeight(15),
                                                         fontFamily: 'Kohi'),
                                                   ),
                                                   content: Text(
@@ -350,7 +359,8 @@ class _SemuaState extends State<Semua> with Validation {
                                                           TextAlign.center,
                                                       style: TextStyle(
                                                           fontFamily: 'Kohi',
-                                                          fontSize: 20,
+                                                          fontSize:
+                                                              getHeight(15),
                                                           fontWeight:
                                                               FontWeight.bold)),
                                                   actions: [],
@@ -376,11 +386,15 @@ class _SemuaState extends State<Semua> with Validation {
                                                       'disconnected'
                                                   ? Image.asset(
                                                       'asset/img/disconnected.png',
-                                                      height: 25,
+                                                      height: SizeConfigs
+                                                              .screenHeight *
+                                                          0.03,
                                                     )
                                                   : Image.asset(
                                                       'asset/img/connected.png',
-                                                      height: 25,
+                                                      height: SizeConfigs
+                                                              .screenHeight *
+                                                          0.02,
                                                     ),
                                             ),
                                           ),

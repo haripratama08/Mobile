@@ -1,11 +1,14 @@
+import 'dart:io';
+import 'dart:typed_data';
+
 import 'package:ch_v2_1/API/api.dart';
 import 'package:ch_v2_1/Menu/Kontrol/kontrol_utama.dart';
 import 'package:ch_v2_1/Menu/Kontrol/kontrol_auto.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
-import 'dart:io';
 import 'package:ch_v2_1/LoginPage/loginpage.dart';
 import 'dart:async';
 import 'package:ch_v2_1/Menu/Monitor/monitor_semua.dart' as a;
@@ -16,6 +19,7 @@ class Logout extends StatefulWidget {
 }
 
 class _LogoutState extends State<Logout> {
+  var imagecap;
   String status;
   String telp;
   String email;
@@ -46,6 +50,8 @@ class _LogoutState extends State<Logout> {
     });
   }
 
+  ImagePicker picker = ImagePicker();
+
   @override
   Widget build(BuildContext context) {
     if (foto == null || namas == null || email == null || alamat == null) {
@@ -59,7 +65,7 @@ class _LogoutState extends State<Logout> {
                 child: Image.asset("asset/img/loading.gif")),
             Padding(
               padding: const EdgeInsets.all(8.0),
-              child: Text("Silahkan Menunggu",
+              child: Text("Sedang dalam proses",
                   style: TextStyle(fontFamily: 'Kohi')),
             ),
           ],
@@ -69,11 +75,16 @@ class _LogoutState extends State<Logout> {
       return Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          CircleAvatar(
-            foregroundColor: Colors.transparent,
-            backgroundColor: Colors.grey,
-            radius: MediaQuery.of(context).size.height / 10,
-            backgroundImage: NetworkImage(foto),
+          GestureDetector(
+            onTap: () {
+              pilihFoto();
+            },
+            child: CircleAvatar(
+              foregroundColor: Colors.transparent,
+              backgroundColor: Colors.grey,
+              radius: MediaQuery.of(context).size.height / 10,
+              backgroundImage: NetworkImage(foto),
+            ),
           ),
           SizedBox(
             height: 10,
@@ -238,5 +249,133 @@ class _LogoutState extends State<Logout> {
         ],
       );
     }
+  }
+
+  Future fotopush(String imagename, String formater, String imagecap) async {
+    var url = Uri.parse(
+        'https://3tnguegmh6.execute-api.ap-southeast-1.amazonaws.com/dev/image?filename=$imagename&filetype=image/jpg');
+    var response = await http.post(
+      url,
+      //  headers: {HttpHeaders.authorizationHeader: '$token'}
+    );
+    response.statusCode == 200
+        ? setState(() {
+            var _data = jsonDecode(response.body.toString());
+            String endpoint = _data['url'];
+            print('ep $endpoint');
+            endpoint.isNotEmpty
+                ? pushbinary(endpoint, imagecap)
+                : print('error ketika upload gambar');
+          })
+        : print("error");
+  }
+
+  Future pushbinary(String endpoint, String imagecap) async {
+    var url = Uri.parse('$endpoint');
+    final bytes = File('$imagecap').readAsBytesSync();
+    String base64(List<int> bytes) => base64Encode(bytes);
+    setState(() {});
+    Uint8List bytes2 = base64Decode(base64(bytes));
+    // String jPEGPrefix = "data:image/jpeg;base64,";
+    // final File file = File('$imagecap').readAsBytesSync();
+    var response = await http.put(url, body: bytes2);
+    print(response.statusCode);
+    response.statusCode == 200
+        ? showDialog(
+            context: context,
+            builder: (BuildContext context) {
+              return AlertDialog(
+                content: Image.network(''),
+              );
+            })
+        : print('error');
+  }
+
+  Future uploadFoto(ImageSource media) async {
+    final XFile image = await picker.pickImage(source: media);
+    setState(() {
+      final myfile = File(image.name);
+      print(myfile);
+      if (image != null) {
+        String imagename = image.name;
+        String formater = image.mimeType;
+        print('mimetype $formater');
+        imagecap = image.path;
+        print(imagecap);
+        fotopush(imagename, formater, imagecap);
+
+        print(imagecap);
+      } else {}
+    });
+  }
+
+  void pilihFoto() {
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+            title: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  'Pilih sumber media',
+                  style: TextStyle(fontFamily: 'Kohi'),
+                ),
+              ],
+            ),
+            content: Container(
+              height: MediaQuery.of(context).size.height / 7,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  TextButton(
+                    onPressed: () {
+                      Navigator.pop(context);
+                      uploadFoto(ImageSource.gallery);
+                    },
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        Icon(
+                          Icons.image,
+                          color: Colors.grey,
+                        ),
+                        SizedBox(width: 20),
+                        Text(
+                          'Foto dari galeri',
+                          style: TextStyle(
+                              fontFamily: 'Kohi', color: Colors.black),
+                        ),
+                      ],
+                    ),
+                  ),
+                  TextButton(
+                    onPressed: () {
+                      Navigator.pop(context);
+                      uploadFoto(ImageSource.camera);
+                    },
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        Icon(
+                          Icons.camera,
+                          color: Colors.grey,
+                        ),
+                        SizedBox(width: 20),
+                        Text(
+                          'Foto dari kamera',
+                          style: TextStyle(
+                              fontFamily: 'Kohi', color: Colors.black),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          );
+        });
   }
 }
