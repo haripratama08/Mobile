@@ -1,6 +1,3 @@
-// To parse this JSON data, do
-//
-//     final grafik = grafikFromJson(jsonString);
 
 import 'dart:convert';
 

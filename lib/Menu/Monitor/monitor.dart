@@ -290,19 +290,90 @@ class _MonitorIndoorState extends State<MonitorIndoor> with Validation {
                                     onTap: () {
                                       if (eventdev[index] == 'disconnected') {
                                         AlertDialog alert = AlertDialog(
-                                          title: Text(
-                                              "Terkoneksi terakhir pada",
-                                              textAlign: TextAlign.center,
-                                              style: TextStyle(
-                                                  fontSize: getHeight(15),
-                                                  fontFamily: 'Kohi')),
-                                          content: Text("${timeevent[index]}",
-                                              textAlign: TextAlign.center,
-                                              style: TextStyle(
-                                                  fontFamily: 'Kohi',
-                                                  fontSize: getHeight(15),
-                                                  fontWeight: FontWeight.bold)),
-                                          actions: [],
+                                          contentPadding: EdgeInsets.all(0),
+                                          content: Container(
+                                            height:
+                                                SizeConfigs.screenHeight * 0.12,
+                                            width:
+                                                SizeConfigs.screenWidth * 0.65,
+                                            child: Stack(
+                                              children: [
+                                                Container(
+                                                  decoration: BoxDecoration(
+                                                      image: DecorationImage(
+                                                          fit: BoxFit.cover,
+                                                          image: AssetImage(
+                                                            'asset/img/backgroundKoneksi.png',
+                                                          ))),
+                                                ),
+                                                Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment.center,
+                                                  children: [
+                                                    Container(
+                                                        // width: SizeConfigs
+                                                        //         .screenWidth *
+                                                        //     0.175,
+                                                        ),
+                                                    Column(
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .center,
+                                                      children: [
+                                                        Text(
+                                                            "Waktu terkoneksi terakhir dengan sensor",
+                                                            textAlign: TextAlign
+                                                                .center,
+                                                            style: TextStyle(
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .bold,
+                                                                fontSize:
+                                                                    getHeight(
+                                                                        15),
+                                                                fontFamily:
+                                                                    'Kohi')),
+                                                        SizedBox(height: 30),
+                                                        Row(
+                                                          mainAxisAlignment:
+                                                              MainAxisAlignment
+                                                                  .center,
+                                                          children: [
+                                                            Text(
+                                                                "${timeevent[index]}",
+                                                                textAlign:
+                                                                    TextAlign
+                                                                        .center,
+                                                                style:
+                                                                    TextStyle(
+                                                                  fontFamily:
+                                                                      'Kohi',
+                                                                  fontSize:
+                                                                      getHeight(
+                                                                          15),
+                                                                )),
+                                                          ],
+                                                        ),
+                                                      ],
+                                                    ),
+                                                  ],
+                                                )
+                                              ],
+                                            ),
+                                          ),
+                                          // title: Text(
+                                          //     "Terkoneksi terakhir pada",
+                                          //     textAlign: TextAlign.center,
+                                          //     style: TextStyle(
+                                          //         fontSize: getHeight(15),
+                                          //         fontFamily: 'Kohi')),
+                                          // content: Text("${timeevent[index]}",
+                                          //     textAlign: TextAlign.center,
+                                          //     style: TextStyle(
+                                          //         fontFamily: 'Kohi',
+                                          //         fontSize: getHeight(15),
+                                          //         fontWeight: FontWeight.bold)),
+                                          // actions: [],
                                         );
                                         // show the dialog
                                         showDialog(

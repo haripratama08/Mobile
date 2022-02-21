@@ -16,10 +16,24 @@ import 'package:ch_v2_1/LoginPage/loginpage.dart';
 import 'package:flutter/material.dart';
 import 'package:ch_v2_1/Menu/tambahan/stringcap.dart';
 import 'package:ch_v2_1/Menu/menu.dart';
-import 'package:toggle_switch/toggle_switch.dart';
 import 'package:intl/intl.dart';
 import 'package:syncfusion_flutter_datepicker/datepicker.dart';
+import 'package:toggle_switch/toggle_switch.dart';
+import '../../process/size_config.dart';
 
+String imagedetail;
+List<String> tanggaltable = [];
+List<num> nilaiTable = [];
+num batasmin;
+num batasmax;
+bool dropdownplot = false;
+String pesan;
+bool refreshfilter = false;
+String startdatesave;
+String enddatesave;
+String startdate;
+String enddate;
+bool dropdownkey = false;
 int indexFilter = 0;
 int indexPlot = 0;
 List<_SensorData> datasensor = [];
@@ -120,6 +134,7 @@ bool refresh = false;
 bool front = true;
 bool loadingdata = true;
 bool zerodata = false;
+bool dropdown = false;
 
 class Semua extends StatefulWidget {
   @override
@@ -137,19 +152,15 @@ class _SemuaState extends State<Semua> {
   void _onSelectionChanged(DateRangePickerSelectionChangedArgs args) {
     setState(() {
       if (args.value is PickerDateRange) {
-        start = '${DateFormat('dd/MM/yyyy').format(args.value.startDate)}';
+        start = '${DateFormat('yyyy/MM/dd').format(args.value.startDate)}';
         end =
-            '${DateFormat('dd/MM/yyyy').format(args.value.endDate ?? args.value.startDate)}';
-        print(args.value.startDate);
-        print(args.value.endDate);
+            '${DateFormat('yyyy/MM/dd').format(args.value.endDate ?? args.value.startDate)}';
         range = '${DateFormat('dd/MM/yyyy').format(args.value.startDate)} -'
-
-            // ignore: lines_longer_than_80_chars
             ' ${DateFormat('dd/MM/yyyy').format(args.value.endDate ?? args.value.startDate)}';
       } else if (args.value is DateTime) {
         selectedDate = args.value.toString();
       } else if (args.value is List<DateTime>) {
-        // _dateCount = args.value.length.toString();
+        dateCount = args.value.length.toString();
       } else {
         rangeCount = args.value.length.toString();
       }
@@ -175,7 +186,8 @@ class _SemuaState extends State<Semua> {
   }
 
   Future hitungminmaxmean(int idlokasidetail, int idhubdetail, int idalatdetail,
-      int idsensordetail, String jenissensordetails) async {
+      int idsensordetail, String jenissensordetails, String img) async {
+    imagedetail = null;
     var jsonString = await http.get(
         Uri.parse(
             '$endPoint/monitoring/mobile/minmaxmean?lokasi=$idlokasidetail&hub=$idhubdetail&alat=$idalatdetail&sensor=$idsensordetail'),
@@ -184,6 +196,7 @@ class _SemuaState extends State<Semua> {
     if (this.mounted) {
       jsonResponse["status"] == 'OK'
           ? setState(() {
+              imagedetail = img;
               idsensorgrafik = idsensordetail;
               jenissensordetails = jenissensordetails;
               load = false;
@@ -271,12 +284,10 @@ class _SemuaState extends State<Semua> {
         FocusScope.of(context).requestFocus(FocusNode());
       });
     }
-    print("Refreshing");
     Future.delayed(Duration(seconds: 2), () {
       if (this.mounted) {
         setState(() {
           refresh = false;
-          print("Refreshed");
         });
       }
     });
@@ -359,7 +370,6 @@ class _SemuaState extends State<Semua> {
           return loadSensor();
         });
       }
-      // }
     } else {
       var jsonString = await http.get(
           Uri.parse(
@@ -390,11 +400,12 @@ class _SemuaState extends State<Semua> {
                     ? nilai1 = ''
                     : nilai1 = dataparsing.data.data[i].data[0].nilai
                         .toStringAsFixed(1);
-                idjns = dataparsing.data.data[i].id;
 
+                idjns = dataparsing.data.data[i].id;
                 notif = dataparsing.data.data[i].allowNotifikasi;
                 jnssensor = dataparsing.data.data[i].jenisSensor.jenis;
                 satuan = dataparsing.data.data[i].satuan;
+
                 satuan == null ? satuan = "" : satuan = satuan;
                 imgtry = dataparsing.data.data[i].jenisSensor.ikon;
                 imgtry == '0'
@@ -439,6 +450,9 @@ class _SemuaState extends State<Semua> {
     }
   }
 
+  TextEditingController min = new TextEditingController();
+  TextEditingController max = new TextEditingController();
+
   TextEditingController cName = new TextEditingController();
   TextEditingController alias = new TextEditingController();
   TextEditingController maxvalue = new TextEditingController();
@@ -450,6 +464,7 @@ class _SemuaState extends State<Semua> {
   int status1 = 0;
   int _current = 0;
   GantiAlias ganti = GantiAlias();
+
   Future doGanti() async {
     if (formKey.currentState.validate()) {
       formKey.currentState.save();
@@ -522,6 +537,7 @@ class _SemuaState extends State<Semua> {
 
   int _counter;
   Timer _timer;
+
   void _startTimer() {
     _counter = 20;
     if (_timer != null) {
@@ -545,11 +561,13 @@ class _SemuaState extends State<Semua> {
       items.clear();
       loadSensor();
     } else {}
+
     setState(() {
       idalabef = idala;
       idhubef = idhu;
       idlokasbef = idlokas;
     });
+
     statusname(index);
     if (panjangtempat == null ||
         panjangtempat == 0 ||
@@ -978,7 +996,7 @@ class _SemuaState extends State<Semua> {
                                                 refreshData();
                                               }
                                             },
-                                          )
+                                          ),
                       ],
                     ),
                   ),
@@ -1151,7 +1169,7 @@ class _SemuaState extends State<Semua> {
                                 GestureDetector(
                                     onTap: () {
                                       print(i);
-                                      dataminmaxmean(i, jenissensor);
+                                      dataminmaxmean(i, jenissensor, img);
                                     },
                                     child: Image.asset(
                                       'asset/img/help.png',
@@ -1206,24 +1224,72 @@ class _SemuaState extends State<Semua> {
     );
   }
 
-  dataminmaxmean(int idsensordetail, String jenissensordetail) {
+  dataminmaxmean(int idsensordetail, String jenissensordetail, String img) {
     idlokas == null ? idlokasidetail = loc[0] : idlokasidetail = idlokas;
     idhu == null ? idhubdetail = huc[0] : idhubdetail = idhu;
     idala == null ? idalatdetail = dev[0] : idalatdetail = idala;
     hitungminmaxmean(idlokasidetail, idhubdetail, idalatdetail, idsensordetail,
-        jenissensordetail);
+        jenissensordetail, img);
   }
 
-  loaddialog() {
+  Future getTableData(int idlokasidetail, int idhubdetail, idalatdetail,
+      int idsensorgrafik) async {
+    datasensor.clear();
+    var jsonString = await http.get(
+        Uri.parse(
+            '$endPoint/monitoring/sensor?mode=grafik&lokasi=$idlokasidetail&hub=$idhubdetail&alat=$idalatdetail&sensor=$idsensorgrafik'),
+        headers: {HttpHeaders.authorizationHeader: '$token'});
+    var jsonResponse = json.decode(jsonString.body);
+    jsonResponse["status"] == "OK"
+        ? setState(() {
+            Grafik table = Grafik.fromJson(jsonResponse);
+            for (int i = 0; i < table.data.sensor.dataRaw.length; i++) {
+              num nilai = table.data.sensor.dataRaw[i].nilai;
+              String waktu = table.data.sensor.dataRaw[i].tanggalSensor;
+              String namaalat = table.data.info.alat.alias;
+              String namasensor = table.data.sensor.jenisSensor;
+              tanggaltable.length <= table.data.sensor.dataRaw.length
+                  ? tanggaltable.add(waktu)
+                  : tanggaltable.length > table.data.sensor.dataRaw.length
+                      ? tanggaltable.clear()
+                      : print(tanggaltable);
+
+              nilaiTable.length <= table.data.sensor.dataRaw.length
+                  ? nilaiTable.add(nilai)
+                  : nilaiTable.length > table.data.sensor.dataRaw.length
+                      ? nilaiTable.clear()
+                      : print(nilaiTable);
+
+              tanggaltable.length == table.data.sensor.dataRaw.length
+                  ? loadtable(tanggaltable, nilaiTable, namaalat, namasensor)
+                  : print("");
+            }
+          })
+        : setState(() {
+            refreshfilter = false;
+            pesan = jsonResponse["message"];
+            getGraph(" ", "", datasensor);
+          });
+  }
+
+  loadtable(List<String> tanggalTable, List<num> nilaiTable, String namaalat,
+      String namasensor) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
+          titlePadding: const EdgeInsets.all(0),
+          title: Container(
+            color: Colors.green[600],
+            height: SizeConfigs.screenHeight * 0.03,
+          ),
           content: Container(
-            height: getHeight(20),
+            height: SizeConfigs.screenHeight * 0.15,
             child: Center(
               child: Text(
-                "Detail data $jenissensordetail",
+                "tabel data $namasensor pada $namaalat",
                 style: TextStyle(
                   fontFamily: 'Kohi',
                   fontWeight: FontWeight.bold,
@@ -1233,98 +1299,74 @@ class _SemuaState extends State<Semua> {
             ),
           ),
           actions: [
-            Padding(
-              padding: const EdgeInsets.only(bottom: 20),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  Column(
-                    children: <Widget>[
-                      Text(
-                        "Min",
-                        style: TextStyle(
-                          fontFamily: "Kohi",
-                          fontSize: MediaQuery.of(context).size.height / 60,
+            Container(
+              height: SizeConfigs.screenHeight * 0.75,
+              width: SizeConfigs.screenWidth * 0.9,
+              child: SingleChildScrollView(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    DataTable(
+                      columns: const <DataColumn>[
+                        DataColumn(
+                          label: Text('No.',
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                  fontStyle: FontStyle.normal,
+                                  fontFamily: 'Kohi',
+                                  fontWeight: FontWeight.bold)),
                         ),
-                      ),
-                      Container(
-                          decoration: BoxDecoration(
-                              color: Colors.green[900],
-                              borderRadius: BorderRadius.circular(5)),
-                          child: Center(
-                              child: Text("$datamin",
-                                  style: TextStyle(
-                                      fontFamily: 'Kohi',
-                                      fontSize:
-                                          MediaQuery.of(context).size.height /
-                                              60,
-                                      color: Colors.white))),
-                          height: 40,
-                          width: 50)
-                    ],
-                  ),
-                  SizedBox(width: 5),
-                  Column(
-                    children: <Widget>[
-                      Text("Mean",
-                          style: TextStyle(
-                            fontFamily: "Kohi",
-                            fontSize: MediaQuery.of(context).size.height / 60,
-                          )),
-                      Container(
-                          decoration: BoxDecoration(
-                              color: Colors.green[900],
-                              borderRadius: BorderRadius.circular(5)),
-                          child: Center(
-                              child: Text("$datamean",
-                                  style: TextStyle(
-                                      fontSize:
-                                          MediaQuery.of(context).size.height /
-                                              60,
-                                      fontFamily: 'Kohi',
-                                      color: Colors.white))),
-                          height: 40,
-                          width: 50)
-                    ],
-                  ),
-                  SizedBox(width: 5),
-                  Column(
-                    children: <Widget>[
-                      Text("Max",
-                          style: TextStyle(
-                            fontFamily: "Kohi",
-                            fontSize: MediaQuery.of(context).size.height / 60,
-                          )),
-                      Container(
-                          decoration: BoxDecoration(
-                              color: Colors.green[900],
-                              borderRadius: BorderRadius.circular(5)),
-                          child: Center(
-                              child: Text("$datamax",
-                                  style: TextStyle(
-                                      fontSize:
-                                          MediaQuery.of(context).size.height /
-                                              60,
-                                      fontFamily: 'Kohi',
-                                      color: Colors.white))),
-                          height: 40,
-                          width: 50)
-                    ],
-                  ),
-                ],
+                        DataColumn(
+                          label: Text(
+                            'Nilai',
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                                fontStyle: FontStyle.normal,
+                                fontFamily: 'Kohi',
+                                fontWeight: FontWeight.bold),
+                          ),
+                        ),
+                        DataColumn(
+                          label: Text(
+                            'Tanggal update',
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                                fontStyle: FontStyle.normal,
+                                fontFamily: 'Kohi',
+                                fontWeight: FontWeight.bold),
+                          ),
+                        ),
+                      ],
+                      rows: <DataRow>[
+                        for (i = 0; i < nilaiTable.length; i++)
+                          DataRow(
+                            cells: <DataCell>[
+                              DataCell(Text(
+                                '${i + 1}',
+                                style: TextStyle(
+                                    fontStyle: FontStyle.normal,
+                                    fontFamily: 'Kohi',
+                                    fontWeight: FontWeight.bold),
+                              )),
+                              DataCell(Text(
+                                '${nilaiTable[i]}',
+                                style: TextStyle(
+                                    fontStyle: FontStyle.normal,
+                                    fontFamily: 'Kohi'),
+                              )),
+                              DataCell(Text(
+                                '${tanggalTable[i]}',
+                                style: TextStyle(
+                                    fontStyle: FontStyle.normal,
+                                    fontFamily: 'Kohi'),
+                              )),
+                            ],
+                          ),
+                      ],
+                    ),
+                  ],
+                ),
               ),
-            ),
-            Center(
-              child: GestureDetector(
-                  onTap: (() {
-                    getGraphData(idlokasidetail, idhubdetail, idalatdetail,
-                        idsensorgrafik, null, null);
-                    print('masuk graph');
-                  }),
-                  child: Image.asset(
-                    'asset/img/graph.png',
-                    height: SizeConfigs.screenHeight * 0.05,
-                  )),
             )
           ],
         );
@@ -1332,9 +1374,481 @@ class _SemuaState extends State<Semua> {
     );
   }
 
+  loaddialog() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          contentPadding: const EdgeInsets.all(0),
+          titlePadding: const EdgeInsets.all(0),
+          actionsPadding: const EdgeInsets.all(0),
+          content: Container(
+            height: SizeConfigs.screenHeight * 0.45,
+            width: SizeConfigs.screenWidth * 0.6,
+            child: Stack(
+              alignment: Alignment.center,
+              children: <Widget>[
+                Container(
+                  decoration: BoxDecoration(
+                      image: DecorationImage(
+                          image: AssetImage('asset/img/backgroundDetail.png'),
+                          fit: BoxFit.cover)),
+                ),
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Container(
+                      height: getHeight(60),
+                      child: Center(
+                        child: Column(
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.only(left: 30),
+                              child: Align(
+                                alignment: Alignment.topLeft,
+                                child: Text(
+                                  "Detail",
+                                  textAlign: TextAlign.left,
+                                  style: TextStyle(
+                                    fontFamily: 'Kohi',
+                                    fontSize: getHeight(20),
+                                  ),
+                                ),
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.only(left: 30),
+                              child: Align(
+                                alignment: Alignment.topLeft,
+                                child: Text(
+                                  "$jenissensordetail",
+                                  textAlign: TextAlign.left,
+                                  style: TextStyle(
+                                    fontFamily: 'Kohi',
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: getHeight(20),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                    SizedBox(
+                      height: SizeConfigs.screenHeight * 0.01,
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Stack(
+                          children: [
+                            Container(
+                              child: Image.asset(
+                                'asset/img/elips.png',
+                                height: 100,
+                              ),
+                            ),
+                            Center(
+                              child: imagedetail == '0'
+                                  ? Container(
+                                      height: SizeConfigs.screenHeight * 0.12,
+                                    )
+                                  : Container(
+                                      height: SizeConfigs.screenHeight * 0.12,
+                                      child: Image.network('$imagedetail')),
+                            ),
+                          ],
+                        ),
+                        SizedBox(
+                          width: SizeConfigs.screenWidth * 0.05,
+                        ),
+                        Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Stack(children: [
+                              Container(
+                                // decoration: BoxDecoration(color: Colors.grey),
+                                height: SizeConfigs.screenHeight * 0.075,
+                                child: Image.asset('asset/img/max.png'),
+                              ),
+                              Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Container(
+                                    height:
+                                        SizeConfigs.screenHeight * 0.075 / 3,
+                                  ),
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      '$datamax'.length >= 4
+                                          ? Container(
+                                              width: SizeConfigs.screenWidth *
+                                                  0.05)
+                                          : Container(
+                                              width: SizeConfigs.screenWidth *
+                                                  0.075),
+                                      Text(
+                                        '$datamax',
+                                        style: TextStyle(
+                                          fontFamily: 'Kohi',
+                                          fontWeight: FontWeight.bold,
+                                          color: Colors.white,
+                                          fontSize: getHeight(18),
+                                        ),
+                                      ),
+                                      Container(),
+                                    ],
+                                  ),
+                                  Container(),
+                                ],
+                              ),
+                            ]),
+                            SizedBox(
+                              height: 10,
+                            ),
+                            Stack(children: [
+                              Container(
+                                // decoration: BoxDecoration(color: Colors.grey),
+                                height: SizeConfigs.screenHeight * 0.075,
+                                child: Image.asset('asset/img/mean.png'),
+                              ),
+                              Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Container(
+                                    height:
+                                        SizeConfigs.screenHeight * 0.075 / 3,
+                                  ),
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      '$datamean'.length >= 4
+                                          ? Container(
+                                              width: SizeConfigs.screenWidth *
+                                                  0.05)
+                                          : Container(
+                                              width: SizeConfigs.screenWidth *
+                                                  0.075),
+                                      Text(
+                                        '$datamean',
+                                        style: TextStyle(
+                                          fontFamily: 'Kohi',
+                                          fontWeight: FontWeight.bold,
+                                          color: Colors.white,
+                                          fontSize: getHeight(18),
+                                        ),
+                                      ),
+                                      Container(),
+                                    ],
+                                  ),
+                                  Container(),
+                                ],
+                              ),
+                            ]),
+                            SizedBox(
+                              height: 10,
+                            ),
+                            Stack(children: [
+                              Container(
+                                // decoration: BoxDecoration(color: Colors.grey),
+                                height: SizeConfigs.screenHeight * 0.075,
+                                child: Image.asset('asset/img/min.png'),
+                              ),
+                              Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Container(
+                                    height:
+                                        SizeConfigs.screenHeight * 0.075 / 3,
+                                  ),
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      '$datamin'.length >= 4
+                                          ? Container(
+                                              width: SizeConfigs.screenWidth *
+                                                  0.05)
+                                          : Container(
+                                              width: SizeConfigs.screenWidth *
+                                                  0.075),
+                                      Text(
+                                        '$datamin',
+                                        style: TextStyle(
+                                                fontFamily:'Kohi',
+                                          fontWeight: FontWeight.bold,
+                                          color: Colors.white,
+                                          fontSize: getHeight(18),
+                                        ),
+                                      ),
+                                      Container(),
+                                    ],
+                                  ),
+                                  Container(),
+                                ],
+                              ),
+                            ]),
+                          ],
+                        )
+                      ],
+                    ),
+                    // ),
+                    // Padding(
+                    //   padding: const EdgeInsets.only(bottom: 20),
+                    //   child: Row(
+                    //     mainAxisAlignment: MainAxisAlignment.center,
+                    //     children: <Widget>[
+                    //       Column(
+                    //         children: <Widget>[
+                    //           Text(
+                    //             "Min",
+                    //             style: TextStyle(
+                    //               fontFamily: "Kohi",
+                    //               fontSize:
+                    //                   MediaQuery.of(context).size.height / 60,
+                    //             ),
+                    //           ),
+                    //           Container(
+                    //               decoration: BoxDecoration(
+                    //                   color: Colors.green[900],
+                    //                   borderRadius: BorderRadius.circular(5)),
+                    //               child: Center(
+                    //                   child: Text("$datamin",
+                    //                       style: TextStyle(
+                    //                           fontFamily: 'Kohi',
+                    //                           fontSize: MediaQuery.of(context)
+                    //                                   .size
+                    //                                   .height /
+                    //                               60,
+                    //                           color: Colors.white))),
+                    //               height: SizeConfigs.screenHeight * 0.03,
+                    //               width: SizeConfigs.screenWidth * 0.15)
+                    //         ],
+                    //       ),
+                    //       SizedBox(width: 5),
+                    //       Column(
+                    //         children: <Widget>[
+                    //           Text("Mean",
+                    //               style: TextStyle(
+                    //                 fontFamily: "Kohi",
+                    //                 fontSize:
+                    //                     MediaQuery.of(context).size.height / 60,
+                    //               )),
+                    //           Container(
+                    //               decoration: BoxDecoration(
+                    //                   color: Colors.green[900],
+                    //                   borderRadius: BorderRadius.circular(5)),
+                    //               child: Center(
+                    //                   child: Text("$datamean",
+                    //                       style: TextStyle(
+                    //                           fontSize: MediaQuery.of(context)
+                    //                                   .size
+                    //                                   .height /
+                    //                               60,
+                    //                           fontFamily: 'Kohi',
+                    //                           color: Colors.white))),
+                    //               height: SizeConfigs.screenHeight * 0.03,
+                    //               width: SizeConfigs.screenWidth * 0.15)
+                    //         ],
+                    //       ),
+                    //       SizedBox(width: 5),
+                    //       Column(
+                    //         children: <Widget>[
+                    //           Text("Max",
+                    //               style: TextStyle(
+                    //                 fontFamily: "Kohi",
+                    //                 fontSize:
+                    //                     MediaQuery.of(context).size.height / 60,
+                    //               )),
+                    //           Container(
+                    //               decoration: BoxDecoration(
+                    //                   color: Colors.green[900],
+                    //                   borderRadius: BorderRadius.circular(5)),
+                    //               child: Center(
+                    //                   child: Text("$datamax",
+                    //                       style: TextStyle(
+                    //                           fontSize: MediaQuery.of(context)
+                    //                                   .size
+                    //                                   .height /
+                    //                               60,
+                    //                           fontFamily: 'Kohi',
+                    //                           color: Colors.white))),
+                    //               height: SizeConfigs.screenHeight * 0.03,
+                    //               width: SizeConfigs.screenWidth * 0.15)
+                    //         ],
+                    //       ),
+                    //     ],
+                    //   ),
+                    // ),
+                    SizedBox(
+                      height: SizeConfigs.screenHeight * 0.01,
+                    ),
+                    Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+                      GestureDetector(
+                          onTap: (() {
+                            getGraphData(idlokasidetail, idhubdetail,
+                                idalatdetail, idsensorgrafik, null, null);
+                            print('masuk graph');
+                          }),
+                          child: Image.asset(
+                            'asset/img/graph.png',
+                            height: SizeConfigs.screenHeight * 0.05,
+                          )),
+                      SizedBox(width: SizeConfigs.screenWidth * 0.05),
+                      GestureDetector(
+                          onTap: (() {
+                            getTableData(idlokasidetail, idhubdetail,
+                                idalatdetail, idsensorgrafik);
+                          }),
+                          child: Image.asset(
+                            'asset/img/table.png',
+                            height: SizeConfigs.screenHeight * 0.03,
+                          )),
+                    ])
+                  ],
+                ),
+              ],
+            ),
+          ),
+          // shape:
+          //     RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
+          // titlePadding: const EdgeInsets.all(0),
+          // title: Container(
+          //   decoration: BoxDecoration(
+          //       color: Colors.green[900],
+          //       borderRadius: BorderRadius.only(
+          //           bottomLeft: Radius.circular(5),
+          //           bottomRight: Radius.circular(5))),
+          //   height: SizeConfigs.screenHeight * 0.03,
+          //   width: SizeConfigs.screenWidth * 0.4,
+          // ),
+          // content: Container(
+          //   height: getHeight(30),
+          //   child: Center(
+          //     child: Text(
+          //       "Detail data $jenissensordetail",
+          //       style: TextStyle(
+          //         fontFamily: 'Kohi',
+          //         fontWeight: FontWeight.bold,
+          //         fontSize: getHeight(17),
+          //       ),
+          //     ),
+          //   ),
+          // ),
+          // actions: [
+          //   Padding(
+          //     padding: const EdgeInsets.only(bottom: 20),
+          //     child: Row(
+          //       mainAxisAlignment: MainAxisAlignment.center,
+          //       children: <Widget>[
+          //         Column(
+          //           children: <Widget>[
+          //             Text(
+          //               "Min",
+          //               style: TextStyle(
+          //                 fontFamily: "Kohi",
+          //                 fontSize: MediaQuery.of(context).size.height / 60,
+          //               ),
+          //             ),
+          //             Container(
+          //                 decoration: BoxDecoration(
+          //                     color: Colors.green[900],
+          //                     borderRadius: BorderRadius.circular(5)),
+          //                 child: Center(
+          //                     child: Text("$datamin",
+          //                         style: TextStyle(
+          //                             fontFamily: 'Kohi',
+          //                             fontSize:
+          //                                 MediaQuery.of(context).size.height /
+          //                                     60,
+          //                             color: Colors.white))),
+          //                 height: SizeConfigs.screenHeight * 0.03,
+          //                 width: SizeConfigs.screenWidth * 0.15)
+          //           ],
+          //         ),
+          //         SizedBox(width: 5),
+          //         Column(
+          //           children: <Widget>[
+          //             Text("Mean",
+          //                 style: TextStyle(
+          //                   fontFamily: "Kohi",
+          //                   fontSize: MediaQuery.of(context).size.height / 60,
+          //                 )),
+          //             Container(
+          //                 decoration: BoxDecoration(
+          //                     color: Colors.green[900],
+          //                     borderRadius: BorderRadius.circular(5)),
+          //                 child: Center(
+          //                     child: Text("$datamean",
+          //                         style: TextStyle(
+          //                             fontSize:
+          //                                 MediaQuery.of(context).size.height /
+          //                                     60,
+          //                             fontFamily: 'Kohi',
+          //                             color: Colors.white))),
+          //                 height: SizeConfigs.screenHeight * 0.03,
+          //                 width: SizeConfigs.screenWidth * 0.15)
+          //           ],
+          //         ),
+          //         SizedBox(width: 5),
+          //         Column(
+          //           children: <Widget>[
+          //             Text("Max",
+          //                 style: TextStyle(
+          //                   fontFamily: "Kohi",
+          //                   fontSize: MediaQuery.of(context).size.height / 60,
+          //                 )),
+          //             Container(
+          //                 decoration: BoxDecoration(
+          //                     color: Colors.green[900],
+          //                     borderRadius: BorderRadius.circular(5)),
+          //                 child: Center(
+          //                     child: Text("$datamax",
+          //                         style: TextStyle(
+          //                             fontSize:
+          //                                 MediaQuery.of(context).size.height /
+          //                                     60,
+          //                             fontFamily: 'Kohi',
+          //                             color: Colors.white))),
+          //                 height: SizeConfigs.screenHeight * 0.03,
+          //                 width: SizeConfigs.screenWidth * 0.15)
+          //           ],
+          //         ),
+          //       ],
+          //     ),
+          //   ),
+          //   Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+          //     GestureDetector(
+          //         onTap: (() {
+          //           getGraphData(idlokasidetail, idhubdetail, idalatdetail,
+          //               idsensorgrafik, null, null);
+          //           print('masuk graph');
+          //         }),
+          //         child: Image.asset(
+          //           'asset/img/graph.png',
+          //           height: SizeConfigs.screenHeight * 0.05,
+          //         )),
+          //     SizedBox(width: SizeConfigs.screenWidth * 0.05),
+          //     GestureDetector(
+          //         onTap: (() {
+          //           getTableData(idlokasidetail, idhubdetail, idalatdetail,
+          //               idsensorgrafik);
+          //         }),
+          //         child: Image.asset(
+          //           'asset/img/table.png',
+          //           height: SizeConfigs.screenHeight * 0.03,
+          //         )),
+          //   ])
+          // ],
+        );
+      },
+    );
+  }
+
   Future getGraphData(int idlokasidetail, int idhubdetail, idalatdetail,
       int idsensorgrafik, String startdate, String enddate) async {
-    print(startdate);
+    datasensor.clear();
     var jsonString = startdate == null && enddate == null
         ? await http.get(
             Uri.parse(
@@ -1344,13 +1858,17 @@ class _SemuaState extends State<Semua> {
               })
         : await http.get(
             Uri.parse(
-                '$endPoint/monitoring/sensor?mode=grafik&lokasi=$idlokasidetail&hub=$idhubdetail&alat=$idalatdetail&sensor=$idsensorgrafik&startDate=$startdate&endDate=$enddate'),
+                '$endPoint/monitoring/sensor?mode=grafikone&lokasi=$idlokasidetail&hub=$idhubdetail&alat=$idalatdetail&sensor=$idsensorgrafik&startDate=$startdate&endDate=$enddate'),
             headers: {HttpHeaders.authorizationHeader: '$token'});
     var jsonResponse = json.decode(jsonString.body);
-    Grafik grafik = Grafik.fromJson(jsonResponse);
-    grafik.status == "OK"
+    startdate == null ? print(startdate) : print(jsonResponse);
+    jsonResponse["status"] == "OK"
         ? setState(() {
-            for (int i = 99; i > 89; i--) {
+            Grafik grafik = Grafik.fromJson(jsonResponse);
+            refreshfilter = false;
+            startdatesave = startdate;
+            enddatesave = enddate;
+            for (int i = 0; i < 10; i++) {
               num nilai = grafik.data.sensor.dataRaw[i].nilai;
               String waktu = grafik.data.sensor.dataRaw[i].tanggalSensor;
               String namaalat = grafik.data.info.alat.alias;
@@ -1360,13 +1878,16 @@ class _SemuaState extends State<Semua> {
                   : datasensor.length > 10
                       ? datasensor.clear()
                       : print(datasensor);
-              print(datasensor[0].nilai);
               datasensor.length == 10
                   ? getGraph(namaalat, namasensor, datasensor)
                   : print("");
             }
           })
-        : print("data tidak ada");
+        : setState(() {
+            refreshfilter = false;
+            pesan = jsonResponse["message"];
+            getGraph(" ", "", datasensor);
+          });
   }
 
   getGraph(String namaalat, String namasensor, List<_SensorData> datasensor) {
@@ -1376,16 +1897,14 @@ class _SemuaState extends State<Semua> {
         titlePadding: const EdgeInsets.all(0),
         title: Container(
           color: Colors.green[600],
-          height: SizeConfigs.screenHeight * 0.04,
+          height: SizeConfigs.screenHeight * 0.03,
         ),
         content: StatefulBuilder(
             builder: (BuildContext context, StateSetter setState) {
-          print(indexFilter);
-          print(indexPlot);
           return Container(
-            height: indexFilter == 1
-                ? SizeConfigs.screenHeight * 0.7
-                : SizeConfigs.screenHeight * 0.45,
+            height: dropdown == true
+                ? SizeConfigs.screenHeight * 0.9
+                : SizeConfigs.screenHeight * 0.55,
             width: SizeConfigs.screenWidth * 0.9,
             child: Column(
               children: [
@@ -1397,55 +1916,87 @@ class _SemuaState extends State<Semua> {
                       fontWeight: FontWeight.bold),
                 ),
                 SizedBox(
-                  height: SizeConfigs.screenHeight * 0.01,
+                  height: SizeConfigs.screenHeight * 0.005,
                 ),
-                Container(
-                  height: SizeConfigs.screenHeight * 0.25,
-                  width: SizeConfigs.screenWidth,
-                  child: SfCartesianChart(
-                      enableAxisAnimation: true,
-                      zoomPanBehavior: ZoomPanBehavior(
-                        enablePinching: true,
-                        enableDoubleTapZooming: true,
+                pesan == null
+                    ? refreshfilter == true
+                        ? Container(
+                            height: SizeConfigs.screenHeight * 0.25,
+                            width: SizeConfigs.screenWidth,
+                            child: Container(
+                              child: Image.asset(
+                                'asset/img/loading.gif',
+                                width: getHeight(5),
+                              ),
+                              height: SizeConfigs.screenHeight * 0.05,
+                              width: SizeConfigs.screenWidth * 0.5,
+                            ),
+                          )
+                        : Container(
+                            height: SizeConfigs.screenHeight * 0.25,
+                            width: SizeConfigs.screenWidth,
+                            child: SfCartesianChart(
+                                enableAxisAnimation: true,
+                                zoomPanBehavior: ZoomPanBehavior(
+                                  enablePinching: true,
+                                  enableDoubleTapZooming: true,
+                                ),
+                                crosshairBehavior: CrosshairBehavior(
+                                    enable: true,
+                                    lineType: CrosshairLineType.both,
+                                    activationMode: ActivationMode.longPress),
+                                primaryXAxis: CategoryAxis(
+                                  labelRotation: 45,
+                                ),
+                                primaryYAxis: batasmin == null
+                                    ? NumericAxis()
+                                    : NumericAxis(
+                                        anchorRangeToVisiblePoints: false,
+                                        plotBands: <PlotBand>[
+                                            PlotBand(
+                                                color: Colors.white,
+                                                isVisible: true,
+                                                verticalTextPadding: '5%',
+                                                horizontalTextPadding: '5%',
+                                                text: '',
+                                                textStyle: TextStyle(
+                                                    color: Colors.red,
+                                                    fontFamily: 'Kohi',
+                                                    fontSize: getHeight(10)),
+                                                textAngle: 0,
+                                                start: batasmin,
+                                                end: batasmax,
+                                                borderColor: Colors.red,
+                                                borderWidth: 1),
+                                          ]),
+                                tooltipBehavior: TooltipBehavior(enable: true),
+                                series: <ChartSeries<_SensorData, String>>[
+                                  LineSeries<_SensorData, String>(
+                                      dataSource: datasensor,
+                                      xValueMapper: (_SensorData data, _) =>
+                                          data.waktu,
+                                      yValueMapper: (_SensorData data, _) =>
+                                          data.nilai,
+                                      markerSettings:
+                                          MarkerSettings(isVisible: true),
+                                      name: '$namasensor',
+                                      dataLabelSettings:
+                                          DataLabelSettings(angle: 0))
+                                ]),
+                          )
+                    : Container(
+                        child: Center(
+                          child: Text(
+                            "$pesan",
+                            style: TextStyle(
+                                fontFamily: 'Kohi', color: Colors.red),
+                          ),
+                        ),
+                        height: SizeConfigs.screenHeight * 0.25,
+                        width: SizeConfigs.screenWidth,
                       ),
-                      crosshairBehavior: CrosshairBehavior(
-                          enable: true,
-                          lineType: CrosshairLineType.both,
-                          activationMode: ActivationMode.longPress),
-                      primaryXAxis: CategoryAxis(
-                        labelRotation: 90,
-                        minimum: 5,
-                        maximum: 10,
-                      ),
-                      primaryYAxis: NumericAxis(
-                          anchorRangeToVisiblePoints: false,
-                          plotBands: <PlotBand>[
-                            PlotBand(
-                                verticalTextPadding: '5%',
-                                horizontalTextPadding: '5%',
-                                text: 'Average',
-                                textAngle: 0,
-                                start: 30,
-                                end: 31,
-                                textStyle: TextStyle(
-                                    color: Colors.deepOrange, fontSize: 16),
-                                borderColor: Colors.red,
-                                borderWidth: 2)
-                          ]),
-                      tooltipBehavior: TooltipBehavior(enable: true),
-                      series: <ChartSeries<_SensorData, String>>[
-                        LineSeries<_SensorData, String>(
-                            dataSource: datasensor,
-                            xValueMapper: (_SensorData data, _) =>
-                                data.waktu.substring(0, 5),
-                            yValueMapper: (_SensorData data, _) => data.nilai,
-                            markerSettings: MarkerSettings(isVisible: true),
-                            name: '$namasensor',
-                            dataLabelSettings: DataLabelSettings(angle: 0))
-                      ]),
-                ),
                 SizedBox(
-                  height: SizeConfigs.screenHeight * 0.01,
+                  height: SizeConfigs.screenHeight * 0.005,
                 ),
                 Column(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -1462,152 +2013,298 @@ class _SemuaState extends State<Semua> {
                                         fontWeight: FontWeight.w900,
                                         fontSize: getHeight(15))))),
                         SizedBox(
-                          width: SizeConfigs.screenWidth * 0.05,
-                        ),
-                        Align(
-                          alignment: Alignment.centerRight,
-                          child: ToggleSwitch(
-                            totalSwitches: 2,
-                            fontSize: getHeight(12),
-                            minHeight: SizeConfigs.screenHeight * 0.03,
-                            initialLabelIndex: indexFilter,
-                            changeOnTap: true,
-                            minWidth: SizeConfigs.screenWidth * 0.15,
-                            cornerRadius: 5.0,
-                            borderWidth: 0.5,
-                            borderColor: [Colors.black],
-                            activeBgColor: [Colors.green[900]],
-                            activeFgColor: Colors.white,
-                            inactiveBgColor: Colors.white,
-                            inactiveFgColor: Colors.green[900],
-                            labels: [
-                              'OFF',
-                              'ON',
-                            ],
-                            onToggle: (index) {
-                              if (mounted)
-                                setState(() {
-                                  indexFilter = index;
-                                  print(indexFilter);
-                                });
-                            },
-                          ),
+                          width: SizeConfigs.screenWidth * 0.03,
                         ),
                         SizedBox(
-                          width: SizeConfigs.screenWidth * 0.05,
+                          width: SizeConfigs.screenWidth * 0.03,
+                        ),
+                        SizedBox(
+                          width: SizeConfigs.screenWidth * 0.03,
                         ),
                         GestureDetector(
                           onTap: (() {
-                             Navigator.pop(context);
-                            String startdate = start;
-                            String enddate = end;
-                            print(start);
-                            datasensor.clear();
-                            print(end);
-                            getGraphData(
-                                idlokasidetail,
-                                idhubdetail,
-                                idalatdetail,
-                                idsensorgrafik,
-                                startdate,
-                                enddate);
+                            setState(() {
+                              dropdown == false
+                                  ? dropdown = true
+                                  : dropdown = false;
+                            });
+                            print(dropdown);
                           }),
-                          child: Icon(Icons.refresh,
-                              color:
-                                  indexFilter == 1 ? Colors.black : Colors.grey,
-                              size: getHeight(20)),
+                          child: Icon(
+                            dropdown == false
+                                ? Icons.arrow_drop_down
+                                : Icons.arrow_drop_up,
+                            color: Colors.black,
+                            size: getHeight(20),
+                          ),
                         )
                       ],
                     ),
                   ],
                 ),
                 SizedBox(
-                  height: SizeConfigs.screenHeight * 0.01,
+                  height: SizeConfigs.screenHeight * 0.005,
                 ),
-                indexFilter == 1
-                    ? Center(
-                        child: Container(
-                          decoration: BoxDecoration(
-                              color: Colors.white,
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Colors.grey,
-                                  blurRadius: 4,
-                                  offset: Offset(4, 8),
-                                ),
-                              ],
-                              border:
-                                  Border.all(color: Colors.black, width: 0.5),
-                              borderRadius: BorderRadius.circular(5.0)),
-                          height: SizeConfigs.screenHeight * 0.25,
-                          width: SizeConfigs.screenWidth * 0.5,
-                          child: SfDateRangePicker(
-                            onSelectionChanged: _onSelectionChanged,
-                            selectionMode: DateRangePickerSelectionMode.range,
-                            initialSelectedRange: PickerDateRange(
-                                DateTime.now(),
-                                // .subtract(const Duration(days: 4)),
-                                DateTime.now()
-                                // .add(const Duration(days: 3))
-                                ),
+                dropdown == true
+                    ? Row(
+                        children: [
+                          Center(
+                            child: Container(
+                              decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: Colors.grey,
+                                      blurRadius: 4,
+                                      offset: Offset(4, 8),
+                                    ),
+                                  ],
+                                  border: Border.all(
+                                      color: Colors.black, width: 0.5),
+                                  borderRadius: BorderRadius.circular(5.0)),
+                              height: SizeConfigs.screenHeight * 0.28,
+                              width: SizeConfigs.screenWidth * 0.5,
+                              child: SfDateRangePicker(
+                                onSelectionChanged: _onSelectionChanged,
+                                maxDate: DateTime.now(),
+                                selectionMode:
+                                    DateRangePickerSelectionMode.range,
+                                initialSelectedRange: PickerDateRange(
+                                    DateTime.now(), DateTime.now()),
+                              ),
+                            ),
                           ),
-                        ),
+                          SizedBox(width: SizeConfigs.screenWidth * 0.03),
+                          GestureDetector(
+                            onTap: (() {
+                              setState(() {
+                                pesan = null;
+                                refreshfilter = true;
+                                dropdown = false;
+                                dropdownplot = false;
+                                startdate = start;
+                                enddate = end;
+                                print(start);
+                                datasensor.clear();
+                                print(end);
+                                getGraphData(
+                                    idlokasidetail,
+                                    idhubdetail,
+                                    idalatdetail,
+                                    idsensorgrafik,
+                                    startdate,
+                                    enddate);
+                              });
+                            }),
+                            child: Icon(Icons.refresh,
+                                color: Colors.black, size: getHeight(20)),
+                          ),
+                        ],
                       )
                     : SizedBox(
                         height: 0,
                       ),
+                SizedBox(
+                  height: SizeConfigs.screenHeight * 0.005,
+                ),
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Align(
+                            alignment: Alignment.centerLeft,
+                            child: Center(
+                                child: Text("Plot Data  ",
+                                    style: TextStyle(
+                                        fontFamily: 'Kohi',
+                                        fontWeight: FontWeight.w900,
+                                        fontSize: getHeight(15))))),
+                        SizedBox(
+                          width: SizeConfigs.screenWidth * 0.03,
+                        ),
+                        SizedBox(
+                          width: SizeConfigs.screenWidth * 0.03,
+                        ),
+                        SizedBox(
+                          width: SizeConfigs.screenWidth * 0.03,
+                        ),
+                        GestureDetector(
+                          onTap: (() {
+                            setState(() {
+                              dropdownplot == false
+                                  ? dropdownplot = true
+                                  : dropdownplot = false;
+                            });
+                          }),
+                          child: Icon(
+                            dropdownplot == false
+                                ? Icons.arrow_drop_down
+                                : Icons.arrow_drop_up,
+                            color: Colors.black,
+                            size: getHeight(20),
+                          ),
+                        )
+                      ],
+                    ),
+                  ],
+                ),
+                SizedBox(
+                  height: SizeConfigs.screenHeight * 0.005,
+                ),
+                // Plot Data
+                dropdownplot == true
+                    ? Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Align(
+                              alignment: Alignment.centerLeft,
+                              child: Center(
+                                  child: Text("Aktifkan ",
+                                      style: TextStyle(
+                                          fontFamily: 'Kohi',
+                                          fontWeight: FontWeight.w900,
+                                          fontSize: getHeight(15))))),
+                          SizedBox(
+                            width: SizeConfigs.screenWidth * 0.05,
+                          ),
+                          Align(
+                            alignment: Alignment.centerRight,
+                            child: ToggleSwitch(
+                              totalSwitches: 2,
+                              fontSize: getHeight(12),
+                              minHeight: SizeConfigs.screenHeight * 0.03,
+                              initialLabelIndex: indexPlot,
+                              changeOnTap: true,
+                              minWidth: SizeConfigs.screenWidth * 0.15,
+                              cornerRadius: 5.0,
+                              borderWidth: 0.5,
+                              borderColor: [Colors.black],
+                              activeBgColor: [Colors.green[900]],
+                              activeFgColor: Colors.white,
+                              inactiveBgColor: Colors.white,
+                              inactiveFgColor: Colors.green[900],
+                              labels: [
+                                'OFF',
+                                'ON',
+                              ],
+                              onToggle: (index) {
+                                if (mounted)
+                                  setState(() {
+                                    indexPlot = index;
+                                    indexPlot == 0
+                                        ? batasmin = null
+                                        : batasmin = batasmin;
+                                    indexPlot == 0
+                                        ? batasmax = null
+                                        : batasmax = batasmax;
+                                  });
+                              },
+                            ),
+                          ),
+                          SizedBox(
+                            height: SizeConfigs.screenHeight * 0.05,
+                          ),
+                        ],
+                      )
+                    : SizedBox(),
+                indexPlot == 1
+                    ? Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Container(
+                            child: Center(
+                              child: TextFormField(
+                                autofocus: false,
+                                controller: min,
+                                decoration: InputDecoration(
+                                  contentPadding: EdgeInsets.all(5.0),
+                                  labelStyle: TextStyle(
+                                      fontFamily: 'Kohi',
+                                      fontSize: getHeight(12)),
+                                  hintText: 'min',
+                                  hintStyle: TextStyle(
+                                      fontFamily: 'Kohi',
+                                      fontSize: getHeight(12)),
+                                  border: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(3.0),
+                                      borderSide:
+                                          BorderSide(color: Colors.green[900])),
+                                ),
+                              ),
+                            ),
+                            height: SizeConfigs.screenHeight * 0.03,
+                            width: SizeConfigs.screenWidth * 0.17,
+                          ),
+                          SizedBox(width: SizeConfigs.screenWidth * 0.01),
+                          Container(
+                            child: Center(
+                              child: TextFormField(
+                                autofocus: false,
+                                controller: max,
+                                decoration: InputDecoration(
+                                  contentPadding: EdgeInsets.all(5.0),
+                                  labelStyle: TextStyle(
+                                      fontFamily: 'Kohi',
+                                      fontSize: getHeight(12)),
+                                  hintText: 'max',
+                                  hintStyle: TextStyle(
+                                      fontFamily: 'Kohi',
+                                      fontSize: getHeight(12)),
+                                  border: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(3.0),
+                                      borderSide:
+                                          BorderSide(color: Colors.green[900])),
+                                ),
+                              ),
+                            ),
+                            height: SizeConfigs.screenHeight * 0.03,
+                            width: SizeConfigs.screenWidth * 0.17,
+                          ),
+                          SizedBox(width: SizeConfigs.screenWidth * 0.01),
+                          GestureDetector(
+                            onTap: (() {
+                              setState(() {
+                                batasmin = num.tryParse(min.text) ?? 0;
+                                batasmax = num.tryParse(max.text) ?? 0;
+                              });
+                            }),
+                            child: Icon(Icons.refresh,
+                                color: Colors.black, size: getHeight(20)),
+                          ),
+                        ],
+                      )
+                    : SizedBox(),
                 SizedBox(
                   height: SizeConfigs.screenHeight * 0.01,
                 ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Align(
-                        alignment: Alignment.centerLeft,
-                        child: Center(
-                            child: Text("Plot Data  ",
-                                style: TextStyle(
-                                    fontFamily: 'Kohi',
-                                    fontWeight: FontWeight.w900,
-                                    fontSize: getHeight(15))))),
                     SizedBox(
-                      width: SizeConfigs.screenWidth * 0.05,
+                      width: SizeConfigs.screenWidth * 0.35,
                     ),
-                    Align(
-                      alignment: Alignment.centerRight,
-                      child: ToggleSwitch(
-                        totalSwitches: 2,
-                        fontSize: getHeight(12),
-                        minHeight: SizeConfigs.screenHeight * 0.03,
-                        initialLabelIndex: indexPlot,
-                        changeOnTap: true,
-                        minWidth: SizeConfigs.screenWidth * 0.15,
-                        cornerRadius: 5.0,
-                        borderWidth: 0.5,
-                        borderColor: [Colors.black],
-                        activeBgColor: [Colors.green[900]],
-                        activeFgColor: Colors.white,
-                        inactiveBgColor: Colors.white,
-                        inactiveFgColor: Colors.green[900],
-                        labels: [
-                          'OFF',
-                          'ON',
-                        ],
-                        onToggle: (index) {
-                          if (mounted)
-                            setState(() {
-                              indexPlot = index;
-                            });
-                        },
+                    GestureDetector(
+                      onTap: (() {
+                        Navigator.pop(context);
+                      }),
+                      child: Container(
+                        alignment: Alignment.centerRight,
+                        child: Center(
+                          child: Text("Kembali",
+                              style: TextStyle(
+                                  color: Colors.white,
+                                  fontFamily: 'Kohi',
+                                  fontSize: getHeight(15))),
+                        ),
+                        decoration: BoxDecoration(
+                            color: Colors.green[300],
+                            borderRadius: BorderRadius.circular(5)),
+                        height: SizeConfigs.screenHeight * 0.04,
+                        width: SizeConfigs.screenWidth * 0.2,
                       ),
                     ),
-                    SizedBox(
-                      width: SizeConfigs.screenWidth * 0.05,
-                    ),
-                    Container(
-                      child: Icon(Icons.refresh,
-                          color: Colors.grey, size: getHeight(20)),
-                    )
                   ],
                 ),
               ],
@@ -1774,7 +2471,6 @@ class _SemuaState extends State<Semua> {
 
 class _SensorData {
   _SensorData(this.waktu, this.nilai);
-
   String waktu;
   num nilai;
 }

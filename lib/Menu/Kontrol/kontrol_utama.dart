@@ -1057,7 +1057,6 @@ class _KontrolUtamaState extends State<KontrolUtama>
                       hintText: '$namaalatkontrol',
                       hintStyle: TextStyle(
                           fontFamily: 'Kohi', fontSize: getHeight(12)),
-                      // border: InputBorder.none,
                       border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(10.0),
                           borderSide: BorderSide(color: Colors.green[900])),
