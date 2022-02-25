@@ -6,8 +6,11 @@ String kontrol =
     'https://cohkc2p9jb.execute-api.ap-southeast-1.amazonaws.com/v1/control';
 String endPoint =
 
+//localhost
+    'http://192.168.8.101:3000/dev';
+
 // development
-    'https://ep5iozludi.execute-api.ap-southeast-1.amazonaws.com/dev';
+// 'https://ep5iozludi.execute-api.ap-southeast-1.amazonaws.com/dev';
 
 //production
 // 'https://hx7jt0d4pd.execute-api.ap-southeast-1.amazonaws.com/v1/api';
