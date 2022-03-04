@@ -79,6 +79,7 @@ var statesend;
 String topic;
 String msg;
 String tempat;
+String status;
 
 class KontrolUtama extends StatefulWidget {
   @override
@@ -92,7 +93,7 @@ class _KontrolUtamaState extends State<KontrolUtama>
   RepositorySensor rep = RepositorySensor();
   bool loading = false;
   int value = 0;
-  String status;
+
   List<int> listidlokasi = [];
   List<int> listidhub = [];
   List<String> listhub = [];
@@ -198,6 +199,25 @@ class _KontrolUtamaState extends State<KontrolUtama>
     }
   }
 
+  Future loadState() async {
+    var url2 = Uri.parse('$endPoint/alat/kontrol/state?id=$iDkontrol');
+    var jsonString = await http
+        .get(url2, headers: {HttpHeaders.authorizationHeader: '$token'});
+    var jsonResponse = json.decode(jsonString.body);
+    if (this.mounted) {
+      try {
+        setState(() {
+          status = jsonResponse['state'];
+        });
+      } on Exception catch (error) {
+        print(error);
+      }
+    }
+    Future.delayed(const Duration(seconds: 10), () {
+      return loadState();
+    });
+  }
+
   Future loadMonitor() async {
     var url = Uri.parse('$endPoint/user/data');
     var jsonString = await http
@@ -265,7 +285,6 @@ class _KontrolUtamaState extends State<KontrolUtama>
         }
       });
     }
-    return loadMonitor();
   }
 
   Future loadSensor(int idlokasienter, int idhubenter, int idalatenter) async {
@@ -304,23 +323,6 @@ class _KontrolUtamaState extends State<KontrolUtama>
         itemsbefore = listsensors.length;
       });
     }
-  }
-
-  Future loadState() async {
-    var url2 = Uri.parse('$endPoint/alat/kontrol/state?id=$iDkontrol');
-    var jsonString = await http
-        .get(url2, headers: {HttpHeaders.authorizationHeader: '$token'});
-    var jsonResponse = json.decode(jsonString.body);
-    if (this.mounted) {
-      try {
-        setState(() {
-          status = jsonResponse['state'];
-        });
-      } on Exception catch (error) {
-        print(error);
-      }
-    }
-    return loadState();
   }
 
   @override

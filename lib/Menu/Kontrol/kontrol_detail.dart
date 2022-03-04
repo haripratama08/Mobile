@@ -74,11 +74,6 @@ class _DetailState extends State<Detail> with Validation {
           } else {
             String hub = jeniskontrol.data.lokasi[widget.ind].nama;
             print(hub);
-            // idlokasikontrol = jeniskontrol.data.lokasi[widget.ind].id;
-            // listname.length == panjanglokasi ? print("") : listname.add(hub);
-            // listidlokasi.length == panjanglokasi
-            //     ? print("")
-            //     : listidlokasi.add(idlokasikontrol);
             var panjanghub = jeniskontrol.data.lokasi[widget.ind].hub.length;
             print(panjanghub);
 //----------------------------------------------------------------------//
@@ -144,6 +139,7 @@ class _DetailState extends State<Detail> with Validation {
                   kontrolnamechoosen == null
                       ? kontrolnamechoosen = kontrolnamelist[0]
                       : kontrolnamechoosen = kontrolnamechoosen;
+                      
                   topic = "$kontrolnamechoosen/crophero/control";
                 }
               }
@@ -263,7 +259,7 @@ class _DetailState extends State<Detail> with Validation {
                                                   spreadRadius: 1,
                                                   blurRadius: 2,
                                                   offset: Offset(0,
-                                                      3), // changes position of shadow
+                                                      3),
                                                 ),
                                               ],
                                             ),
@@ -344,7 +340,6 @@ class _DetailState extends State<Detail> with Validation {
                                                               FontWeight.bold)),
                                                   actions: [],
                                                 );
-                                                // show the dialog
                                                 showDialog(
                                                   context: context,
                                                   builder:
@@ -373,7 +368,6 @@ class _DetailState extends State<Detail> with Validation {
                                                               FontWeight.bold)),
                                                   actions: [],
                                                 );
-                                                // show the dialog
                                                 showDialog(
                                                   context: context,
                                                   builder:
@@ -383,8 +377,6 @@ class _DetailState extends State<Detail> with Validation {
                                                 );
                                               }
                                             }
-
-                                            // set up the AlertDialog
                                           },
                                           child: Padding(
                                             padding: const EdgeInsets.only(
@@ -423,7 +415,7 @@ class _DetailState extends State<Detail> with Validation {
                                               Color(0xB1AFAF).withOpacity(0.3),
                                           spreadRadius: 1,
                                           offset: Offset(0,
-                                              2), // changes position of shadow
+                                              2),
                                         ),
                                       ],
                                       color: warna,
@@ -436,7 +428,6 @@ class _DetailState extends State<Detail> with Validation {
       ),
     );
   }
-
   void dialog() {
     showDialog(
       context: context,

@@ -7,8 +7,12 @@ String kontrol =
 String endPoint =
 
 //localhost
-    'http://192.168.8.101:3000/dev';
+    // 'http://192.168.8.101:3000/v21';
 
+//v21
+    'https://iqjsdzrni0.execute-api.ap-southeast-1.amazonaws.com/v21';
+
+    
 // development
 // 'https://ep5iozludi.execute-api.ap-southeast-1.amazonaws.com/dev';
 

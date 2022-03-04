@@ -29,21 +29,18 @@ class _KontrolManualState extends State<KontrolManual> {
         "manual": "$state",
         "id_sensor": "null",
       });
-      // print(message);
-      // print('topic $topic');
       var url = Uri.parse('$kontrol');
       var body = {"topic": topic, "message": message};
       var response = await http.post(url, body: body);
       if (response.statusCode == 200) {
+        status = null;
         liststate.clear();
         setState(() {
           loading = false;
           showDialog(
             context: context,
             builder: (ctxt) {
-              Future.delayed(Duration(seconds: 1), () {
-                // Navigator.of(context).pop(true);
-              });
+              Future.delayed(Duration(seconds: 1), () {});
               return new AlertDialog(
                 title: Column(
                   children: <Widget>[
@@ -57,7 +54,6 @@ class _KontrolManualState extends State<KontrolManual> {
       }
       return response;
     }
-
     return Container(
       child: Container(
         child: loading == true
@@ -88,14 +84,11 @@ class _KontrolManualState extends State<KontrolManual> {
                             color: Colors.green[300],
                             fontWeight: FontWeight.bold)),
                     onPressed: () {
-                      print('mengirim');
                       liststate.clear();
                       FocusScope.of(context).requestFocus(FocusNode());
                       publish("manual", "0", "0", statesend);
                     },
                   );
-
-                  // set up the AlertDialog
                   AlertDialog alert = AlertDialog(
                     content: Text(
                       "Apakah Anda Yakin?",
@@ -106,15 +99,12 @@ class _KontrolManualState extends State<KontrolManual> {
                       cancelButton,
                     ],
                   );
-
-                  // show the dialog
                   showDialog(
                     context: context,
                     builder: (BuildContext context) {
                       return alert;
                     },
                   );
-                  // }
                 },
                 child: Container(
                     child: Center(

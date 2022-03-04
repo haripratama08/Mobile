@@ -74,7 +74,7 @@ class _SemuaState extends State<Semua> with Validation {
                 ? print("")
                 : listidlokasi.add(idlokasikontrol);
             var panjanghub = jeniskontrol.data.lokasi[i].hub.length;
-//----------------------------------------------------------------------//
+//---------------------------------------------------  -------------------//
             for (int j = 0; j < panjanghub; j++) {
               var panjangalat = jeniskontrol.data.lokasi[i].hub[j].alat.length;
               int idhubkontrol = jeniskontrol.data.lokasi[i].hub[j].id;
@@ -136,6 +136,7 @@ class _SemuaState extends State<Semua> with Validation {
                   kontrolnamechoosen == null
                       ? kontrolnamechoosen = kontrolnamelist[0]
                       : kontrolnamechoosen = kontrolnamechoosen;
+
                   topic = "$kontrolnamechoosen/crophero/control";
                 }
               }
@@ -144,7 +145,9 @@ class _SemuaState extends State<Semua> with Validation {
         } else {}
       });
     }
-    return loadKontrol();
+    Future.delayed(const Duration(seconds: 10), () {
+      return loadKontrol();
+    });
   }
 
   Future doGantiAliasKontrol() async {
@@ -233,6 +236,9 @@ class _SemuaState extends State<Semua> with Validation {
                         : GestureDetector(
                             onTap: () {
                               setState(() {
+                                status = null;
+                                print(namaalatkontrol);
+                                print(status);
                                 data(status1);
                                 change(index);
                                 statusa(index);
@@ -311,71 +317,174 @@ class _SemuaState extends State<Semua> with Validation {
                                       Positioned.fill(
                                         child: GestureDetector(
                                           onTap: () {
-                                            if (timelist[index].isEmpty) {
-                                            } else {
-                                              if (eventlist[index] ==
-                                                  'disconnected') {
-                                                AlertDialog alert = AlertDialog(
-                                                  title: Text(
-                                                      "Terkoneksi terakhir pada",
-                                                      textAlign:
-                                                          TextAlign.center,
-                                                      style: TextStyle(
-                                                          fontSize:
-                                                              getHeight(15),
-                                                          fontFamily: 'Kohi')),
-                                                  content: Text(
-                                                      "${timelist[index]}",
-                                                      textAlign:
-                                                          TextAlign.center,
-                                                      style: TextStyle(
-                                                          fontFamily: 'Kohi',
-                                                          fontSize:
-                                                              getHeight(15),
-                                                          fontWeight:
-                                                              FontWeight.bold)),
-                                                  actions: [],
-                                                );
-                                                // show the dialog
-                                                showDialog(
-                                                  context: context,
-                                                  builder:
-                                                      (BuildContext context) {
-                                                    return alert;
-                                                  },
-                                                );
-                                              } else {
-                                                AlertDialog alert = AlertDialog(
-                                                  title: Text(
-                                                    "Terhubung kembali pada",
-                                                    textAlign: TextAlign.center,
-                                                    style: TextStyle(
-                                                        fontSize: getHeight(15),
-                                                        fontFamily: 'Kohi'),
+                                            if (eventlist[index] ==
+                                                'disconnected') {
+                                              AlertDialog alert = AlertDialog(
+                                                contentPadding:
+                                                    EdgeInsets.all(0),
+                                                content: Container(
+                                                  height:
+                                                      SizeConfigs.screenHeight *
+                                                          0.12,
+                                                  width:
+                                                      SizeConfigs.screenWidth *
+                                                          0.65,
+                                                  child: Stack(
+                                                    children: [
+                                                      Container(
+                                                        decoration: BoxDecoration(
+                                                            image: DecorationImage(
+                                                                fit: BoxFit.cover,
+                                                                image: AssetImage(
+                                                                  'asset/img/Koneksi.png',
+                                                                ))),
+                                                      ),
+                                                      Row(
+                                                        mainAxisAlignment:
+                                                            MainAxisAlignment
+                                                                .center,
+                                                        children: [
+                                                          Container(),
+                                                          Column(
+                                                            mainAxisAlignment:
+                                                                MainAxisAlignment
+                                                                    .center,
+                                                            children: [
+                                                              Text(
+                                                                  "Waktu terkoneksi terakhir dengan sensor",
+                                                                  textAlign:
+                                                                      TextAlign
+                                                                          .center,
+                                                                  style: TextStyle(
+                                                                      fontWeight:
+                                                                          FontWeight
+                                                                              .bold,
+                                                                      fontSize:
+                                                                          getHeight(
+                                                                              15),
+                                                                      fontFamily:
+                                                                          'Kohi')),
+                                                              SizedBox(
+                                                                  height: 30),
+                                                              Row(
+                                                                mainAxisAlignment:
+                                                                    MainAxisAlignment
+                                                                        .center,
+                                                                children: [
+                                                                  Text(
+                                                                      "${timelist[index]}",
+                                                                      textAlign:
+                                                                          TextAlign
+                                                                              .center,
+                                                                      style:
+                                                                          TextStyle(
+                                                                        fontFamily:
+                                                                            'Kohi',
+                                                                        fontSize:
+                                                                            getHeight(15),
+                                                                      )),
+                                                                ],
+                                                              ),
+                                                            ],
+                                                          ),
+                                                        ],
+                                                      )
+                                                    ],
                                                   ),
-                                                  content: Text(
-                                                      "${timelist[index]}",
-                                                      textAlign:
-                                                          TextAlign.center,
-                                                      style: TextStyle(
-                                                          fontFamily: 'Kohi',
-                                                          fontSize:
-                                                              getHeight(15),
-                                                          fontWeight:
-                                                              FontWeight.bold)),
-                                                  actions: [],
-                                                );
-                                                // show the dialog
-                                                showDialog(
-                                                  context: context,
-                                                  builder:
-                                                      (BuildContext context) {
-                                                    return alert;
-                                                  },
-                                                );
-                                              }
+                                                ),
+                                              );
+                                              // show the dialog
+                                              showDialog(
+                                                context: context,
+                                                builder:
+                                                    (BuildContext context) {
+                                                  return alert;
+                                                },
+                                              );
+                                            } else {
+                                              AlertDialog alert = AlertDialog(
+                                                contentPadding:
+                                                    EdgeInsets.all(0),
+                                                content: Container(
+                                                  height:
+                                                      SizeConfigs.screenHeight *
+                                                          0.12,
+                                                  width:
+                                                      SizeConfigs.screenWidth *
+                                                          0.65,
+                                                  child: Stack(
+                                                    children: [
+                                                      Container(
+                                                        decoration: BoxDecoration(
+                                                            image: DecorationImage(
+                                                                fit: BoxFit.cover,
+                                                                image: AssetImage(
+                                                                  'asset/img/Koneksi.png',
+                                                                ))),
+                                                      ),
+                                                      Row(
+                                                        mainAxisAlignment:
+                                                            MainAxisAlignment
+                                                                .center,
+                                                        children: [
+                                                          Container(),
+                                                          Column(
+                                                            mainAxisAlignment:
+                                                                MainAxisAlignment
+                                                                    .center,
+                                                            children: [
+                                                              Text(
+                                                                  "Waktu terkoneksi terakhir dengan sensor",
+                                                                  textAlign:
+                                                                      TextAlign
+                                                                          .center,
+                                                                  style: TextStyle(
+                                                                      fontWeight:
+                                                                          FontWeight
+                                                                              .bold,
+                                                                      fontSize:
+                                                                          getHeight(
+                                                                              15),
+                                                                      fontFamily:
+                                                                          'Kohi')),
+                                                              SizedBox(
+                                                                  height: 30),
+                                                              Row(
+                                                                mainAxisAlignment:
+                                                                    MainAxisAlignment
+                                                                        .center,
+                                                                children: [
+                                                                  Text(
+                                                                      "${timelist[index]}",
+                                                                      textAlign:
+                                                                          TextAlign
+                                                                              .center,
+                                                                      style:
+                                                                          TextStyle(
+                                                                        fontFamily:
+                                                                            'Kohi',
+                                                                        fontSize:
+                                                                            getHeight(15),
+                                                                      )),
+                                                                ],
+                                                              ),
+                                                            ],
+                                                          ),
+                                                        ],
+                                                      )
+                                                    ],
+                                                  ),
+                                                ),
+                                              );
+                                              // show the dialog
+                                              showDialog(
+                                                context: context,
+                                                builder:
+                                                    (BuildContext context) {
+                                                  return alert;
+                                                },
+                                              );
                                             }
-                                            // set up the AlertDialog
                                           },
                                           child: Padding(
                                             padding: const EdgeInsets.only(
@@ -400,6 +509,99 @@ class _SemuaState extends State<Semua> with Validation {
                                           ),
                                         ),
                                       ),
+                                      // ),
+                                      // Positioned.fill(
+                                      //   child: GestureDetector(
+                                      //     onTap: () {
+                                      //       if (timelist[index].isEmpty) {
+                                      //       } else {
+                                      //         if (eventlist[index] ==
+                                      //             'disconnected') {
+                                      //           AlertDialog alert = AlertDialog(
+                                      //             title: Text(
+                                      //                 "Terkoneksi terakhir pada",
+                                      //                 textAlign:
+                                      //                     TextAlign.center,
+                                      //                 style: TextStyle(
+                                      //                     fontSize:
+                                      //                         getHeight(15),
+                                      //                     fontFamily: 'Kohi')),
+                                      //             content: Text(
+                                      //                 "${timelist[index]}",
+                                      //                 textAlign:
+                                      //                     TextAlign.center,
+                                      //                 style: TextStyle(
+                                      //                     fontFamily: 'Kohi',
+                                      //                     fontSize:
+                                      //                         getHeight(15),
+                                      //                     fontWeight:
+                                      //                         FontWeight.bold)),
+                                      //             actions: [],
+                                      //           );
+                                      //           // show the dialog
+                                      //           showDialog(
+                                      //             context: context,
+                                      //             builder:
+                                      //                 (BuildContext context) {
+                                      //               return alert;
+                                      //             },
+                                      //           );
+                                      //         } else {
+                                      //           AlertDialog alert = AlertDialog(
+                                      //             title: Text(
+                                      //               "Terhubung kembali pada",
+                                      //               textAlign: TextAlign.center,
+                                      //               style: TextStyle(
+                                      //                   fontSize: getHeight(15),
+                                      //                   fontFamily: 'Kohi'),
+                                      //             ),
+                                      //             content: Text(
+                                      //                 "${timelist[index]}",
+                                      //                 textAlign:
+                                      //                     TextAlign.center,
+                                      //                 style: TextStyle(
+                                      //                     fontFamily: 'Kohi',
+                                      //                     fontSize:
+                                      //                         getHeight(15),
+                                      //                     fontWeight:
+                                      //                         FontWeight.bold)),
+                                      //             actions: [],
+                                      //           );
+                                      //           // show the dialog
+                                      //           showDialog(
+                                      //             context: context,
+                                      //             builder:
+                                      //                 (BuildContext context) {
+                                      //               return alert;
+                                      //             },
+                                      //           );
+                                      //         }
+                                      //       }
+                                      //       // set up the AlertDialog
+                                      //     },
+                                      //     child: Padding(
+                                      //       padding: const EdgeInsets.only(
+                                      //           right: 10),
+                                      //       child: Align(
+                                      //         alignment: Alignment.centerRight,
+                                      //         child: eventlist[index] ==
+                                      //                 'disconnected'
+                                      //             ? Image.asset(
+                                      //                 'asset/img/disconnected.png',
+                                      //                 height: SizeConfigs
+                                      //                         .screenHeight *
+                                      //                     0.03,
+                                      //               )
+                                      //             : Image.asset(
+                                      //                 'asset/img/connected.png',
+                                      //                 height: SizeConfigs
+                                      //                         .screenHeight *
+                                      //                     0.02,
+                                      //               ),
+                                      //       ),
+                                      //     ),
+                                      //   ),
+                                      // ),
                                     ],
                                   ),
                                   height:

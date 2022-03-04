@@ -76,7 +76,6 @@ class ChangeName {
       },
     );
   }
-
   Future gantiAliasAlat(
       int idAlatChange, String namaganti, String token) async {
     var jsonString = await http.put(

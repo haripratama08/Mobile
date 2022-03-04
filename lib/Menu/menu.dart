@@ -70,29 +70,10 @@ class _MenuState extends State<Menu> with SingleTickerProviderStateMixin {
     });
     setState(() {
       title = 'Monitoring';
-      if (index == 0 && widget.index == null ||
-          index == 0 && widget.index == 0 ||
-          index == null && widget.index == null ||
-          index == null && widget.index == 0) {
+      if (index == 0) {
         setState(() {
           route = Semua();
         });
-      } else if (index == 0 && widget.index != null ||
-          index == 0 && widget.index != 0) {
-        _selectedIndex = widget.index;
-        if (widget.index == 0) {
-          setState(() {
-            route = Semua();
-          });
-        } else if (widget.index == 1) {
-          setState(() {
-            route = KontrolUtama();
-          });
-        } else if (widget.index == 2) {
-          setState(() {
-            route = Logout();
-          });
-        }
       } else if (index == 1) {
         setState(() {
           title = 'Kontroling';

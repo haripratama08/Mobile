@@ -54,6 +54,7 @@ class _MonitorIndoorState extends State<MonitorIndoor> with Validation {
   String msg = '';
   final formKey = GlobalKey<FormState>();
   GantiAlias ganti = GantiAlias();
+
   Future loadDevice() async {
     var url = Uri.parse('$endPoint/user/data');
     var jsonString = await http
@@ -120,7 +121,7 @@ class _MonitorIndoorState extends State<MonitorIndoor> with Validation {
         }
       });
     }
-    return loadDevice();
+    // return loadDevice();
   }
 
   Future doGanti() async {
@@ -209,6 +210,10 @@ class _MonitorIndoorState extends State<MonitorIndoor> with Validation {
                   return GestureDetector(
                       onTap: () {
                         setState(() {
+                          print("ganti");
+                          print(idlokas);
+                          print(idala);
+                          print(idhu);
                           nama = listnama[index];
                           loading = true;
                           itemsshadow.clear();
@@ -303,18 +308,14 @@ class _MonitorIndoorState extends State<MonitorIndoor> with Validation {
                                                       image: DecorationImage(
                                                           fit: BoxFit.cover,
                                                           image: AssetImage(
-                                                            'asset/img/backgroundKoneksi.png',
+                                                            'asset/img/Koneksi.png',
                                                           ))),
                                                 ),
                                                 Row(
                                                   mainAxisAlignment:
                                                       MainAxisAlignment.center,
                                                   children: [
-                                                    Container(
-                                                        // width: SizeConfigs
-                                                        //         .screenWidth *
-                                                        //     0.175,
-                                                        ),
+                                                    Container(),
                                                     Column(
                                                       mainAxisAlignment:
                                                           MainAxisAlignment
@@ -361,19 +362,6 @@ class _MonitorIndoorState extends State<MonitorIndoor> with Validation {
                                               ],
                                             ),
                                           ),
-                                          // title: Text(
-                                          //     "Terkoneksi terakhir pada",
-                                          //     textAlign: TextAlign.center,
-                                          //     style: TextStyle(
-                                          //         fontSize: getHeight(15),
-                                          //         fontFamily: 'Kohi')),
-                                          // content: Text("${timeevent[index]}",
-                                          //     textAlign: TextAlign.center,
-                                          //     style: TextStyle(
-                                          //         fontFamily: 'Kohi',
-                                          //         fontSize: getHeight(15),
-                                          //         fontWeight: FontWeight.bold)),
-                                          // actions: [],
                                         );
                                         // show the dialog
                                         showDialog(
@@ -384,20 +372,73 @@ class _MonitorIndoorState extends State<MonitorIndoor> with Validation {
                                         );
                                       } else {
                                         AlertDialog alert = AlertDialog(
-                                          title: Text(
-                                            "Terhubung pada",
-                                            textAlign: TextAlign.center,
-                                            style: TextStyle(
-                                                fontSize: getHeight(15),
-                                                fontFamily: 'Kohi'),
+                                          contentPadding: EdgeInsets.all(0),
+                                          content: Container(
+                                            height:
+                                                SizeConfigs.screenHeight * 0.12,
+                                            width:
+                                                SizeConfigs.screenWidth * 0.65,
+                                            child: Stack(
+                                              children: [
+                                                Container(
+                                                  decoration: BoxDecoration(
+                                                      image: DecorationImage(
+                                                          fit: BoxFit.cover,
+                                                          image: AssetImage(
+                                                            'asset/img/Koneksi.png',
+                                                          ))),
+                                                ),
+                                                Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment.center,
+                                                  children: [
+                                                    Container(),
+                                                    Column(
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .center,
+                                                      children: [
+                                                        Text(
+                                                            "Waktu terkoneksi terakhir dengan sensor",
+                                                            textAlign: TextAlign
+                                                                .center,
+                                                            style: TextStyle(
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .bold,
+                                                                fontSize:
+                                                                    getHeight(
+                                                                        15),
+                                                                fontFamily:
+                                                                    'Kohi')),
+                                                        SizedBox(height: 30),
+                                                        Row(
+                                                          mainAxisAlignment:
+                                                              MainAxisAlignment
+                                                                  .center,
+                                                          children: [
+                                                            Text(
+                                                                "${timeevent[index]}",
+                                                                textAlign:
+                                                                    TextAlign
+                                                                        .center,
+                                                                style:
+                                                                    TextStyle(
+                                                                  fontFamily:
+                                                                      'Kohi',
+                                                                  fontSize:
+                                                                      getHeight(
+                                                                          15),
+                                                                )),
+                                                          ],
+                                                        ),
+                                                      ],
+                                                    ),
+                                                  ],
+                                                )
+                                              ],
+                                            ),
                                           ),
-                                          content: Text("${timeevent[index]}",
-                                              textAlign: TextAlign.center,
-                                              style: TextStyle(
-                                                  fontFamily: 'Kohi',
-                                                  fontSize: getHeight(15),
-                                                  fontWeight: FontWeight.bold)),
-                                          actions: [],
                                         );
                                         // show the dialog
                                         showDialog(

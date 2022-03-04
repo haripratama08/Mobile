@@ -175,7 +175,6 @@ class _SemuaState extends State<Semua> {
 
   @override
   void initState() {
-    _startTimer();
     loadDevice2();
     super.initState();
   }
@@ -277,6 +276,7 @@ class _SemuaState extends State<Semua> {
   void refreshData() {
     if (this.mounted) {
       setState(() {
+        loadDevice2();
         refresh = true;
         items.clear();
         iditems.clear();
@@ -301,6 +301,7 @@ class _SemuaState extends State<Semua> {
   }
 
   Future loadSensor() async {
+    print('lokasi=$idlokas&hub=$idhu&alat=$idala');
     if (idlokas == null) {
       var jsonString = await http.get(
           Uri.parse(
@@ -366,11 +367,12 @@ class _SemuaState extends State<Semua> {
             print(_);
           }
         });
-        Future.delayed(const Duration(minutes: 1), () {
+        Future.delayed(const Duration(minutes: 5), () {
           return loadSensor();
         });
       }
     } else {
+      print('lokasi=$idlokas&hub=$idhu&alat=$idala');
       var jsonString = await http.get(
           Uri.parse(
               '$endPoint/monitoring/mobile/sensorRev?lokasi=$idlokas&hub=$idhu&alat=$idala'),
@@ -443,7 +445,7 @@ class _SemuaState extends State<Semua> {
             print("kosong");
           }
         });
-        Future.delayed(const Duration(minutes: 1), () {
+        Future.delayed(const Duration(minutes: 5), () {
           return loadSensor();
         });
       }
@@ -535,39 +537,18 @@ class _SemuaState extends State<Semua> {
     }
   }
 
-  int _counter;
-  Timer _timer;
-
-  void _startTimer() {
-    _counter = 20;
-    if (_timer != null) {
-      _timer.cancel();
-    }
-    _timer = Timer.periodic(Duration(seconds: 1), (timer) {
-      if (this.mounted)
-        setState(() {
-          if (_counter > 0) {
-            _counter--;
-          } else {
-            _timer.cancel();
-          }
-        });
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
-    if (idlokas != idlokasbef && idala != idalabef && idhu != idhubef) {
+    print(idala == idalabef);
+    if (idlokas != idlokasbef || idala != idalabef || idhu != idhubef) {
       items.clear();
       loadSensor();
+      setState(() {
+        idalabef = idala;
+        idhubef = idhu;
+        idlokasbef = idlokas;
+      });
     } else {}
-
-    setState(() {
-      idalabef = idala;
-      idhubef = idhu;
-      idlokasbef = idlokas;
-    });
-
     statusname(index);
     if (panjangtempat == null ||
         panjangtempat == 0 ||
@@ -1443,10 +1424,12 @@ class _SemuaState extends State<Semua> {
                       children: [
                         Stack(
                           children: [
-                            Container(
-                              child: Image.asset(
-                                'asset/img/elips.png',
-                                height: 100,
+                            Center(
+                              child: Container(
+                                child: Image.asset(
+                                  'asset/img/elips.png',
+                                  height: 100,
+                                ),
                               ),
                             ),
                             Center(
@@ -1576,7 +1559,7 @@ class _SemuaState extends State<Semua> {
                                       Text(
                                         '$datamin',
                                         style: TextStyle(
-                                                fontFamily:'Kohi',
+                                          fontFamily: 'Kohi',
                                           fontWeight: FontWeight.bold,
                                           color: Colors.white,
                                           fontSize: getHeight(18),
@@ -1684,28 +1667,28 @@ class _SemuaState extends State<Semua> {
                     SizedBox(
                       height: SizeConfigs.screenHeight * 0.01,
                     ),
-                    Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-                      GestureDetector(
-                          onTap: (() {
-                            getGraphData(idlokasidetail, idhubdetail,
-                                idalatdetail, idsensorgrafik, null, null);
-                            print('masuk graph');
-                          }),
-                          child: Image.asset(
-                            'asset/img/graph.png',
-                            height: SizeConfigs.screenHeight * 0.05,
-                          )),
-                      SizedBox(width: SizeConfigs.screenWidth * 0.05),
-                      GestureDetector(
-                          onTap: (() {
-                            getTableData(idlokasidetail, idhubdetail,
-                                idalatdetail, idsensorgrafik);
-                          }),
-                          child: Image.asset(
-                            'asset/img/table.png',
-                            height: SizeConfigs.screenHeight * 0.03,
-                          )),
-                    ])
+                    // Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+                    //   GestureDetector(
+                    //       onTap: (() {
+                    //         getGraphData(idlokasidetail, idhubdetail,
+                    //             idalatdetail, idsensorgrafik, null, null);
+                    //         print('masuk graph');
+                    //       }),
+                    //       child: Image.asset(
+                    //         'asset/img/graph.png',
+                    //         height: SizeConfigs.screenHeight * 0.05,
+                    //       )),
+                    //   SizedBox(width: SizeConfigs.screenWidth * 0.05),
+                    //   GestureDetector(
+                    //       onTap: (() {
+                    //         getTableData(idlokasidetail, idhubdetail,
+                    //             idalatdetail, idsensorgrafik);
+                    //       }),
+                    //       child: Image.asset(
+                    //         'asset/img/table.png',
+                    //         height: SizeConfigs.screenHeight * 0.03,
+                    //       )),
+                    // ])
                   ],
                 ),
               ],

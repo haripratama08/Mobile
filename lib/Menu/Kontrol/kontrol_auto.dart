@@ -75,7 +75,6 @@ class _KontrolAutoState extends State<KontrolAuto> with Validation {
       }
       return response;
     }
-
     return Container(
       child: Padding(
         padding: const EdgeInsets.only(top: 5),
