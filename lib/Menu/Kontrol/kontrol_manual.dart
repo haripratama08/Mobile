@@ -40,14 +40,7 @@ class _KontrolManualState extends State<KontrolManual> {
           showDialog(
             context: context,
             builder: (ctxt) {
-<<<<<<< HEAD
-              Future.delayed(Duration(seconds: 1), () {
-                // Navigator.pop(context);
-                // Navigator.of(context).pop(true);
-              });
-=======
               Future.delayed(Duration(seconds: 1), () {});
->>>>>>> c45977631a0546afa898457c561e7afb8723a97e
               return new AlertDialog(
                 title: Column(
                   children: <Widget>[
@@ -61,6 +54,7 @@ class _KontrolManualState extends State<KontrolManual> {
       }
       return response;
     }
+
     return Container(
       child: Container(
         child: loading == true

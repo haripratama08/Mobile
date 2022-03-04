@@ -3,11 +3,7 @@ description: A new Flutter project.
 
 publish_to: "Google Play Store"
 
-<<<<<<< HEAD
 version: 1.0.3+4
-=======
-version: 1.0.2+3
->>>>>>> c45977631a0546afa898457c561e7afb8723a97e
 
 environment:
   sdk: ">=2.7.0 <3.0.0"

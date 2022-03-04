@@ -60,14 +60,8 @@ class _KontrolAutoState extends State<KontrolAuto> with Validation {
           showDialog(
               context: context,
               builder: (ctxt) {
-<<<<<<< HEAD
-                Future.delayed(Duration(seconds: 1), () {
-                  // Navigator.pop(context);
-                  // Navigator.of(context).pop(true);
-=======
                 Future.delayed(Duration(seconds: 2), () {
                   Navigator.pop(context);
->>>>>>> c45977631a0546afa898457c561e7afb8723a97e
                 });
                 return new AlertDialog(
                   title: Column(
@@ -81,6 +75,7 @@ class _KontrolAutoState extends State<KontrolAuto> with Validation {
       }
       return response;
     }
+
     return Container(
       child: Padding(
         padding: const EdgeInsets.only(top: 5),
