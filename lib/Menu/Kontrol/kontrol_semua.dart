@@ -2,8 +2,10 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 import 'package:ch_v2_1/API/api.dart';
+import 'package:ch_v2_1/API/jeniskontrol.dart';
 import 'package:ch_v2_1/Menu/menu.dart';
 import 'package:ch_v2_1/Validator/validation.dart';
+import 'package:ch_v2_1/process/size_config.dart';
 import 'package:http/http.dart' as http;
 import 'package:ch_v2_1/LoginPage/loginpage.dart';
 import 'package:ch_v2_1/Menu/Kontrol/kontrol_utama.dart';
@@ -32,6 +34,9 @@ class _SemuaState extends State<Semua> with Validation {
   int idkontrol;
   String kontrolnamechoosen;
   List<String> kontrolnamelist = [];
+  List<String> timelist = [];
+  List<String> eventlist = [];
+  List<String> reasonlist = [];
   List<String> listname = [];
   List<String> listkontrol = [];
   int idlokasikontrol;
@@ -52,68 +57,87 @@ class _SemuaState extends State<Semua> with Validation {
   }
 
   Future loadKontrol() async {
-    var url = Uri.parse('$endPoint/kontrol?uuid=$uuid');
+    var url = Uri.parse('$endPoint/alat/kontrol');
     var jsonString = await http
         .get(url, headers: {HttpHeaders.authorizationHeader: '$token'});
     var jsonResponse = json.decode(jsonString.body);
+    Jeniskontrol jeniskontrol = Jeniskontrol.fromJson(jsonResponse);
     if (this.mounted) {
       setState(() {
-        if ((jsonResponse['status']) == 'OK') {
-          panjanglokasi = (((jsonResponse['data'])['lokasi']).length);
+        if (jeniskontrol.status == 'OK') {
+          panjanglokasi = jeniskontrol.data.lokasi.length;
           for (int i = 0; i < panjanglokasi; i++) {
-            String hub = (((jsonResponse['data'])['lokasi'])[i]['nama']);
-            idlokasikontrol = (((jsonResponse['data'])['lokasi'])[i]['id']);
+            String hub = jeniskontrol.data.lokasi[i].nama;
+            idlokasikontrol = jeniskontrol.data.lokasi[i].id;
             listname.length == panjanglokasi ? print("") : listname.add(hub);
             listidlokasi.length == panjanglokasi
                 ? print("")
                 : listidlokasi.add(idlokasikontrol);
-            var panjanghub =
-                (((jsonResponse['data'])['lokasi'])[i]['hub'].length);
-//----------------------------------------------------------------------//
+            var panjanghub = jeniskontrol.data.lokasi[i].hub.length;
+//---------------------------------------------------  -------------------//
             for (int j = 0; j < panjanghub; j++) {
-              var panjangalat = ((((jsonResponse['data'])['lokasi'])[i]['hub']
-                      [j]['alat']
-                  .length));
-              int idhubkontrol =
-                  ((((jsonResponse['data'])['lokasi'])[i]['hub'][j]['id']));
+              var panjangalat = jeniskontrol.data.lokasi[i].hub[j].alat.length;
+              int idhubkontrol = jeniskontrol.data.lokasi[i].hub[j].id;
               listidhub.length == panjanghub
                   ? print("")
                   : listidhub.add(idhubkontrol);
 //----------------------------------------------------------------------//
               for (int k = 0; k < panjangalat; k++) {
-                panjangkontrol = ((((jsonResponse['data'])['lokasi'])[i]['hub']
-                        [j]['alat'][k]['kontrol']
-                    .length));
-                int idalatkontrol = ((((jsonResponse['data'])['lokasi'])[i]
-                    ['hub'][j]['alat'][k]['id']));
+                panjangkontrol =
+                    jeniskontrol.data.lokasi[i].hub[j].alat[k].kontrol.length;
+                int idalatkontrol =
+                    jeniskontrol.data.lokasi[i].hub[j].alat[k].id;
                 listidalat.length == panjangalat
                     ? print("")
                     : listidalat.add(idalatkontrol);
 //---------------------------------------------------------------------//
                 for (int l = 0; l < panjangkontrol; l++) {
-                  String kontrol = ((((jsonResponse['data'])['lokasi'])[i]
-                      ['hub'][j]['alat'][k]['kontrol'][l])['alias']);
-                  String kontrolname = ((((jsonResponse['data'])['lokasi'])[i]
-                      ['hub'][j]['alat'][k]['kontrol'][l])['nama']);
-                  int idkontrol = ((((jsonResponse['data'])['lokasi'])[i]['hub']
-                      [j]['alat'][k]['kontrol'][l])['id']);
+                  String kontrol = jeniskontrol
+                      .data.lokasi[i].hub[j].alat[k].kontrol[l].alias;
+                  String kontrolname = jeniskontrol
+                      .data.lokasi[i].hub[j].alat[k].kontrol[l].nama;
+                  String event = jeniskontrol
+                      .data.lokasi[i].hub[j].alat[k].kontrol[l].event;
+                  String reason = jeniskontrol
+                      .data.lokasi[i].hub[j].alat[k].kontrol[l].reason;
+                  String time = jeniskontrol
+                      .data.lokasi[i].hub[j].alat[k].kontrol[l].time;
+                  int idkontrol =
+                      jeniskontrol.data.lokasi[i].hub[j].alat[k].kontrol[l].id;
+
+                  eventlist.length == panjangkontrol
+                      ? print("")
+                      : eventlist.add(event);
+
+                  timelist.length == panjangkontrol
+                      ? print("")
+                      : timelist.add(time);
+
+                  reasonlist.length == panjangkontrol
+                      ? print("")
+                      : reasonlist.add(reason);
+
                   listkontrol.contains(kontrol)
                       ? print("")
                       : listkontrol.add(kontrol);
+
                   kontrolnamelist.contains(kontrolname)
                       ? print("")
                       : kontrolnamelist.add(kontrolname);
+
                   namaalatkontrol == null
                       ? namaalatkontrol = listkontrol[0]
                       : namaalatkontrol = namaalatkontrol;
+
                   listidkontrol.contains(idkontrol)
                       ? print("")
                       : listidkontrol.add(idkontrol);
+
                   kontrolnamechoosen == null
                       ? kontrolnamechoosen = kontrolnamelist[0]
                       : kontrolnamechoosen = kontrolnamechoosen;
+
                   topic = "$kontrolnamechoosen/crophero/control";
-                  print(kontrolnamechoosen);
                 }
               }
             }
@@ -121,7 +145,9 @@ class _SemuaState extends State<Semua> with Validation {
         } else {}
       });
     }
-    return loadKontrol();
+    Future.delayed(const Duration(seconds: 10), () {
+      return loadKontrol();
+    });
   }
 
   Future doGantiAliasKontrol() async {
@@ -210,53 +236,390 @@ class _SemuaState extends State<Semua> with Validation {
                         : GestureDetector(
                             onTap: () {
                               setState(() {
+                                status = null;
+                                print(namaalatkontrol);
+                                print(status);
                                 data(status1);
                                 change(index);
                                 statusa(index);
                               });
                             },
                             child: Padding(
-                              padding: const EdgeInsets.all(10),
+                              padding: const EdgeInsets.fromLTRB(20, 10, 20, 5),
                               child: Container(
-                                  child: Center(
-                                      child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: <Widget>[
-                                      Image.asset(
-                                        'asset/img/ghico.png',
-                                        height: 40,
-                                      ),
-                                      SizedBox(
-                                        width:
-                                            MediaQuery.of(context).size.width /
-                                                7,
-                                      ),
-                                      Column(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        children: <Widget>[
-                                          new Text(
-                                            '${listkontrol[index]}',
-                                            textDirection: TextDirection.ltr,
-                                            style: TextStyle(
-                                                fontFamily: 'Mont',
-                                                fontSize: 14),
+                                  child: Stack(
+                                    children: [
+                                      Positioned.fill(
+                                        child: Align(
+                                          alignment: Alignment.centerLeft,
+                                          child: Container(
+                                            decoration: BoxDecoration(
+                                              boxShadow: [
+                                                BoxShadow(
+                                                  color: Colors.grey
+                                                      .withOpacity(0.2),
+                                                  spreadRadius: 1,
+                                                  blurRadius: 2,
+                                                  offset: Offset(0,
+                                                      3), // changes position of shadow
+                                                ),
+                                              ],
+                                            ),
+                                            child: Image.asset(
+                                              'asset/img/toogle.png',
+                                              height: SizeConfigs.screenHeight *
+                                                  0.04,
+                                            ),
                                           ),
-                                        ],
+                                        ),
                                       ),
+                                      Positioned.fill(
+                                        child: Align(
+                                          alignment: Alignment.center,
+                                          child: eventlist[index] ==
+                                                  'disconnected'
+                                              ? Column(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment.center,
+                                                  children: <Widget>[
+                                                      new Text(
+                                                        '${listkontrol[index]}',
+                                                        textDirection:
+                                                            TextDirection.ltr,
+                                                        style: TextStyle(
+                                                            fontFamily: 'kohi',
+                                                            fontSize:
+                                                                getHeight(14),
+                                                            fontWeight:
+                                                                FontWeight
+                                                                    .bold),
+                                                      ),
+                                                      new Text(
+                                                        '${reasonlist[index]}',
+                                                        style: TextStyle(
+                                                          fontSize:
+                                                              getHeight(10),
+                                                        ),
+                                                      )
+                                                    ])
+                                              : new Text(
+                                                  '${listkontrol[index]}',
+                                                  textDirection:
+                                                      TextDirection.ltr,
+                                                  style: TextStyle(
+                                                      fontFamily: 'kohi',
+                                                      fontSize: getHeight(14),
+                                                      fontWeight:
+                                                          FontWeight.bold),
+                                                ),
+                                        ),
+                                      ),
+                                      Positioned.fill(
+                                        child: GestureDetector(
+                                          onTap: () {
+                                            if (eventlist[index] ==
+                                                'disconnected') {
+                                              AlertDialog alert = AlertDialog(
+                                                contentPadding:
+                                                    EdgeInsets.all(0),
+                                                content: Container(
+                                                  height:
+                                                      SizeConfigs.screenHeight *
+                                                          0.12,
+                                                  width:
+                                                      SizeConfigs.screenWidth *
+                                                          0.65,
+                                                  child: Stack(
+                                                    children: [
+                                                      Container(
+                                                        decoration: BoxDecoration(
+                                                            image: DecorationImage(
+                                                                fit: BoxFit.cover,
+                                                                image: AssetImage(
+                                                                  'asset/img/Koneksi.png',
+                                                                ))),
+                                                      ),
+                                                      Row(
+                                                        mainAxisAlignment:
+                                                            MainAxisAlignment
+                                                                .center,
+                                                        children: [
+                                                          Container(),
+                                                          Column(
+                                                            mainAxisAlignment:
+                                                                MainAxisAlignment
+                                                                    .center,
+                                                            children: [
+                                                              Text(
+                                                                  "Waktu terkoneksi terakhir dengan sensor",
+                                                                  textAlign:
+                                                                      TextAlign
+                                                                          .center,
+                                                                  style: TextStyle(
+                                                                      fontWeight:
+                                                                          FontWeight
+                                                                              .bold,
+                                                                      fontSize:
+                                                                          getHeight(
+                                                                              15),
+                                                                      fontFamily:
+                                                                          'Kohi')),
+                                                              SizedBox(
+                                                                  height: 30),
+                                                              Row(
+                                                                mainAxisAlignment:
+                                                                    MainAxisAlignment
+                                                                        .center,
+                                                                children: [
+                                                                  Text(
+                                                                      "${timelist[index]}",
+                                                                      textAlign:
+                                                                          TextAlign
+                                                                              .center,
+                                                                      style:
+                                                                          TextStyle(
+                                                                        fontFamily:
+                                                                            'Kohi',
+                                                                        fontSize:
+                                                                            getHeight(15),
+                                                                      )),
+                                                                ],
+                                                              ),
+                                                            ],
+                                                          ),
+                                                        ],
+                                                      )
+                                                    ],
+                                                  ),
+                                                ),
+                                              );
+                                              // show the dialog
+                                              showDialog(
+                                                context: context,
+                                                builder:
+                                                    (BuildContext context) {
+                                                  return alert;
+                                                },
+                                              );
+                                            } else {
+                                              AlertDialog alert = AlertDialog(
+                                                contentPadding:
+                                                    EdgeInsets.all(0),
+                                                content: Container(
+                                                  height:
+                                                      SizeConfigs.screenHeight *
+                                                          0.12,
+                                                  width:
+                                                      SizeConfigs.screenWidth *
+                                                          0.65,
+                                                  child: Stack(
+                                                    children: [
+                                                      Container(
+                                                        decoration: BoxDecoration(
+                                                            image: DecorationImage(
+                                                                fit: BoxFit.cover,
+                                                                image: AssetImage(
+                                                                  'asset/img/Koneksi.png',
+                                                                ))),
+                                                      ),
+                                                      Row(
+                                                        mainAxisAlignment:
+                                                            MainAxisAlignment
+                                                                .center,
+                                                        children: [
+                                                          Container(),
+                                                          Column(
+                                                            mainAxisAlignment:
+                                                                MainAxisAlignment
+                                                                    .center,
+                                                            children: [
+                                                              Text(
+                                                                  "Waktu terkoneksi terakhir dengan sensor",
+                                                                  textAlign:
+                                                                      TextAlign
+                                                                          .center,
+                                                                  style: TextStyle(
+                                                                      fontWeight:
+                                                                          FontWeight
+                                                                              .bold,
+                                                                      fontSize:
+                                                                          getHeight(
+                                                                              15),
+                                                                      fontFamily:
+                                                                          'Kohi')),
+                                                              SizedBox(
+                                                                  height: 30),
+                                                              Row(
+                                                                mainAxisAlignment:
+                                                                    MainAxisAlignment
+                                                                        .center,
+                                                                children: [
+                                                                  Text(
+                                                                      "${timelist[index]}",
+                                                                      textAlign:
+                                                                          TextAlign
+                                                                              .center,
+                                                                      style:
+                                                                          TextStyle(
+                                                                        fontFamily:
+                                                                            'Kohi',
+                                                                        fontSize:
+                                                                            getHeight(15),
+                                                                      )),
+                                                                ],
+                                                              ),
+                                                            ],
+                                                          ),
+                                                        ],
+                                                      )
+                                                    ],
+                                                  ),
+                                                ),
+                                              );
+                                              // show the dialog
+                                              showDialog(
+                                                context: context,
+                                                builder:
+                                                    (BuildContext context) {
+                                                  return alert;
+                                                },
+                                              );
+                                            }
+                                          },
+                                          child: Padding(
+                                            padding: const EdgeInsets.only(
+                                                right: 10),
+                                            child: Align(
+                                              alignment: Alignment.centerRight,
+                                              child: eventlist[index] ==
+                                                      'disconnected'
+                                                  ? Image.asset(
+                                                      'asset/img/disconnected.png',
+                                                      height: SizeConfigs
+                                                              .screenHeight *
+                                                          0.03,
+                                                    )
+                                                  : Image.asset(
+                                                      'asset/img/connected.png',
+                                                      height: SizeConfigs
+                                                              .screenHeight *
+                                                          0.02,
+                                                    ),
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                      // ),
+                                      // Positioned.fill(
+                                      //   child: GestureDetector(
+                                      //     onTap: () {
+                                      //       if (timelist[index].isEmpty) {
+                                      //       } else {
+                                      //         if (eventlist[index] ==
+                                      //             'disconnected') {
+                                      //           AlertDialog alert = AlertDialog(
+                                      //             title: Text(
+                                      //                 "Terkoneksi terakhir pada",
+                                      //                 textAlign:
+                                      //                     TextAlign.center,
+                                      //                 style: TextStyle(
+                                      //                     fontSize:
+                                      //                         getHeight(15),
+                                      //                     fontFamily: 'Kohi')),
+                                      //             content: Text(
+                                      //                 "${timelist[index]}",
+                                      //                 textAlign:
+                                      //                     TextAlign.center,
+                                      //                 style: TextStyle(
+                                      //                     fontFamily: 'Kohi',
+                                      //                     fontSize:
+                                      //                         getHeight(15),
+                                      //                     fontWeight:
+                                      //                         FontWeight.bold)),
+                                      //             actions: [],
+                                      //           );
+                                      //           // show the dialog
+                                      //           showDialog(
+                                      //             context: context,
+                                      //             builder:
+                                      //                 (BuildContext context) {
+                                      //               return alert;
+                                      //             },
+                                      //           );
+                                      //         } else {
+                                      //           AlertDialog alert = AlertDialog(
+                                      //             title: Text(
+                                      //               "Terhubung kembali pada",
+                                      //               textAlign: TextAlign.center,
+                                      //               style: TextStyle(
+                                      //                   fontSize: getHeight(15),
+                                      //                   fontFamily: 'Kohi'),
+                                      //             ),
+                                      //             content: Text(
+                                      //                 "${timelist[index]}",
+                                      //                 textAlign:
+                                      //                     TextAlign.center,
+                                      //                 style: TextStyle(
+                                      //                     fontFamily: 'Kohi',
+                                      //                     fontSize:
+                                      //                         getHeight(15),
+                                      //                     fontWeight:
+                                      //                         FontWeight.bold)),
+                                      //             actions: [],
+                                      //           );
+                                      //           // show the dialog
+                                      //           showDialog(
+                                      //             context: context,
+                                      //             builder:
+                                      //                 (BuildContext context) {
+                                      //               return alert;
+                                      //             },
+                                      //           );
+                                      //         }
+                                      //       }
+                                      //       // set up the AlertDialog
+                                      //     },
+                                      //     child: Padding(
+                                      //       padding: const EdgeInsets.only(
+                                      //           right: 10),
+                                      //       child: Align(
+                                      //         alignment: Alignment.centerRight,
+                                      //         child: eventlist[index] ==
+                                      //                 'disconnected'
+                                      //             ? Image.asset(
+                                      //                 'asset/img/disconnected.png',
+                                      //                 height: SizeConfigs
+                                      //                         .screenHeight *
+                                      //                     0.03,
+                                      //               )
+                                      //             : Image.asset(
+                                      //                 'asset/img/connected.png',
+                                      //                 height: SizeConfigs
+                                      //                         .screenHeight *
+                                      //                     0.02,
+                                      //               ),
+                                      //       ),
+                                      //     ),
+                                      //   ),
+                                      // ),
                                     ],
-                                  )),
+                                  ),
                                   height:
                                       MediaQuery.of(context).size.height / 11.5,
                                   width:
                                       MediaQuery.of(context).size.width * 4 / 5,
                                   padding: const EdgeInsets.all(10),
                                   decoration: BoxDecoration(
+                                      boxShadow: [
+                                        BoxShadow(
+                                          color:
+                                              Color(0xB1AFAF).withOpacity(0.3),
+                                          spreadRadius: 1,
+                                          offset: Offset(0,
+                                              2), // changes position of shadow
+                                        ),
+                                      ],
                                       color: warna,
-                                      border: Border.all(
-                                        width: 2.0,
-                                        color: Colors.black,
-                                      ),
                                       borderRadius: BorderRadius.circular(10))),
                             ));
                   }

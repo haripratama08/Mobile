@@ -1,5 +1,5 @@
-import 'package:ch_v2_1/LoginPage/loginpage.dart';
 import 'package:ch_v2_1/Menu/Kontrol/kontrol_utama.dart';
+import 'package:ch_v2_1/process/size_config.dart';
 import 'package:flutter/material.dart';
 import 'package:ch_v2_1/Menu/Akun/logout.dart';
 import 'package:ch_v2_1/Menu/tambahan/stringcap.dart';
@@ -9,9 +9,11 @@ int _selectedIndex;
 int count = 0;
 int index = 0;
 String namaalat;
+String title;
 
 class Menu extends StatefulWidget {
   final namaalat;
+
   final int count;
   final int index;
   final String nama;
@@ -67,35 +69,19 @@ class _MenuState extends State<Menu> with SingleTickerProviderStateMixin {
       _selectedIndex = index;
     });
     setState(() {
-      if (index == 0 && widget.index == null ||
-          index == 0 && widget.index == 0 ||
-          index == null && widget.index == null ||
-          index == null && widget.index == 0) {
+      title = 'Monitoring';
+      if (index == 0) {
         setState(() {
           route = Semua();
         });
-      } else if (index == 0 && widget.index != null ||
-          index == 0 && widget.index != 0) {
-        _selectedIndex = widget.index;
-        if (widget.index == 0) {
-          setState(() {
-            route = Semua();
-          });
-        } else if (widget.index == 1) {
-          setState(() {
-            route = KontrolUtama();
-          });
-        } else if (widget.index == 2) {
-          setState(() {
-            route = Logout();
-          });
-        }
       } else if (index == 1) {
         setState(() {
+          title = 'Kontroling';
           route = KontrolUtama();
         });
       } else if (index == 2) {
         setState(() {
+          title = 'Akun';
           route = Logout();
         });
       }
@@ -114,14 +100,22 @@ class _MenuState extends State<Menu> with SingleTickerProviderStateMixin {
               child: new Padding(
                 padding:
                     const EdgeInsets.only(left: 30.0, top: 20.0, bottom: 20.0),
-                child: new Text(
-                  '$user'.inCaps,
-                  style: new TextStyle(
-                    fontSize: 20.0,
-                    fontFamily: 'Mont',
-                    fontWeight: FontWeight.w500,
-                    color: Colors.green[900],
-                  ),
+                child: Row(
+                  children: [
+                    Container(
+                        alignment: Alignment.centerLeft,
+                        height: getHeight(18),
+                        child: Image.asset('asset/img/logocrophero.png')),
+                    SizedBox(
+                      width: 5,
+                    ),
+                    Text('${title.inCaps}',
+                        style: TextStyle(
+                            color: Colors.green[900],
+                            fontFamily: 'kohi',
+                            fontWeight: FontWeight.bold,
+                            fontSize: getHeight(18)))
+                  ],
                 ),
               ),
               decoration: new BoxDecoration(
@@ -139,7 +133,7 @@ class _MenuState extends State<Menu> with SingleTickerProviderStateMixin {
           body: route,
           bottomNavigationBar: Container(
             decoration: BoxDecoration(
-              color: Colors.white,
+              color: Colors.white10,
               boxShadow: [
                 BoxShadow(
                   spreadRadius: 1.5,
@@ -148,26 +142,27 @@ class _MenuState extends State<Menu> with SingleTickerProviderStateMixin {
               ],
             ),
             child: BottomNavigationBar(
+                iconSize: 35,
                 showSelectedLabels: true,
-                unselectedItemColor: Colors.green[900],
-                selectedItemColor: Color(0xFFF7931E),
+                unselectedItemColor: Colors.grey,
+                selectedItemColor: Colors.green[400],
                 items: <BottomNavigationBarItem>[
                   BottomNavigationBarItem(
-                    icon: Icon(Icons.desktop_windows),
-                    label: "Monitor",
+                    icon: Icon(Icons.insert_chart),
+                    title: Text("", style: TextStyle(fontSize: 0)),
                   ),
                   BottomNavigationBarItem(
-                    icon: Icon(Icons.settings_remote_rounded),
-                    label: "Kontrol",
+                    icon: Icon(Icons.control_camera),
+                    title: Text("", style: TextStyle(fontSize: 0)),
                   ),
                   BottomNavigationBarItem(
+                    title: Text("", style: TextStyle(fontSize: 0)),
                     icon: Icon(Icons.account_circle),
-                    label: "Akun",
                   ),
                 ],
                 selectedLabelStyle: TextStyle(
                   fontSize: MediaQuery.of(context).size.height / 65,
-                  fontFamily: "Mont",
+                  fontFamily: "Kohi",
                   fontWeight: FontWeight.bold,
                 ),
                 type: BottomNavigationBarType.fixed,

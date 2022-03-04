@@ -1,8 +1,10 @@
+import 'package:ch_v2_1/process/size_config.dart';
 import 'package:flutter/material.dart';
 
 class BeforeLogin extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    SizeConfigs().init(context);
     return Scaffold(
       backgroundColor: Colors.white,
       body: new Container(
@@ -17,7 +19,7 @@ class BeforeLogin extends StatelessWidget {
               Center(
                 child: Image.asset(
                   "asset/img/logocircle.png",
-                  height: MediaQuery.of(context).size.height / 8,
+                  height: SizeConfigs.screenHeight / 10,
                 ),
               ),
               SizedBox(
@@ -27,14 +29,14 @@ class BeforeLogin extends StatelessWidget {
                   child: Text("Feeling Your Plants",
                       style: TextStyle(
                           color: Colors.white,
-                          fontSize: 20,
+                          fontSize: getHeight(15),
                           fontWeight: FontWeight.bold,
-                          fontFamily: 'Mont'))),
+                          fontFamily: 'Kohi'))),
               SizedBox(
                 height: 15,
               ),
               Container(
-                height: 45,
+                height: SizeConfigs.screenHeight / 20,
                 padding: EdgeInsets.fromLTRB(120, 0, 120, 0),
                 child: MaterialButton(
                     shape: RoundedRectangleBorder(
@@ -49,9 +51,9 @@ class BeforeLogin extends StatelessWidget {
                     },
                     child: Text("Masuk",
                         style: TextStyle(
-                            fontSize: 15,
+                            fontSize: getHeight(13),
                             fontWeight: FontWeight.bold,
-                            fontFamily: 'Mont'))),
+                            fontFamily: 'Kohi'))),
               ),
               SizedBox(
                 height: 15,
@@ -60,14 +62,14 @@ class BeforeLogin extends StatelessWidget {
                   child: Text("Jika belum memiliki akun",
                       style: TextStyle(
                           color: Colors.white,
-                          fontSize: 15,
+                          fontSize: getHeight(12),
                           fontWeight: FontWeight.bold,
-                          fontFamily: 'Mont'))),
+                          fontFamily: 'Kohi'))),
               SizedBox(
                 height: 15,
               ),
               Container(
-                height: 45,
+                height: SizeConfigs.screenHeight / 20,
                 padding: EdgeInsets.fromLTRB(120, 0, 120, 0),
                 child: MaterialButton(
                     shape: RoundedRectangleBorder(
@@ -80,9 +82,9 @@ class BeforeLogin extends StatelessWidget {
                     child: Text(
                       "Daftar",
                       style: TextStyle(
-                          fontSize: 15,
+                          fontSize: getHeight(13),
                           fontWeight: FontWeight.bold,
-                          fontFamily: 'Mont'),
+                          fontFamily: 'Kohi'),
                     )),
               ),
             ],

@@ -1,8 +1,9 @@
 import 'dart:async';
+import 'package:ch_v2_1/API/jenismonitoring.dart';
 import 'package:ch_v2_1/Menu/Monitor/monitor_semua.dart';
+import 'package:ch_v2_1/process/size_config.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'package:ch_v2_1/API/parsing.dart';
 import 'dart:convert';
 import 'package:ch_v2_1/LoginPage/loginpage.dart';
 import 'dart:io';
@@ -10,11 +11,17 @@ import 'package:ch_v2_1/Validator/validation.dart';
 import 'package:ch_v2_1/API/api.dart';
 import 'package:ch_v2_1/Menu/menu.dart';
 
+String eventalat;
+String time;
+String reason;
 List<dynamic> list2 = [];
 int status1 = 0;
 List<dynamic> idlokasi = [];
 List<dynamic> idhub = [];
 List<dynamic> idalat = [];
+List<dynamic> eventdev = [];
+List<dynamic> reasondev = [];
+List<dynamic> timeevent = [];
 int number;
 int data1;
 int data3;
@@ -47,12 +54,13 @@ class _MonitorIndoorState extends State<MonitorIndoor> with Validation {
   String msg = '';
   final formKey = GlobalKey<FormState>();
   GantiAlias ganti = GantiAlias();
+
   Future loadDevice() async {
-    var url = Uri.parse('$endPoint/data?uuid=$uuid');
+    var url = Uri.parse('$endPoint/user/data');
     var jsonString = await http
         .get(url, headers: {HttpHeaders.authorizationHeader: '$token'});
     var jsonResponse = json.decode(jsonString.body);
-    Data2 data2 = Data2.fromJson(jsonResponse);
+    Jenismonitoring data2 = Jenismonitoring.fromJson(jsonResponse);
     if (this.mounted) {
       setState(() {
         alat = 1;
@@ -67,12 +75,14 @@ class _MonitorIndoorState extends State<MonitorIndoor> with Validation {
               for (int k = 0;
                   k < data2.data.lokasi[i].hub[j].alat.length;
                   k++) {
+                eventalat = data2.data.lokasi[i].hub[j].alat[k].event;
+                reason = data2.data.lokasi[i].hub[j].alat[k].reason;
                 alat = data2.data.lokasi[i].hub[j].alat.length;
                 data1 = data2.data.lokasi[i].id;
                 data3 = data2.data.lokasi[i].hub[j].id;
                 data4 = data2.data.lokasi[i].hub[j].alat[k].id;
                 data5 = data2.data.lokasi[i].hub[j].alat[k].alias;
-
+                time = data2.data.lokasi[i].hub[j].alat[k].time;
                 if (listnama.contains(data5)) {
                 } else {
                   listnama.add('$data5');
@@ -90,8 +100,18 @@ class _MonitorIndoorState extends State<MonitorIndoor> with Validation {
                 } else {
                   idalat.add(data4);
                 }
-                list2.add(
-                    ('{ "idlokasi" : $data1,  "idhub" : $data3,  "idalat" : $data4, "nama" : $data5}'));
+                if (idalat.length == eventdev.length) {
+                } else {
+                  eventdev.add(eventalat);
+                }
+                if (idalat.length == reasondev.length) {
+                } else {
+                  reasondev.add(reason);
+                }
+                if (idalat.length == timeevent.length) {
+                } else {
+                  timeevent.add(time);
+                }
               }
             }
           }
@@ -101,7 +121,7 @@ class _MonitorIndoorState extends State<MonitorIndoor> with Validation {
         }
       });
     }
-    return loadDevice();
+    // return loadDevice();
   }
 
   Future doGanti() async {
@@ -112,7 +132,7 @@ class _MonitorIndoorState extends State<MonitorIndoor> with Validation {
       listnama.clear();
       setState(() {
         loadDevice();
-        print(jsonRes);
+        // print(jsonRes);
       });
       jsonRes['status'] == "OK"
           ? Navigator.push(
@@ -138,7 +158,6 @@ class _MonitorIndoorState extends State<MonitorIndoor> with Validation {
     if (index == null) {
       change(0);
       items.clear();
-
       idlokas = idlokasi[0];
       idhu = idhub[0];
       idala = idalat[0];
@@ -153,7 +172,11 @@ class _MonitorIndoorState extends State<MonitorIndoor> with Validation {
 
   void initState() {
     loadDevice();
+    eventdev.clear();
+    reasondev.clear();
     listnama.clear();
+    idalat.clear();
+    idhub.clear();
     super.initState();
   }
 
@@ -187,6 +210,10 @@ class _MonitorIndoorState extends State<MonitorIndoor> with Validation {
                   return GestureDetector(
                       onTap: () {
                         setState(() {
+                          print("ganti");
+                          print(idlokas);
+                          print(idala);
+                          print(idhu);
                           nama = listnama[index];
                           loading = true;
                           itemsshadow.clear();
@@ -199,41 +226,265 @@ class _MonitorIndoorState extends State<MonitorIndoor> with Validation {
                         });
                       },
                       child: Padding(
-                        padding: const EdgeInsets.all(10),
+                        padding: const EdgeInsets.fromLTRB(20, 10, 20, 5),
                         child: Container(
-                            child: Center(
-                                child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: <Widget>[
-                                Image.asset(
-                                  'asset/img/ghico.png',
-                                  height: 40,
-                                ),
-                                SizedBox(
-                                  width: MediaQuery.of(context).size.width / 7,
-                                ),
-                                Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: <Widget>[
-                                    new Text(
-                                      '${listnama[index]}',
-                                      textDirection: TextDirection.ltr,
-                                      style: TextStyle(
-                                          fontFamily: 'Mont', fontSize: 14),
+                            child: Stack(
+                              children: [
+                                Positioned.fill(
+                                  child: Align(
+                                    alignment: Alignment.centerLeft,
+                                    child: Container(
+                                      decoration: BoxDecoration(
+                                        boxShadow: [
+                                          BoxShadow(
+                                            color: Colors.grey.withOpacity(0.2),
+                                            spreadRadius: 1,
+                                            blurRadius: 2,
+                                            offset: Offset(0,
+                                                3), // changes position of shadow
+                                          ),
+                                        ],
+                                      ),
+                                      child: Image.asset(
+                                        'asset/img/monitor.png',
+                                        height: SizeConfigs.screenHeight * 0.04,
+                                      ),
                                     ),
-                                  ],
+                                  ),
+                                ),
+                                Positioned.fill(
+                                  child: Align(
+                                    alignment: Alignment.center,
+                                    child: eventdev[index] == 'disconnected'
+                                        ? Column(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            children: <Widget>[
+                                                new Text(
+                                                  '${listnama[index]}',
+                                                  textDirection:
+                                                      TextDirection.ltr,
+                                                  style: TextStyle(
+                                                      fontFamily: 'kohi',
+                                                      fontSize: getHeight(14),
+                                                      fontWeight:
+                                                          FontWeight.bold),
+                                                ),
+                                                new Text(
+                                                  '${reasondev[index]}',
+                                                  style: TextStyle(
+                                                    fontSize: getHeight(10),
+                                                  ),
+                                                )
+                                              ])
+                                        : Align(
+                                            alignment: Alignment.center,
+                                            child: new Text(
+                                              '${listnama[index]}',
+                                              textDirection: TextDirection.ltr,
+                                              style: TextStyle(
+                                                  fontFamily: 'kohi',
+                                                  fontSize: getHeight(14),
+                                                  fontWeight: FontWeight.bold),
+                                            ),
+                                          ),
+                                  ),
+                                ),
+                                Positioned.fill(
+                                  child: GestureDetector(
+                                    onTap: () {
+                                      if (eventdev[index] == 'disconnected') {
+                                        AlertDialog alert = AlertDialog(
+                                          contentPadding: EdgeInsets.all(0),
+                                          content: Container(
+                                            height:
+                                                SizeConfigs.screenHeight * 0.12,
+                                            width:
+                                                SizeConfigs.screenWidth * 0.65,
+                                            child: Stack(
+                                              children: [
+                                                Container(
+                                                  decoration: BoxDecoration(
+                                                      image: DecorationImage(
+                                                          fit: BoxFit.cover,
+                                                          image: AssetImage(
+                                                            'asset/img/Koneksi.png',
+                                                          ))),
+                                                ),
+                                                Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment.center,
+                                                  children: [
+                                                    Container(),
+                                                    Column(
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .center,
+                                                      children: [
+                                                        Text(
+                                                            "Waktu terkoneksi terakhir dengan sensor",
+                                                            textAlign: TextAlign
+                                                                .center,
+                                                            style: TextStyle(
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .bold,
+                                                                fontSize:
+                                                                    getHeight(
+                                                                        15),
+                                                                fontFamily:
+                                                                    'Kohi')),
+                                                        SizedBox(height: 30),
+                                                        Row(
+                                                          mainAxisAlignment:
+                                                              MainAxisAlignment
+                                                                  .center,
+                                                          children: [
+                                                            Text(
+                                                                "${timeevent[index]}",
+                                                                textAlign:
+                                                                    TextAlign
+                                                                        .center,
+                                                                style:
+                                                                    TextStyle(
+                                                                  fontFamily:
+                                                                      'Kohi',
+                                                                  fontSize:
+                                                                      getHeight(
+                                                                          15),
+                                                                )),
+                                                          ],
+                                                        ),
+                                                      ],
+                                                    ),
+                                                  ],
+                                                )
+                                              ],
+                                            ),
+                                          ),
+                                        );
+                                        // show the dialog
+                                        showDialog(
+                                          context: context,
+                                          builder: (BuildContext context) {
+                                            return alert;
+                                          },
+                                        );
+                                      } else {
+                                        AlertDialog alert = AlertDialog(
+                                          contentPadding: EdgeInsets.all(0),
+                                          content: Container(
+                                            height:
+                                                SizeConfigs.screenHeight * 0.12,
+                                            width:
+                                                SizeConfigs.screenWidth * 0.65,
+                                            child: Stack(
+                                              children: [
+                                                Container(
+                                                  decoration: BoxDecoration(
+                                                      image: DecorationImage(
+                                                          fit: BoxFit.cover,
+                                                          image: AssetImage(
+                                                            'asset/img/Koneksi.png',
+                                                          ))),
+                                                ),
+                                                Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment.center,
+                                                  children: [
+                                                    Container(),
+                                                    Column(
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .center,
+                                                      children: [
+                                                        Text(
+                                                            "Waktu terkoneksi terakhir dengan sensor",
+                                                            textAlign: TextAlign
+                                                                .center,
+                                                            style: TextStyle(
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .bold,
+                                                                fontSize:
+                                                                    getHeight(
+                                                                        15),
+                                                                fontFamily:
+                                                                    'Kohi')),
+                                                        SizedBox(height: 30),
+                                                        Row(
+                                                          mainAxisAlignment:
+                                                              MainAxisAlignment
+                                                                  .center,
+                                                          children: [
+                                                            Text(
+                                                                "${timeevent[index]}",
+                                                                textAlign:
+                                                                    TextAlign
+                                                                        .center,
+                                                                style:
+                                                                    TextStyle(
+                                                                  fontFamily:
+                                                                      'Kohi',
+                                                                  fontSize:
+                                                                      getHeight(
+                                                                          15),
+                                                                )),
+                                                          ],
+                                                        ),
+                                                      ],
+                                                    ),
+                                                  ],
+                                                )
+                                              ],
+                                            ),
+                                          ),
+                                        );
+                                        // show the dialog
+                                        showDialog(
+                                          context: context,
+                                          builder: (BuildContext context) {
+                                            return alert;
+                                          },
+                                        );
+                                      }
+                                    },
+                                    child: Padding(
+                                      padding: const EdgeInsets.only(right: 10),
+                                      child: Align(
+                                        alignment: Alignment.centerRight,
+                                        child: eventdev[index] == 'disconnected'
+                                            ? Image.asset(
+                                                'asset/img/disconnected.png',
+                                                height:
+                                                    SizeConfigs.screenHeight *
+                                                        0.03,
+                                              )
+                                            : Image.asset(
+                                                'asset/img/connected.png',
+                                                height:
+                                                    SizeConfigs.screenHeight *
+                                                        0.02,
+                                              ),
+                                      ),
+                                    ),
+                                  ),
                                 ),
                               ],
-                            )),
-                            height: MediaQuery.of(context).size.height / 11.5,
+                            ),
+                            height: MediaQuery.of(context).size.height / 11,
                             width: MediaQuery.of(context).size.width * 4 / 5,
                             padding: const EdgeInsets.all(10),
                             decoration: BoxDecoration(
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Color(0xB1AFAF).withOpacity(0.3),
+                                    spreadRadius: 1,
+                                    offset: Offset(
+                                        0, 2), // changes position of shadow
+                                  ),
+                                ],
                                 color: warna,
-                                border: Border.all(
-                                  width: 2.0,
-                                  color: Colors.black,
-                                ),
                                 borderRadius: BorderRadius.circular(10))),
                       ));
                 }),
@@ -256,7 +507,7 @@ class _MonitorIndoorState extends State<MonitorIndoor> with Validation {
                     padding: const EdgeInsets.fromLTRB(100, 5, 100, 5),
                     child: new Text(
                       "Nama Baru",
-                      style: TextStyle(fontFamily: 'Mont', fontSize: 15),
+                      style: TextStyle(fontFamily: 'kohi', fontSize: 15),
                     )),
                 Container(
                     width: 150,
@@ -296,7 +547,7 @@ class _MonitorIndoorState extends State<MonitorIndoor> with Validation {
                       child: Center(
                           child: Text("Terapkan",
                               style: TextStyle(
-                                  color: Colors.white, fontFamily: 'Mont'))),
+                                  color: Colors.white, fontFamily: 'kohi'))),
                     ),
                   ),
                 )

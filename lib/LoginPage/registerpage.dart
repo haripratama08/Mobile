@@ -93,63 +93,6 @@ class _RegisterPageState extends State<RegisterPage> with Validation {
     });
   }
 
-// registrasi ke API
-  // Future<int> submitSubscription(
-  //     {File image,
-  //     String username,
-  //     String pass,
-  //     String nama,
-  //     String email,
-  //     String telp,
-  //     String alamat}) async {
-  //   var request = http.MultipartRequest(
-  //     'POST',
-  //     Uri.parse("http://18.139.101.44:4040/api/user/register"),
-  //   );
-  //   Map<String, String> headers = {"Content-type": "multipart/form-data"};
-  //   request.files.add(
-  //     http.MultipartFile(
-  //       'foto',
-  //       image.readAsBytes().asStream(),
-  //       image.lengthSync(),
-  //       filename: image.path,
-  //       contentType: MediaType('image', 'jpeg'),
-  //     ),
-  //   );
-  //   request.headers.addAll(headers);
-  //   request.fields.addAll({
-  //     "username": "$username",
-  //     "password": "$pass",
-  //     "nama": "$nama",
-  //     "email": "$email",
-  //     "telp": "$telp",
-  //     "alamat": "$alamat"
-  //   });
-  //   print("request: " + request.toString());
-  //   var streamedResponse = await request.send();
-  //   var response = await http.Response.fromStream(streamedResponse);
-  //   print("This is response:" + response.body.toString());
-  //   var _data = jsonDecode(response.body.toString());
-  //   print(_data);
-  //   if (_data['status'] == 'Created') {
-  //     Navigator.push(context,
-  //         new MaterialPageRoute(builder: (context) => new LoginPage()));
-  //     print("masuk");
-  //   } else {
-  //     msg = _data['message'];
-  //     print("$msg");
-  //   }
-  //   return response.statusCode;
-  // }
-// untuk mendapat gambar dari Device
-  // Future uploadFoto(ImageSource media) async {
-  //   final pickedFile = await picker.getImage(source: media);
-  //   setState(() {
-  //     if (pickedFile != null) {
-  //       _image = File(pickedFile.path);
-  //     } else {}
-  //   });
-  // }
   @override
   void dispose() {
     username.dispose();
@@ -208,7 +151,7 @@ class _RegisterPageState extends State<RegisterPage> with Validation {
                         msg,
                         style: TextStyle(
                             color: Colors.red,
-                            fontFamily: "Mont",
+                            fontFamily: "kohi",
                             fontSize: 12),
                       ),
                     ),
@@ -237,13 +180,15 @@ class _RegisterPageState extends State<RegisterPage> with Validation {
 
   Widget userField() {
     return Padding(
-        padding: EdgeInsets.symmetric(horizontal: 50.0),
+        padding: EdgeInsets.symmetric(horizontal: 20.0),
         child: TextFormField(
           validator: (value) {
             if (value.isEmpty) {
               return 'masukan username';
             } else if (value.length < 5) {
               return 'username harus lebih dari 5 karakter';
+            } else if (value.contains(RegExp(r'\s\s*'))) {
+              return 'username tidak boleh mengandung whitespace';
             } else {
               return null;
             }
@@ -256,13 +201,14 @@ class _RegisterPageState extends State<RegisterPage> with Validation {
           keyboardType: TextInputType.text,
           autofocus: false,
           decoration: InputDecoration(
-            prefixIcon: Icon(Icons.person, color: Colors.green[900]),
+            prefixIcon: Icon(Icons.account_circle, color: Colors.green[900]),
             hintText: 'Username',
-            labelStyle:
-                TextStyle(color: Colors.white, fontFamily: "Montserrat"),
+            hintStyle: TextStyle(
+                color: Colors.black, fontFamily: "kohi", fontSize: 15),
+            labelStyle: TextStyle(color: Colors.white, fontFamily: "kohi"),
             contentPadding: EdgeInsets.fromLTRB(20.0, 5.0, 20.0, 5.0),
             border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(32.0),
+                borderRadius: BorderRadius.circular(10.0),
                 borderSide: BorderSide(color: Colors.green[900])),
           ),
         ));
@@ -270,7 +216,7 @@ class _RegisterPageState extends State<RegisterPage> with Validation {
 
   Widget emailField() {
     return Padding(
-        padding: EdgeInsets.symmetric(horizontal: 50.0),
+        padding: EdgeInsets.symmetric(horizontal: 20.0),
         child: TextFormField(
           validator: (value) {
             if (value.isEmpty) {
@@ -293,11 +239,12 @@ class _RegisterPageState extends State<RegisterPage> with Validation {
           decoration: InputDecoration(
             prefixIcon: Icon(Icons.email, color: Colors.green[900]),
             hintText: 'Email',
-            labelStyle:
-                TextStyle(color: Colors.white, fontFamily: "Montserrat"),
+            hintStyle: TextStyle(
+                color: Colors.black, fontFamily: "kohi", fontSize: 15),
+            labelStyle: TextStyle(color: Colors.white, fontFamily: "kohi"),
             contentPadding: EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
             border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(32.0),
+                borderRadius: BorderRadius.circular(10.0),
                 borderSide: BorderSide(color: Colors.green[900])),
           ),
         ));
@@ -305,7 +252,7 @@ class _RegisterPageState extends State<RegisterPage> with Validation {
 
   Widget passwordField() {
     return Padding(
-        padding: EdgeInsets.symmetric(horizontal: 50.0),
+        padding: EdgeInsets.symmetric(horizontal: 20.0),
         child: TextFormField(
           validator: (value) {
             if (value.isEmpty) {
@@ -331,15 +278,16 @@ class _RegisterPageState extends State<RegisterPage> with Validation {
                   _passwordVisible ? Icons.visibility_off : Icons.visibility),
             ),
             prefixIcon: Icon(
-              Icons.lock,
+              Icons.lock_open,
               color: Colors.green[900],
             ),
             hintText: 'Password',
-            labelStyle:
-                TextStyle(color: Colors.white, fontFamily: "Montserrat"),
+            hintStyle: TextStyle(
+                color: Colors.black, fontFamily: "kohi", fontSize: 15),
+            labelStyle: TextStyle(color: Colors.white, fontFamily: "kohi"),
             contentPadding: EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
             border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(32.0),
+                borderRadius: BorderRadius.circular(10.0),
                 borderSide: BorderSide(color: Colors.green[900])),
           ),
         ));
@@ -347,7 +295,7 @@ class _RegisterPageState extends State<RegisterPage> with Validation {
 
   Widget retypeField() {
     return Padding(
-        padding: EdgeInsets.symmetric(horizontal: 50.0),
+        padding: EdgeInsets.symmetric(horizontal: 20.0),
         child: TextFormField(
           validator: (value) {
             if (value.isEmpty) {
@@ -377,11 +325,12 @@ class _RegisterPageState extends State<RegisterPage> with Validation {
               color: Colors.green[900],
             ),
             hintText: 'Konfirmasi Password',
-            labelStyle:
-                TextStyle(color: Colors.white, fontFamily: "Montserrat"),
+            hintStyle: TextStyle(
+                color: Colors.black, fontFamily: "kohi", fontSize: 15),
+            labelStyle: TextStyle(color: Colors.white, fontFamily: "kohi"),
             contentPadding: EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
             border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(32.0),
+                borderRadius: BorderRadius.circular(10.0),
                 borderSide: BorderSide(color: Colors.green[900])),
           ),
         ));
@@ -389,7 +338,7 @@ class _RegisterPageState extends State<RegisterPage> with Validation {
 
   Widget nameField() {
     return Padding(
-        padding: EdgeInsets.symmetric(horizontal: 50.0),
+        padding: EdgeInsets.symmetric(horizontal: 20.0),
         child: TextFormField(
           validator: (value) {
             if (value.isEmpty) {
@@ -405,13 +354,14 @@ class _RegisterPageState extends State<RegisterPage> with Validation {
           keyboardType: TextInputType.text,
           autofocus: false,
           decoration: InputDecoration(
-            prefixIcon: Icon(Icons.person_pin, color: Colors.green[900]),
+            prefixIcon: Icon(Icons.perm_identity, color: Colors.green[900]),
             hintText: 'Nama Lengkap',
-            labelStyle:
-                TextStyle(color: Colors.white, fontFamily: "Montserrat"),
+            hintStyle: TextStyle(
+                color: Colors.black, fontFamily: "kohi", fontSize: 15),
+            labelStyle: TextStyle(color: Colors.white, fontFamily: "kohi"),
             contentPadding: EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
             border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(32.0),
+                borderRadius: BorderRadius.circular(10.0),
                 borderSide: BorderSide(color: Colors.green[900])),
           ),
         ));
@@ -419,7 +369,7 @@ class _RegisterPageState extends State<RegisterPage> with Validation {
 
   Widget addressField() {
     return Padding(
-        padding: EdgeInsets.symmetric(horizontal: 50.0),
+        padding: EdgeInsets.symmetric(horizontal: 20.0),
         child: TextFormField(
           validator: (value) {
             if (value.isEmpty) {
@@ -437,11 +387,12 @@ class _RegisterPageState extends State<RegisterPage> with Validation {
           decoration: InputDecoration(
             prefixIcon: Icon(Icons.home, color: Colors.green[900]),
             hintText: 'Alamat',
-            labelStyle:
-                TextStyle(color: Colors.white, fontFamily: "Montserrat"),
+            hintStyle: TextStyle(
+                color: Colors.black, fontFamily: "kohi", fontSize: 15),
+            labelStyle: TextStyle(color: Colors.white, fontFamily: "kohi"),
             contentPadding: EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
             border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(32.0),
+                borderRadius: BorderRadius.circular(10.0),
                 borderSide: BorderSide(color: Colors.green[900])),
           ),
         ));
@@ -449,7 +400,7 @@ class _RegisterPageState extends State<RegisterPage> with Validation {
 
   Widget telpField() {
     return Padding(
-        padding: EdgeInsets.symmetric(horizontal: 50.0),
+        padding: EdgeInsets.symmetric(horizontal: 20.0),
         child: TextFormField(
           validator: (value) {
             String patttern = r'(^(?:[+0]9)?[0-9]{10,12}$)';
@@ -467,13 +418,14 @@ class _RegisterPageState extends State<RegisterPage> with Validation {
           autofocus: false,
           autovalidateMode: AutovalidateMode.onUserInteraction,
           decoration: InputDecoration(
-            prefixIcon: Icon(Icons.phone, color: Colors.green[900]),
+            prefixIcon: Icon(Icons.phone_android, color: Colors.green[900]),
             hintText: 'Nomor Telpon',
-            labelStyle:
-                TextStyle(color: Colors.white, fontFamily: "Montserrat"),
+            hintStyle: TextStyle(
+                color: Colors.black, fontFamily: "kohi", fontSize: 15),
+            labelStyle: TextStyle(color: Colors.white, fontFamily: "kohi"),
             contentPadding: EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
             border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(32.0),
+                borderRadius: BorderRadius.circular(10.0),
                 borderSide: BorderSide(color: Colors.green[900])),
           ),
         ));
@@ -496,18 +448,10 @@ class _RegisterPageState extends State<RegisterPage> with Validation {
               print(email.text?.isEmpty ?? true);
               print(telp.text?.isEmpty ?? true);
               print(alamat.text?.isEmpty ?? true);
-              // submitSubscription(
-              //     image: _image,
-              //     username: username.text,
-              //     pass: passwordreal.text,
-              //     nama: nama.text,
-              //     email: email.text,
-              //     telp: telp.text,
-              //     alamat: alamat.text);
             },
             child: Text(
               "Daftar",
-              style: TextStyle(color: Colors.white, fontFamily: "Montserrat"),
+              style: TextStyle(color: Colors.white, fontFamily: "kohi"),
             ),
           ),
         ));
@@ -518,101 +462,20 @@ class _RegisterPageState extends State<RegisterPage> with Validation {
         padding: EdgeInsets.symmetric(vertical: 5.0),
         child: Material(
           color: Colors.green[900],
-          borderRadius: BorderRadius.circular(20.0),
+          borderRadius: BorderRadius.circular(10.0),
           child: MaterialButton(
-            minWidth: 200.0,
+            minWidth: MediaQuery.of(context).size.width * 0.9,
             height: 42.0,
             onPressed: () {
-              // if ((username.text?.isEmpty ?? true) ||
-              //     (passwordreal.text?.isEmpty ?? true) ||
-              //     (passwordtype.text?.isEmpty ?? true) ||
-              //     (nama.text?.isEmpty ?? true) ||
-              //     (email.text?.isEmpty ?? true) ||
-              //     (telp.text?.isEmpty ?? true) ||
-              //     (alamat.text?.isEmpty ?? true)) {
-              //   msg = 'mohon lengkapi isian terlebih dahulu';
-              //   print(msg);
-              // } else {
               msg = '';
               FocusScope.of(context).requestFocus(FocusNode());
               doRegis();
-              // }
-              // submitSubscription(
-              //     image: _image,
-              //     username: username.text,
-              //     pass: passwordreal.text,
-              //     nama: nama.text,
-              //     email: email.text,
-              //     telp: telp.text,
-              //     alamat: alamat.text);
             },
             child: Text(
               "Daftar",
-              style: TextStyle(color: Colors.white, fontFamily: "Montserrat"),
+              style: TextStyle(color: Colors.white, fontFamily: "kohi"),
             ),
           ),
         ));
   }
-
-  // void pilihFoto() {
-  //   showDialog(
-  //       context: context,
-  //       builder: (BuildContext context) {
-  //         return AlertDialog(
-  //           shape:
-  //               RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-  //           title: Column(
-  //             mainAxisAlignment: MainAxisAlignment.center,
-  //             children: [
-  //               Text(
-  //                 'Pilih Sumber Media',
-  //                 style: TextStyle(fontFamily: 'Mont'),
-  //               ),
-  //             ],
-  //           ),
-  //           content: Container(
-  //             height: MediaQuery.of(context).size.height / 7,
-  //             child: Column(
-  //               mainAxisAlignment: MainAxisAlignment.center,
-  //               children: <Widget>[
-  //                 TextButton(
-  //                   onPressed: () {
-  //                     Navigator.pop(context);
-  //                     uploadFoto(ImageSource.gallery);
-  //                   },
-  //                   child: Row(
-  //                     mainAxisAlignment: MainAxisAlignment.center,
-  //                     children: <Widget>[
-  //                       Icon(Icons.image),
-  //                       Text(
-  //                         'Foto dari galeri',
-  //                         style: TextStyle(
-  //                             fontFamily: 'Mont', color: Colors.black),
-  //                       ),
-  //                     ],
-  //                   ),
-  //                 ),
-  //                 TextButton(
-  //                   onPressed: () {
-  //                     Navigator.pop(context);
-  //                     uploadFoto(ImageSource.camera);
-  //                   },
-  //                   child: Row(
-  //                     mainAxisAlignment: MainAxisAlignment.center,
-  //                     children: <Widget>[
-  //                       Icon(Icons.camera),
-  //                       Text(
-  //                         'Foto dari kamera',
-  //                         style: TextStyle(
-  //                             fontFamily: 'Mont', color: Colors.black),
-  //                       ),
-  //                     ],
-  //                   ),
-  //                 ),
-  //               ],
-  //             ),
-  //           ),
-  //         );
-  //       });
-  // }
 }

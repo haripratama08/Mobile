@@ -33,16 +33,21 @@ class _KontrolManualState extends State<KontrolManual> {
       var body = {"topic": topic, "message": message};
       var response = await http.post(url, body: body);
       if (response.statusCode == 200) {
+        status = null;
         liststate.clear();
         setState(() {
           loading = false;
           showDialog(
             context: context,
             builder: (ctxt) {
+<<<<<<< HEAD
               Future.delayed(Duration(seconds: 1), () {
                 // Navigator.pop(context);
                 // Navigator.of(context).pop(true);
               });
+=======
+              Future.delayed(Duration(seconds: 1), () {});
+>>>>>>> c45977631a0546afa898457c561e7afb8723a97e
               return new AlertDialog(
                 title: Column(
                   children: <Widget>[
@@ -56,7 +61,6 @@ class _KontrolManualState extends State<KontrolManual> {
       }
       return response;
     }
-
     return Container(
       child: Container(
         child: loading == true
@@ -68,22 +72,59 @@ class _KontrolManualState extends State<KontrolManual> {
               )
             : GestureDetector(
                 onTap: () {
-                  liststate.clear();
-                  FocusScope.of(context).requestFocus(FocusNode());
-                  publish("manual", "0", "0", statesend);
+                  Widget cancelButton = TextButton(
+                    child: Text(
+                      "Tidak",
+                      style: TextStyle(
+                          fontFamily: 'Kohi',
+                          color: Colors.green[300],
+                          fontWeight: FontWeight.bold),
+                    ),
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                  );
+                  Widget continueButton = TextButton(
+                    child: Text("Ya",
+                        style: TextStyle(
+                            fontFamily: 'Kohi',
+                            color: Colors.green[300],
+                            fontWeight: FontWeight.bold)),
+                    onPressed: () {
+                      liststate.clear();
+                      FocusScope.of(context).requestFocus(FocusNode());
+                      publish("manual", "0", "0", statesend);
+                    },
+                  );
+                  AlertDialog alert = AlertDialog(
+                    content: Text(
+                      "Apakah Anda Yakin?",
+                      style: TextStyle(fontFamily: 'Kohi'),
+                    ),
+                    actions: [
+                      continueButton,
+                      cancelButton,
+                    ],
+                  );
+                  showDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return alert;
+                    },
+                  );
                 },
                 child: Container(
                     child: Center(
                       child: Text("$statesend",
                           style: TextStyle(
                               color: Colors.white,
-                              fontFamily: 'Mont',
+                              fontFamily: 'Kohi',
                               fontSize: 15)),
                     ),
                     height: 30,
                     width: 100,
                     decoration: BoxDecoration(
-                        color: Colors.red[900],
+                        color: Colors.green[300],
                         borderRadius: BorderRadius.circular(10)))),
       ),
     );
