@@ -139,7 +139,7 @@ class _DetailState extends State<Detail> with Validation {
                   kontrolnamechoosen == null
                       ? kontrolnamechoosen = kontrolnamelist[0]
                       : kontrolnamechoosen = kontrolnamechoosen;
-                      
+
                   topic = "$kontrolnamechoosen/crophero/control";
                 }
               }
@@ -148,7 +148,9 @@ class _DetailState extends State<Detail> with Validation {
         } else {}
       });
     }
-    return loadKontrol();
+    Future.delayed(const Duration(seconds: 10), () {
+      return loadKontrol();
+    });
   }
 
   Future doGantiAliasKontrol() async {
@@ -258,8 +260,7 @@ class _DetailState extends State<Detail> with Validation {
                                                       .withOpacity(0.2),
                                                   spreadRadius: 1,
                                                   blurRadius: 2,
-                                                  offset: Offset(0,
-                                                      3),
+                                                  offset: Offset(0, 3),
                                                 ),
                                               ],
                                             ),
@@ -414,8 +415,7 @@ class _DetailState extends State<Detail> with Validation {
                                           color:
                                               Color(0xB1AFAF).withOpacity(0.3),
                                           spreadRadius: 1,
-                                          offset: Offset(0,
-                                              2),
+                                          offset: Offset(0, 2),
                                         ),
                                       ],
                                       color: warna,
@@ -428,6 +428,7 @@ class _DetailState extends State<Detail> with Validation {
       ),
     );
   }
+
   void dialog() {
     showDialog(
       context: context,
