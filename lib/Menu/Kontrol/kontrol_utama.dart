@@ -5,6 +5,7 @@ import 'package:ch_v2_1/API/parsingmonitoring.dart';
 import 'package:ch_v2_1/API/api.dart';
 import 'package:ch_v2_1/Menu/Kontrol/kontrol_detail.dart';
 import 'package:ch_v2_1/Menu/Kontrol/kontrol_semua.dart';
+import 'package:ch_v2_1/Menu/menu.dart';
 import 'package:ch_v2_1/process/size_config.dart';
 import 'package:http/http.dart' as http;
 import 'package:ch_v2_1/LoginPage/loginpage.dart';
@@ -14,6 +15,7 @@ import 'package:flutter/material.dart';
 import 'package:toggle_switch/toggle_switch.dart';
 import 'package:ch_v2_1/API/parsing.dart';
 
+int idKontrolbef;
 bool refresh = false;
 List<String> listname = [];
 String selectedkondisi;
@@ -213,8 +215,9 @@ class _KontrolUtamaState extends State<KontrolUtama>
         print(error);
       }
     }
-    Future.delayed(const Duration(seconds: 10), () {
-      return loadState();
+    Future.delayed(const Duration(seconds: 5), () {
+    return  indexpage == 2 ?
+       loadState():print("index $indexpage");
     });
   }
 
@@ -327,6 +330,7 @@ class _KontrolUtamaState extends State<KontrolUtama>
 
   @override
   void initState() {
+    indexpage = 2;
     namaalatkontrol = null;
     status1 = 0;
     loadKontrol();
@@ -346,6 +350,14 @@ class _KontrolUtamaState extends State<KontrolUtama>
     }
 
     state(status);
+    if (iDkontrol != idKontrolbef) {
+      print("idkontrol utama $iDkontrol");
+      loadState();
+      setState(() {
+        idKontrolbef = iDkontrol;
+      });
+    } else {}
+
     return DefaultTabController(
         initialIndex: 0,
         length: listname.length + 1,

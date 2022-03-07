@@ -33,6 +33,7 @@ class _KontrolManualState extends State<KontrolManual> {
       var body = {"topic": topic, "message": message};
       var response = await http.post(url, body: body);
       if (response.statusCode == 200) {
+        print(body);
         status = null;
         liststate.clear();
         setState(() {
@@ -40,7 +41,12 @@ class _KontrolManualState extends State<KontrolManual> {
           showDialog(
             context: context,
             builder: (ctxt) {
-              Future.delayed(Duration(seconds: 1), () {});
+              Future.delayed(Duration(seconds: 1), () {
+                Navigator.pop(context);
+                Future.delayed(Duration(seconds: 0), () {
+                  Navigator.pop(context);
+                });
+              });
               return new AlertDialog(
                 title: Column(
                   children: <Widget>[
@@ -54,6 +60,7 @@ class _KontrolManualState extends State<KontrolManual> {
       }
       return response;
     }
+
     return Container(
       child: Container(
         child: loading == true

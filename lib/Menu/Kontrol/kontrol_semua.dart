@@ -145,9 +145,9 @@ class _SemuaState extends State<Semua> with Validation {
         } else {}
       });
     }
-    Future.delayed(const Duration(seconds: 10), () {
-      return loadKontrol();
-    });
+    // Future.delayed(const Duration(seconds: 10), () {
+    //   return loadKontrol();
+    // });
   }
 
   Future doGantiAliasKontrol() async {
@@ -175,8 +175,10 @@ class _SemuaState extends State<Semua> with Validation {
   void change(int index) {
     status1 = index;
     iDkontrol = listidkontrol[index];
+    // print(iDkontrol);
     namaalatkontrol = listkontrol[index];
     kontrolnamechoosen = kontrolnamelist[index];
+    loadKontrol();
   }
 
   void data(int index) {
@@ -189,6 +191,15 @@ class _SemuaState extends State<Semua> with Validation {
 
   @override
   Widget build(BuildContext context) {
+    if (iDkontrol != idKontrolbef) {
+      print("idkontrol $iDkontrol");
+      loadKontrol();
+      setState(() {
+        namaalatkontrol = namaalatkontrol;
+        idKontrolbef = iDkontrol;
+        print(namaalatkontrol);
+      });
+    } else {}
     return Scaffold(
       body: Container(
         height: MediaQuery.of(context).size.height / 4.5,
@@ -237,8 +248,6 @@ class _SemuaState extends State<Semua> with Validation {
                             onTap: () {
                               setState(() {
                                 status = null;
-                                print(namaalatkontrol);
-                                print(status);
                                 data(status1);
                                 change(index);
                                 statusa(index);
@@ -393,7 +402,6 @@ class _SemuaState extends State<Semua> with Validation {
                                                   ),
                                                 ),
                                               );
-                                              // show the dialog
                                               showDialog(
                                                 context: context,
                                                 builder:

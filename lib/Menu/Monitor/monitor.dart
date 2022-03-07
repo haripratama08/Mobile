@@ -9,7 +9,6 @@ import 'package:ch_v2_1/LoginPage/loginpage.dart';
 import 'dart:io';
 import 'package:ch_v2_1/Validator/validation.dart';
 import 'package:ch_v2_1/API/api.dart';
-import 'package:ch_v2_1/Menu/menu.dart';
 
 String eventalat;
 String time;
@@ -37,9 +36,6 @@ int index;
 int location;
 int hub;
 int device;
-int idhu;
-int idala;
-int idlokas;
 int idalate;
 
 class MonitorIndoor extends StatefulWidget {
@@ -121,28 +117,6 @@ class _MonitorIndoorState extends State<MonitorIndoor> with Validation {
         }
       });
     }
-    // return loadDevice();
-  }
-
-  Future doGanti() async {
-    listnama.clear();
-    try {
-      var rs = await ganti.doGanti(alias.text, idala, uuid, token);
-      var jsonRes = json.decode(rs.body);
-      listnama.clear();
-      setState(() {
-        loadDevice();
-        // print(jsonRes);
-      });
-      jsonRes['status'] == "OK"
-          ? Navigator.push(
-              context,
-              new MaterialPageRoute(
-                  builder: (context) => new Menu(
-                        index: 0,
-                      )))
-          : print("tidak ada");
-    } catch (e) {}
   }
 
   void change(int index) {
@@ -151,6 +125,9 @@ class _MonitorIndoorState extends State<MonitorIndoor> with Validation {
     idlokas = idlokasi[index];
     idhu = idhub[index];
     idala = idalat[index];
+    print(idlokas);
+    print(idala);
+    print(idhu);
     loadDevice();
   }
 
@@ -211,14 +188,10 @@ class _MonitorIndoorState extends State<MonitorIndoor> with Validation {
                       onTap: () {
                         setState(() {
                           print("ganti");
-                          print(idlokas);
-                          print(idala);
-                          print(idhu);
                           nama = listnama[index];
                           loading = true;
                           itemsshadow.clear();
                           items.clear();
-                          zerodata = false;
                           data(status1);
                           change(index);
                           items = items;
@@ -240,8 +213,7 @@ class _MonitorIndoorState extends State<MonitorIndoor> with Validation {
                                             color: Colors.grey.withOpacity(0.2),
                                             spreadRadius: 1,
                                             blurRadius: 2,
-                                            offset: Offset(0,
-                                                3), // changes position of shadow
+                                            offset: Offset(0, 3),
                                           ),
                                         ],
                                       ),
@@ -363,7 +335,6 @@ class _MonitorIndoorState extends State<MonitorIndoor> with Validation {
                                             ),
                                           ),
                                         );
-                                        // show the dialog
                                         showDialog(
                                           context: context,
                                           builder: (BuildContext context) {
@@ -440,7 +411,6 @@ class _MonitorIndoorState extends State<MonitorIndoor> with Validation {
                                             ),
                                           ),
                                         );
-                                        // show the dialog
                                         showDialog(
                                           context: context,
                                           builder: (BuildContext context) {
@@ -480,8 +450,7 @@ class _MonitorIndoorState extends State<MonitorIndoor> with Validation {
                                   BoxShadow(
                                     color: Color(0xB1AFAF).withOpacity(0.3),
                                     spreadRadius: 1,
-                                    offset: Offset(
-                                        0, 2), // changes position of shadow
+                                    offset: Offset(0, 2),
                                   ),
                                 ],
                                 color: warna,
@@ -491,73 +460,6 @@ class _MonitorIndoorState extends State<MonitorIndoor> with Validation {
           ],
         ),
       ),
-    );
-  }
-
-  void dialog() {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          actions: <Widget>[
-            Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                Padding(
-                    padding: const EdgeInsets.fromLTRB(100, 5, 100, 5),
-                    child: new Text(
-                      "Nama Baru",
-                      style: TextStyle(fontFamily: 'kohi', fontSize: 15),
-                    )),
-                Container(
-                    width: 150,
-                    height: 50,
-                    child: TextFormField(
-                      controller: alias,
-                      keyboardType: TextInputType.text,
-                      autofocus: false,
-                      decoration: InputDecoration(
-                        fillColor: Colors.white,
-                        filled: true,
-                        hintText: nama,
-                        contentPadding:
-                            EdgeInsets.fromLTRB(10.0, 10.0, 20.0, 10.0),
-                      ),
-                      validator: validateall,
-                    )),
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(50, 20, 50, 15),
-                  child: GestureDetector(
-                    onTap: () {
-                      FocusScope.of(context).requestFocus(FocusNode());
-                      doGanti();
-                      setState(() {
-                        loading = true;
-                        listnama.clear();
-                      });
-                      listnama.clear();
-                      loadDevice();
-                    },
-                    child: Container(
-                      height: 30,
-                      width: 100,
-                      decoration: BoxDecoration(
-                          color: Colors.green[900],
-                          borderRadius: BorderRadius.circular(5)),
-                      child: Center(
-                          child: Text("Terapkan",
-                              style: TextStyle(
-                                  color: Colors.white, fontFamily: 'kohi'))),
-                    ),
-                  ),
-                )
-              ],
-            ),
-          ],
-          shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.all(Radius.circular(32.0))),
-        );
-      },
     );
   }
 }

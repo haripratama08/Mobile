@@ -5,6 +5,7 @@ import 'package:ch_v2_1/Menu/Akun/logout.dart';
 import 'package:ch_v2_1/Menu/tambahan/stringcap.dart';
 import 'package:ch_v2_1/Menu/Monitor/monitor_semua.dart';
 
+int indexpage = 1;
 int _selectedIndex;
 int count = 0;
 int index = 0;
