@@ -1,5 +1,5 @@
 import 'dart:convert';
-import 'package:flutter/rendering.dart';
+// import 'package:flutter/rendering.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 import 'dart:io';
 import 'package:ch_v2_1/API/parsinggrafik.dart';
@@ -135,6 +135,9 @@ bool front = true;
 bool loadingdata = true;
 bool zerodata = false;
 bool dropdown = false;
+int idlokas;
+int idhu;
+int idala;
 
 class Semua extends StatefulWidget {
   @override
@@ -175,6 +178,7 @@ class _SemuaState extends State<Semua> {
 
   @override
   void initState() {
+    indexpage = 1;
     loadDevice2();
     super.initState();
   }
@@ -308,6 +312,7 @@ class _SemuaState extends State<Semua> {
               '$endPoint/monitoring/mobile/sensorRev?lokasi=${loc[0]}&hub=${huc[0]}&alat=${dev[0]}'),
           headers: {HttpHeaders.authorizationHeader: '$token'});
       var jsonResponse = json.decode(jsonString.body);
+      print(jsonResponse);
       MonitoringParse dataparsing = MonitoringParse.fromJson(jsonResponse);
       if (this.mounted) {
         setState(() {
@@ -367,17 +372,14 @@ class _SemuaState extends State<Semua> {
             print(_);
           }
         });
-        Future.delayed(const Duration(minutes: 5), () {
-          return loadSensor();
-        });
       }
     } else {
-      print('lokasi=$idlokas&hub=$idhu&alat=$idala');
       var jsonString = await http.get(
           Uri.parse(
               '$endPoint/monitoring/mobile/sensorRev?lokasi=$idlokas&hub=$idhu&alat=$idala'),
           headers: {HttpHeaders.authorizationHeader: '$token'});
       var jsonResponse = json.decode(jsonString.body);
+      print(jsonResponse);
       MonitoringParse dataparsing = MonitoringParse.fromJson(jsonResponse);
       if (this.mounted) {
         setState(() {
@@ -445,16 +447,12 @@ class _SemuaState extends State<Semua> {
             print("kosong");
           }
         });
-        Future.delayed(const Duration(minutes: 5), () {
-          return loadSensor();
-        });
       }
     }
   }
 
   TextEditingController min = new TextEditingController();
   TextEditingController max = new TextEditingController();
-
   TextEditingController cName = new TextEditingController();
   TextEditingController alias = new TextEditingController();
   TextEditingController maxvalue = new TextEditingController();

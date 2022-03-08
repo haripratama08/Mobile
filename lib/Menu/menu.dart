@@ -5,6 +5,7 @@ import 'package:ch_v2_1/Menu/Akun/logout.dart';
 import 'package:ch_v2_1/Menu/tambahan/stringcap.dart';
 import 'package:ch_v2_1/Menu/Monitor/monitor_semua.dart';
 
+int indexpage = 1;
 int _selectedIndex;
 int count = 0;
 int index = 0;
@@ -148,17 +149,17 @@ class _MenuState extends State<Menu> with SingleTickerProviderStateMixin {
                 selectedItemColor: Colors.green[400],
                 items: <BottomNavigationBarItem>[
                   BottomNavigationBarItem(
-                    icon: Icon(Icons.insert_chart),
-                    title: Text("", style: TextStyle(fontSize: 0)),
-                  ),
+                      icon: Icon(Icons.insert_chart), label: ''
+                      // title: Text("", style: TextStyle(fontSize: 0)),
+                      ),
                   BottomNavigationBarItem(
-                    icon: Icon(Icons.control_camera),
-                    title: Text("", style: TextStyle(fontSize: 0)),
-                  ),
+                      icon: Icon(Icons.control_camera), label: ''
+                      // title: Text("", style: TextStyle(fontSize: 0)),
+                      ),
                   BottomNavigationBarItem(
-                    title: Text("", style: TextStyle(fontSize: 0)),
-                    icon: Icon(Icons.account_circle),
-                  ),
+                      // title: Text("", style: TextStyle(fontSize: 0)),
+                      icon: Icon(Icons.account_circle),
+                      label: ''),
                 ],
                 selectedLabelStyle: TextStyle(
                   fontSize: MediaQuery.of(context).size.height / 65,
