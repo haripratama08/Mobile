@@ -1,6 +1,6 @@
 import 'dart:async';
 import 'package:ch_v2_1/corousel/corousel_state.dart';
-import 'package:flutter/foundation.dart';
+// import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:ch_v2_1/corousel/corousel_controller.dart';
