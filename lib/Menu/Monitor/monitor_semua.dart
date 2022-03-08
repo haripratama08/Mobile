@@ -399,6 +399,7 @@ class _SemuaState extends State<Semua> {
                 dataparsing.data.data[i].data.isEmpty
                     ? timeonly = ''
                     : timeonly = dataparsing.data.data[i].data[0].timeOnly;
+
                 dataparsing.data.data[i].data.isEmpty
                     ? nilai1 = ''
                     : nilai1 = dataparsing.data.data[i].data[0].nilai
@@ -1421,22 +1422,45 @@ class _SemuaState extends State<Semua> {
                       children: [
                         Stack(
                           children: [
-                            Center(
-                              child: Container(
-                                child: Image.asset(
-                                  'asset/img/elips.png',
-                                  height: 100,
+                            Padding(
+                              padding:
+                                  const EdgeInsets.only(right: 2, bottom: 15),
+                              child: Center(
+                                child: Container(
+                                  child: Image.asset(
+                                    'asset/img/elips.png',
+                                    height: 115,
+                                  ),
                                 ),
                               ),
                             ),
                             Center(
                               child: imagedetail == '0'
-                                  ? Container(
-                                      height: SizeConfigs.screenHeight * 0.12,
+                                  ? Positioned(
+                                      width: MediaQuery.of(context).size.width,
+                                      top: MediaQuery.of(context).size.width *
+                                          0.30,
+                                      child: Container(
+                                        height: SizeConfigs.screenHeight * 0.12,
+                                      ),
                                     )
-                                  : Container(
-                                      height: SizeConfigs.screenHeight * 0.12,
-                                      child: Image.network('$imagedetail')),
+                                  : Positioned(
+                                      width: MediaQuery.of(context).size.width,
+                                      top: MediaQuery.of(context).size.width *
+                                          0.30,
+                                      child: Padding(
+                                        padding: const EdgeInsets.only(
+                                          top: 5,
+                                        ),
+                                        child: Center(
+                                          child: Container(
+                                              height: SizeConfigs.screenHeight *
+                                                  0.12,
+                                              child: Image.network(
+                                                  '$imagedetail')),
+                                        ),
+                                      ),
+                                    ),
                             ),
                           ],
                         ),
