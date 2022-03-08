@@ -10,6 +10,12 @@ flutter pub get
 flutter run
 ```
 
+for rendering image in web server
+
+```
+flutter run -d web-server --web-renderer html
+```
+
 ### Compiles and minifies for production
 ```
 flutter build apk/appbundle
