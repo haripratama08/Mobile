@@ -216,8 +216,7 @@ class _KontrolUtamaState extends State<KontrolUtama>
       }
     }
     Future.delayed(const Duration(seconds: 5), () {
-    return  indexpage == 2 ?
-       loadState():print("index $indexpage");
+      return indexpage == 2 ? loadState() : print("index $indexpage");
     });
   }
 

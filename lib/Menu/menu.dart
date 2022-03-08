@@ -150,14 +150,11 @@ class _MenuState extends State<Menu> with SingleTickerProviderStateMixin {
                 items: <BottomNavigationBarItem>[
                   BottomNavigationBarItem(
                       icon: Icon(Icons.insert_chart), label: ''
-                      // title: Text("", style: TextStyle(fontSize: 0)),
                       ),
                   BottomNavigationBarItem(
                       icon: Icon(Icons.control_camera), label: ''
-                      // title: Text("", style: TextStyle(fontSize: 0)),
                       ),
                   BottomNavigationBarItem(
-                      // title: Text("", style: TextStyle(fontSize: 0)),
                       icon: Icon(Icons.account_circle),
                       label: ''),
                 ],

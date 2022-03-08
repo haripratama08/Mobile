@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:ch_v2_1/corousel/corousel_option.dart';
 import 'package:ch_v2_1/corousel/corousel_slider.dart';
 import 'package:ch_v2_1/corousel/corousel_state.dart';
 import 'package:ch_v2_1/corousel/util.dart';

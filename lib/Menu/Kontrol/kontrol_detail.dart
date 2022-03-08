@@ -9,7 +9,6 @@ import 'package:ch_v2_1/process/size_config.dart';
 import 'package:http/http.dart' as http;
 import 'package:ch_v2_1/LoginPage/loginpage.dart';
 import 'package:ch_v2_1/Menu/Kontrol/kontrol_utama.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class Detail extends StatefulWidget {

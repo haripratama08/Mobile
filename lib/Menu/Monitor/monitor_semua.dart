@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'package:flutter/rendering.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 import 'dart:io';
 import 'package:ch_v2_1/API/parsinggrafik.dart';
