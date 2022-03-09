@@ -39,6 +39,7 @@ class _KontrolManualState extends State<KontrolManual> {
         setState(() {
           loading = false;
           showDialog(
+            barrierDismissible: false,
             context: context,
             builder: (ctxt) {
               Future.delayed(Duration(seconds: 2), () {
@@ -48,10 +49,11 @@ class _KontrolManualState extends State<KontrolManual> {
                 });
               });
               return new AlertDialog(
-                title: Column(
-                  children: <Widget>[
-                    Center(child: Image.asset("asset/img/datasent.png")),
-                  ],
+                title: GestureDetector(
+                  onTap: (() {
+                    print("1");
+                  }),
+                  child: Center(child: Image.asset("asset/img/datasent.png")),
                 ),
               );
             },

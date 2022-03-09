@@ -144,9 +144,6 @@ class _SemuaState extends State<Semua> with Validation {
         } else {}
       });
     }
-    // Future.delayed(const Duration(seconds: 10), () {
-    //   return loadKontrol();
-    // });
   }
 
   Future doGantiAliasKontrol() async {

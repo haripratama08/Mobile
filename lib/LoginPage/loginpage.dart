@@ -167,7 +167,7 @@ class _LoginPageState extends State<LoginPage> {
           autofocus: false,
           decoration: InputDecoration(
             prefixIcon: Icon(Icons.person, color: Colors.green[900]),
-            hintText: 'Username',
+            hintText: 'Username / email',
             hintStyle: TextStyle(
                 color: Colors.black,
                 fontFamily: "kohi",
