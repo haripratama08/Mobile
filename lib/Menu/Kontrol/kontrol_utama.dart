@@ -15,7 +15,8 @@ import 'package:flutter/material.dart';
 import 'package:toggle_switch/toggle_switch.dart';
 import 'package:ch_v2_1/API/parsing.dart';
 
-int idKontrolbef;
+bool ganti = true;
+int idKontrolbef = 100;
 bool refresh = false;
 List<String> listname = [];
 String selectedkondisi;
@@ -126,96 +127,115 @@ class _KontrolUtamaState extends State<KontrolUtama>
   }
 
   Future loadKontrol() async {
-    var url = Uri.parse('$endPoint/alat/kontrol');
-    var jsonString = await http
-        .get(url, headers: {HttpHeaders.authorizationHeader: '$token'});
-    var jsonResponse = json.decode(jsonString.body);
-    if (this.mounted) {
-      setState(() {
-        print(jsonResponse);
-        if ((jsonResponse['status']) == 'OK') {
-          panjanglokasi = (((jsonResponse['data'])['lokasi']).length);
-          for (int i = 0; i < panjanglokasi; i++) {
-            String hub = (((jsonResponse['data'])['lokasi'])[i]['nama']);
-            idlokasikontrol = (((jsonResponse['data'])['lokasi'])[i]['id']);
-            listname.length == panjanglokasi ? print("") : listname.add(hub);
-            listidlokasi.length == panjanglokasi
-                ? print("")
-                : listidlokasi.add(idlokasikontrol);
-            var panjanghub =
-                (((jsonResponse['data'])['lokasi'])[i]['hub'].length);
-            for (int j = 0; j < panjanghub; j++) {
-              var panjangalat = ((((jsonResponse['data'])['lokasi'])[i]['hub']
-                      [j]['alat']
-                  .length));
-              int idhubkontrol =
-                  ((((jsonResponse['data'])['lokasi'])[i]['hub'][j]['id']));
-              listidhub.length == panjanghub
+    if (ganti == false) {
+      print("ganti false");
+    } else {
+      var url = Uri.parse('$endPoint/alat/kontrol');
+      var jsonString = await http
+          .get(url, headers: {HttpHeaders.authorizationHeader: '$token'});
+      var jsonResponse = json.decode(jsonString.body);
+      if (this.mounted) {
+        setState(() {
+          ganti = false;
+          if ((jsonResponse['status']) == 'OK') {
+            panjanglokasi = (((jsonResponse['data'])['lokasi']).length);
+            for (int i = 0; i < panjanglokasi; i++) {
+              String hub = (((jsonResponse['data'])['lokasi'])[i]['nama']);
+              idlokasikontrol = (((jsonResponse['data'])['lokasi'])[i]['id']);
+              listname.length == panjanglokasi ? print("") : listname.add(hub);
+              listidlokasi.length == panjanglokasi
                   ? print("")
-                  : listidhub.add(idhubkontrol);
-              //----------------------------------------------------------------------//
-              for (int k = 0; k < panjangalat; k++) {
-                panjangkontrol = ((((jsonResponse['data'])['lokasi'])[i]['hub']
-                        [j]['alat'][k]['kontrol']
+                  : listidlokasi.add(idlokasikontrol);
+              var panjanghub =
+                  (((jsonResponse['data'])['lokasi'])[i]['hub'].length);
+              for (int j = 0; j < panjanghub; j++) {
+                var panjangalat = ((((jsonResponse['data'])['lokasi'])[i]['hub']
+                        [j]['alat']
                     .length));
-                int idalatkontrol = ((((jsonResponse['data'])['lokasi'])[i]
-                    ['hub'][j]['alat'][k]['id']));
-                listidalat.length == panjangalat
+                int idhubkontrol =
+                    ((((jsonResponse['data'])['lokasi'])[i]['hub'][j]['id']));
+                listidhub.length == panjanghub
                     ? print("")
-                    : listidalat.add(idalatkontrol);
-                //---------------------------------------------------------------------//
-                for (int l = 0; l < panjangkontrol; l++) {
-                  String kontrol = ((((jsonResponse['data'])['lokasi'])[i]
-                      ['hub'][j]['alat'][k]['kontrol'][l])['alias']);
-                  String statusaaaa = ((((jsonResponse['data'])['lokasi'])[i]
-                      ['hub'][j]['alat'][k]['kontrol'][l])['state']);
-                  int idkontrol = ((((jsonResponse['data'])['lokasi'])[i]['hub']
-                      [j]['alat'][k]['kontrol'][l])['id']);
-                  listkontrol.contains(kontrol)
-                      ? print("$listkontrol")
-                      : listkontrol.add(kontrol);
-                  listidkontrol.contains(idkontrol)
+                    : listidhub.add(idhubkontrol);
+                //----------------------------------------------------------------------//
+                for (int k = 0; k < panjangalat; k++) {
+                  panjangkontrol = ((((jsonResponse['data'])['lokasi'])[i]
+                          ['hub'][j]['alat'][k]['kontrol']
+                      .length));
+                  int idalatkontrol = ((((jsonResponse['data'])['lokasi'])[i]
+                      ['hub'][j]['alat'][k]['id']));
+                  listidalat.length == panjangalat
                       ? print("")
-                      : listidkontrol.add(idkontrol);
-                  liststate.length == panjangalat
-                      ? print("")
-                      : liststate.add(statusaaaa);
+                      : listidalat.add(idalatkontrol);
                   //---------------------------------------------------------------------//
-                  iDlokasi == null
-                      ? iDlokasi = listidlokasi[0]
-                      : iDlokasi = iDlokasi;
-                  namaalatkontrol == null
-                      ? namaalatkontrol = listkontrol[0]
-                      : namaalatkontrol = namaalatkontrol;
-                  iDhub == null ? iDhub = listidhub[0] : iDhub = iDhub;
-                  iDalat == null ? iDalat = listidalat[0] : iDalat = iDalat;
-                  iDkontrol == null
-                      ? iDkontrol = listidkontrol[0]
-                      : iDkontrol = iDkontrol;
+                  for (int l = 0; l < panjangkontrol; l++) {
+                    String kontrol = ((((jsonResponse['data'])['lokasi'])[i]
+                        ['hub'][j]['alat'][k]['kontrol'][l])['alias']);
+                    String statusaaaa = ((((jsonResponse['data'])['lokasi'])[i]
+                        ['hub'][j]['alat'][k]['kontrol'][l])['state']);
+                    int idkontrol = ((((jsonResponse['data'])['lokasi'])[i]
+                        ['hub'][j]['alat'][k]['kontrol'][l])['id']);
+                    listkontrol.contains(kontrol)
+                        ? print("$listkontrol")
+                        : listkontrol.add(kontrol);
+                    listidkontrol.contains(idkontrol)
+                        ? print("")
+                        : listidkontrol.add(idkontrol);
+                    liststate.length == panjangalat
+                        ? print("")
+                        : liststate.add(statusaaaa);
+                    //---------------------------------------------------------------------//
+                    iDlokasi == null
+                        ? iDlokasi = listidlokasi[0]
+                        : iDlokasi = iDlokasi;
+                    namaalatkontrol == null
+                        ? namaalatkontrol = listkontrol[0]
+                        : namaalatkontrol = namaalatkontrol;
+                    iDhub == null ? iDhub = listidhub[0] : iDhub = iDhub;
+                    iDalat == null ? iDalat = listidalat[0] : iDalat = iDalat;
+                    iDkontrol == null
+                        ? iDkontrol = listidkontrol[0]
+                        : iDkontrol = iDkontrol;
+                    Future.delayed(const Duration(seconds: 3), () {
+                      return loadState();
+                    });
+                  }
                 }
               }
             }
-          }
-        } else {}
-      });
+          } else {}
+        });
+      }
     }
+
+    Future.delayed(const Duration(seconds: 1), () {
+      return indexpage == 2 ? loadKontrol() : print("index $indexpage");
+    });
   }
 
   Future loadState() async {
-    var url2 = Uri.parse('$endPoint/alat/kontrol/state?id=$iDkontrol');
-    var jsonString = await http
-        .get(url2, headers: {HttpHeaders.authorizationHeader: '$token'});
-    var jsonResponse = json.decode(jsonString.body);
-    if (this.mounted) {
-      try {
-        setState(() {
-          status = jsonResponse['state'];
-        });
-      } on Exception catch (error) {
-        print(error);
+    if (ganti == false) {
+    } else {
+      print("------------");
+      var url2 = Uri.parse('$endPoint/alat/kontrol/state?id=$iDkontrol');
+      var jsonString = await http
+          .get(url2, headers: {HttpHeaders.authorizationHeader: '$token'});
+      var jsonResponse = json.decode(jsonString.body);
+      print(jsonResponse);
+      if (this.mounted) {
+        try {
+          setState(() {
+            print("------------");
+            status = jsonResponse['state'];
+            ganti = false;
+          });
+        } on Exception catch (error) {
+          print(error);
+        }
       }
     }
-    Future.delayed(const Duration(seconds: 5), () {
+
+    Future.delayed(const Duration(seconds: 1), () {
       return indexpage == 2 ? loadState() : print("index $indexpage");
     });
   }
@@ -329,12 +349,13 @@ class _KontrolUtamaState extends State<KontrolUtama>
 
   @override
   void initState() {
+    ganti = true;
     indexpage = 2;
     namaalatkontrol = null;
     status1 = 0;
     loadKontrol();
     loadMonitor();
-    loadState();
+    // loadState();
     super.initState();
   }
 

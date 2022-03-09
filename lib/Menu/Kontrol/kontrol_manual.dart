@@ -33,10 +33,10 @@ class _KontrolManualState extends State<KontrolManual> {
       var body = {"topic": topic, "message": message};
       var response = await http.post(url, body: body);
       if (response.statusCode == 200) {
-        print(body);
         status = null;
         liststate.clear();
         setState(() {
+          ganti = true;
           loading = false;
           showDialog(
             barrierDismissible: false,
@@ -50,9 +50,7 @@ class _KontrolManualState extends State<KontrolManual> {
               });
               return new AlertDialog(
                 title: GestureDetector(
-                  onTap: (() {
-                    print("1");
-                  }),
+                  onTap: (() {}),
                   child: Center(child: Image.asset("asset/img/datasent.png")),
                 ),
               );

@@ -246,6 +246,7 @@ class _SemuaState extends State<Semua> with Validation {
                                 data(status1);
                                 change(index);
                                 statusa(index);
+                                ganti = true;
                               });
                             },
                             child: Padding(
@@ -355,7 +356,7 @@ class _SemuaState extends State<Semua> with Validation {
                                                                     .center,
                                                             children: [
                                                               Text(
-                                                                  "Waktu terkoneksi terakhir dengan sensor",
+                                                                  "Waktu terkoneksi terakhir",
                                                                   textAlign:
                                                                       TextAlign
                                                                           .center,
@@ -437,7 +438,7 @@ class _SemuaState extends State<Semua> with Validation {
                                                                     .center,
                                                             children: [
                                                               Text(
-                                                                  "Waktu terkoneksi terakhir dengan sensor",
+                                                                  "Waktu terkoneksi terakhir",
                                                                   textAlign:
                                                                       TextAlign
                                                                           .center,
@@ -512,99 +513,6 @@ class _SemuaState extends State<Semua> with Validation {
                                           ),
                                         ),
                                       ),
-                                      // ),
-                                      // Positioned.fill(
-                                      //   child: GestureDetector(
-                                      //     onTap: () {
-                                      //       if (timelist[index].isEmpty) {
-                                      //       } else {
-                                      //         if (eventlist[index] ==
-                                      //             'disconnected') {
-                                      //           AlertDialog alert = AlertDialog(
-                                      //             title: Text(
-                                      //                 "Terkoneksi terakhir pada",
-                                      //                 textAlign:
-                                      //                     TextAlign.center,
-                                      //                 style: TextStyle(
-                                      //                     fontSize:
-                                      //                         getHeight(15),
-                                      //                     fontFamily: 'Kohi')),
-                                      //             content: Text(
-                                      //                 "${timelist[index]}",
-                                      //                 textAlign:
-                                      //                     TextAlign.center,
-                                      //                 style: TextStyle(
-                                      //                     fontFamily: 'Kohi',
-                                      //                     fontSize:
-                                      //                         getHeight(15),
-                                      //                     fontWeight:
-                                      //                         FontWeight.bold)),
-                                      //             actions: [],
-                                      //           );
-                                      //           // show the dialog
-                                      //           showDialog(
-                                      //             context: context,
-                                      //             builder:
-                                      //                 (BuildContext context) {
-                                      //               return alert;
-                                      //             },
-                                      //           );
-                                      //         } else {
-                                      //           AlertDialog alert = AlertDialog(
-                                      //             title: Text(
-                                      //               "Terhubung kembali pada",
-                                      //               textAlign: TextAlign.center,
-                                      //               style: TextStyle(
-                                      //                   fontSize: getHeight(15),
-                                      //                   fontFamily: 'Kohi'),
-                                      //             ),
-                                      //             content: Text(
-                                      //                 "${timelist[index]}",
-                                      //                 textAlign:
-                                      //                     TextAlign.center,
-                                      //                 style: TextStyle(
-                                      //                     fontFamily: 'Kohi',
-                                      //                     fontSize:
-                                      //                         getHeight(15),
-                                      //                     fontWeight:
-                                      //                         FontWeight.bold)),
-                                      //             actions: [],
-                                      //           );
-                                      //           // show the dialog
-                                      //           showDialog(
-                                      //             context: context,
-                                      //             builder:
-                                      //                 (BuildContext context) {
-                                      //               return alert;
-                                      //             },
-                                      //           );
-                                      //         }
-                                      //       }
-                                      //       // set up the AlertDialog
-                                      //     },
-                                      //     child: Padding(
-                                      //       padding: const EdgeInsets.only(
-                                      //           right: 10),
-                                      //       child: Align(
-                                      //         alignment: Alignment.centerRight,
-                                      //         child: eventlist[index] ==
-                                      //                 'disconnected'
-                                      //             ? Image.asset(
-                                      //                 'asset/img/disconnected.png',
-                                      //                 height: SizeConfigs
-                                      //                         .screenHeight *
-                                      //                     0.03,
-                                      //               )
-                                      //             : Image.asset(
-                                      //                 'asset/img/connected.png',
-                                      //                 height: SizeConfigs
-                                      //                         .screenHeight *
-                                      //                     0.02,
-                                      //               ),
-                                      //       ),
-                                      //     ),
-                                      //   ),
-                                      // ),
                                     ],
                                   ),
                                   height:

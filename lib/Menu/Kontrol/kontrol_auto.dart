@@ -58,6 +58,7 @@ class _KontrolAutoState extends State<KontrolAuto> with Validation {
         setState(() {
           loading = false;
           showDialog(
+              barrierDismissible: false,
               context: context,
               builder: (ctxt) {
                 Future.delayed(Duration(seconds: 2), () {
