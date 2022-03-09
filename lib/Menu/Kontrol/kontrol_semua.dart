@@ -176,7 +176,7 @@ class _SemuaState extends State<Semua> with Validation {
     iDkontrol = listidkontrol[index];
     namaalatkontrol = listkontrol[index];
     kontrolnamechoosen = kontrolnamelist[index];
-    loadKontrol();
+    // loadKontrol();
   }
 
   void data(int index) {

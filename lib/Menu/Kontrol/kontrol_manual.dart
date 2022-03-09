@@ -41,10 +41,10 @@ class _KontrolManualState extends State<KontrolManual> {
           showDialog(
             context: context,
             builder: (ctxt) {
-              Future.delayed(Duration(seconds: 1), () {
-                Navigator.pop(context);
+              Future.delayed(Duration(seconds: 2), () {
+                Navigator.pop(context, true);
                 Future.delayed(Duration(seconds: 0), () {
-                  Navigator.pop(context);
+                  Navigator.pop(context, true);
                 });
               });
               return new AlertDialog(
@@ -81,7 +81,7 @@ class _KontrolManualState extends State<KontrolManual> {
                           fontWeight: FontWeight.bold),
                     ),
                     onPressed: () {
-                      Navigator.pop(context);
+                      Navigator.pop(context, true);
                     },
                   );
                   Widget continueButton = TextButton(
