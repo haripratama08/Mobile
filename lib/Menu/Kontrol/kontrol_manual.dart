@@ -60,7 +60,6 @@ class _KontrolManualState extends State<KontrolManual> {
       }
       return response;
     }
-
     return Container(
       child: Container(
         child: loading == true
