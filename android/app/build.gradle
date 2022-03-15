@@ -48,6 +48,7 @@ android {
         applicationId "com.ch_v2_1"
         minSdkVersion 16
         targetSdkVersion 30
+        multiDexEnabled true
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
     }

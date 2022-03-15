@@ -63,6 +63,9 @@ class _KontrolAutoState extends State<KontrolAuto> with Validation {
               builder: (ctxt) {
                 Future.delayed(Duration(seconds: 2), () {
                   Navigator.pop(context);
+                  Future.delayed(Duration(seconds: 0), () {
+                    Navigator.pop(context, true);
+                  });
                 });
                 return new AlertDialog(
                   title: Column(
@@ -261,10 +264,52 @@ class _KontrolAutoState extends State<KontrolAuto> with Validation {
                                                 BorderRadius.circular(10))))
                                 : GestureDetector(
                                     onTap: () {
-                                      FocusScope.of(context)
-                                          .requestFocus(FocusNode());
-                                      publish("auto", threshold.text,
-                                          selectedstate);
+                                      Widget cancelButton = TextButton(
+                                        child: Text(
+                                          "Tidak",
+                                          style: TextStyle(
+                                              fontFamily: 'Kohi',
+                                              color: Colors.green[300],
+                                              fontWeight: FontWeight.bold),
+                                        ),
+                                        onPressed: () {
+                                          Navigator.pop(context, true);
+                                        },
+                                      );
+                                      Widget continueButton = TextButton(
+                                        child: Text("Ya",
+                                            style: TextStyle(
+                                                fontFamily: 'Kohi',
+                                                color: Colors.green[300],
+                                                fontWeight: FontWeight.bold)),
+                                        onPressed: () {
+                                          liststate.clear();
+                                          FocusScope.of(context)
+                                              .requestFocus(FocusNode());
+                                          publish("auto", threshold.text,
+                                              selectedstate);
+                                        },
+                                      );
+                                      AlertDialog alert = AlertDialog(
+                                        content: Text(
+                                          "Apakah Anda Yakin?",
+                                          style: TextStyle(fontFamily: 'Kohi'),
+                                        ),
+                                        actions: [
+                                          continueButton,
+                                          cancelButton,
+                                        ],
+                                      );
+                                      showDialog(
+                                        context: context,
+                                        builder: (BuildContext context) {
+                                          return alert;
+                                        },
+                                      );
+                                      // FocusScope.of(context)
+                                      //     .requestFocus(FocusNode());
+                                      // publish("auto", threshold.text,
+                                      //     selectedstate);
                                     },
                                     child: Container(
                                         child: Center(

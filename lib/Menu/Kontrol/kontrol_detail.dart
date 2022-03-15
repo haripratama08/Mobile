@@ -247,6 +247,7 @@ class _DetailState extends State<Detail> with Validation {
                                 data(status1);
                                 change(index);
                                 statusa(index);
+                                loop = true;
                               });
                             },
                             child: Padding(
@@ -298,13 +299,13 @@ class _DetailState extends State<Detail> with Validation {
                                                                 FontWeight
                                                                     .bold),
                                                       ),
-                                                      new Text(
-                                                        '${reasonlist[index]}',
-                                                        style: TextStyle(
-                                                          fontSize:
-                                                              getHeight(10),
-                                                        ),
-                                                      )
+                                                      // new Text(
+                                                      //   '${reasonlist[index]}',
+                                                      //   style: TextStyle(
+                                                      //     fontSize:
+                                                      //         getHeight(10),
+                                                      //   ),
+                                                      // )
                                                     ])
                                               : new Text(
                                                   '${listkontrol[index]}',

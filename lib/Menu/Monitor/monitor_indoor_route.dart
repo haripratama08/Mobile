@@ -243,12 +243,12 @@ class MonitorIndoorRouteState extends State<MonitorIndoorRoute>
                                                       fontWeight:
                                                           FontWeight.bold),
                                                 ),
-                                                new Text(
-                                                  '${reasondev[index]}',
-                                                  style: TextStyle(
-                                                    fontSize: getHeight(10),
-                                                  ),
-                                                )
+                                                // new Text(
+                                                //   '${reasondev[index]}',
+                                                //   style: TextStyle(
+                                                //     fontSize: getHeight(10),
+                                                //   ),
+                                                // )
                                               ])
                                         : Align(
                                             alignment: Alignment.center,

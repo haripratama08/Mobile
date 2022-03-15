@@ -52,12 +52,13 @@ class _LoginPageState extends State<LoginPage> {
         getPref();
       }
     } on SocketException catch (_) {
+      print(_);
       showDialog(
           context: context,
           builder: (BuildContext context) {
             return CustomDialogBox(
               title: "Internet Tidak Tersedia",
-              text: "Reload",
+              text: "Perbarui",
             );
           });
       LoginPage();

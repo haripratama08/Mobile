@@ -247,6 +247,7 @@ class _SemuaState extends State<Semua> with Validation {
                                 change(index);
                                 statusa(index);
                                 ganti = true;
+                                loop = true;
                               });
                             },
                             child: Padding(
@@ -299,13 +300,13 @@ class _SemuaState extends State<Semua> with Validation {
                                                                 FontWeight
                                                                     .bold),
                                                       ),
-                                                      new Text(
-                                                        '${reasonlist[index]}',
-                                                        style: TextStyle(
-                                                          fontSize:
-                                                              getHeight(10),
-                                                        ),
-                                                      )
+                                                      // new Text(
+                                                      //   '${reasonlist[index]}',
+                                                      //   style: TextStyle(
+                                                      //     fontSize:
+                                                      //         getHeight(10),
+                                                      //   ),
+                                                      // )
                                                     ])
                                               : new Text(
                                                   '${listkontrol[index]}',

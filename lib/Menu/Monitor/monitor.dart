@@ -242,12 +242,12 @@ class _MonitorIndoorState extends State<MonitorIndoor> with Validation {
                                                       fontWeight:
                                                           FontWeight.bold),
                                                 ),
-                                                new Text(
-                                                  '${reasondev[index]}',
-                                                  style: TextStyle(
-                                                    fontSize: getHeight(10),
-                                                  ),
-                                                )
+                                                // new Text(
+                                                //   '${reasondev[index]}',
+                                                //   style: TextStyle(
+                                                //     fontSize: getHeight(10),
+                                                //   ),
+                                                // )
                                               ])
                                         : Align(
                                             alignment: Alignment.center,

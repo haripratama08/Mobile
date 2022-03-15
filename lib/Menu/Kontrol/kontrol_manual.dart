@@ -44,9 +44,6 @@ class _KontrolManualState extends State<KontrolManual> {
             builder: (ctxt) {
               Future.delayed(Duration(seconds: 2), () {
                 Navigator.pop(context, true);
-                Future.delayed(Duration(seconds: 0), () {
-                  Navigator.pop(context, true);
-                });
               });
               return new AlertDialog(
                 title: GestureDetector(
@@ -60,6 +57,7 @@ class _KontrolManualState extends State<KontrolManual> {
       }
       return response;
     }
+
     return Container(
       child: Container(
         child: loading == true
@@ -71,46 +69,49 @@ class _KontrolManualState extends State<KontrolManual> {
               )
             : GestureDetector(
                 onTap: () {
-                  Widget cancelButton = TextButton(
-                    child: Text(
-                      "Tidak",
-                      style: TextStyle(
-                          fontFamily: 'Kohi',
-                          color: Colors.green[300],
-                          fontWeight: FontWeight.bold),
-                    ),
-                    onPressed: () {
-                      Navigator.pop(context, true);
-                    },
-                  );
-                  Widget continueButton = TextButton(
-                    child: Text("Ya",
-                        style: TextStyle(
-                            fontFamily: 'Kohi',
-                            color: Colors.green[300],
-                            fontWeight: FontWeight.bold)),
-                    onPressed: () {
-                      liststate.clear();
-                      FocusScope.of(context).requestFocus(FocusNode());
-                      publish("manual", "0", "0", statesend);
-                    },
-                  );
-                  AlertDialog alert = AlertDialog(
-                    content: Text(
-                      "Apakah Anda Yakin?",
-                      style: TextStyle(fontFamily: 'Kohi'),
-                    ),
-                    actions: [
-                      continueButton,
-                      cancelButton,
-                    ],
-                  );
-                  showDialog(
-                    context: context,
-                    builder: (BuildContext context) {
-                      return alert;
-                    },
-                  );
+                  // Widget cancelButton = TextButton(
+                  //   child: Text(
+                  //     "Tidak",
+                  //     style: TextStyle(
+                  //         fontFamily: 'Kohi',
+                  //         color: Colors.green[300],
+                  //         fontWeight: FontWeight.bold),
+                  //   ),
+                  //   onPressed: () {
+                  //     Navigator.pop(context, true);
+                  //   },
+                  // );
+                  // Widget continueButton = TextButton(
+                  //   child: Text("Ya",
+                  //       style: TextStyle(
+                  //           fontFamily: 'Kohi',
+                  //           color: Colors.green[300],
+                  //           fontWeight: FontWeight.bold)),
+                  //   onPressed: () {
+                  //     liststate.clear();
+                  //     FocusScope.of(context).requestFocus(FocusNode());
+                  //     publish("manual", "0", "0", statesend);
+                  //   },
+                  // );
+                  // AlertDialog alert = AlertDialog(
+                  //   content: Text(
+                  //     "Apakah Anda Yakin?",
+                  //     style: TextStyle(fontFamily: 'Kohi'),
+                  //   ),
+                  //   actions: [
+                  //     continueButton,
+                  //     cancelButton,
+                  //   ],
+                  // );
+                  // showDialog(
+                  //   context: context,
+                  //   builder: (BuildContext context) {
+                  //     return alert;
+                  //   },
+                  // );
+                  liststate.clear();
+                  FocusScope.of(context).requestFocus(FocusNode());
+                  publish("manual", "0", "0", statesend);
                 },
                 child: Container(
                     child: Center(

@@ -1,4 +1,3 @@
-
 import 'package:ch_v2_1/LoginPage/loginpage.dart';
 import 'package:ch_v2_1/dialogbox/constants.dart';
 import 'package:flutter/material.dart';
@@ -69,7 +68,7 @@ class _CustomDialogBoxState extends State<CustomDialogBox> {
                     },
                     child: Text(
                       widget.text,
-                      style: TextStyle(fontSize: 12, fontFamily: 'Kohi'),
+                      style: TextStyle(fontSize: 15, fontFamily: 'Kohi'),
                     )),
               ),
             ],
