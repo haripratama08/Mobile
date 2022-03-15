@@ -244,9 +244,14 @@ class _DetailState extends State<Detail> with Validation {
                         : GestureDetector(
                             onTap: () {
                               setState(() {
+                                status = null;
                                 data(status1);
                                 change(index);
                                 statusa(index);
+                                ganti = true;
+                                // data(status1);
+                                // change(index);
+                                // statusa(index);
                                 loop = true;
                               });
                             },

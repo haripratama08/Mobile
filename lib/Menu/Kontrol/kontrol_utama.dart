@@ -220,6 +220,7 @@ class _KontrolUtamaState extends State<KontrolUtama>
                     iDkontrol == null
                         ? iDkontrol = listidkontrol[0]
                         : iDkontrol = iDkontrol;
+                    loop = false;
                     Future.delayed(const Duration(seconds: 3), () {
                       return loadState();
                     });
