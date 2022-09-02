@@ -63,6 +63,7 @@ class _SemuaState extends State<Semua> with Validation {
     Jeniskontrol jeniskontrol = Jeniskontrol.fromJson(jsonResponse);
     if (this.mounted) {
       setState(() {
+        print(jsonResponse);
         if (jeniskontrol.status == 'OK') {
           panjanglokasi = jeniskontrol.data.lokasi.length;
           for (int i = 0; i < panjanglokasi; i++) {
@@ -107,31 +108,32 @@ class _SemuaState extends State<Semua> with Validation {
                   eventlist.length == panjangkontrol
                       ? print("")
                       : eventlist.add(event);
-
+                  print("$eventlist ${eventlist.length}");
                   timelist.length == panjangkontrol
                       ? print("")
                       : timelist.add(time);
-
+                  print("$timelist ${timelist.length}");
                   reasonlist.length == panjangkontrol
                       ? print("")
                       : reasonlist.add(reason);
-
+                  print("$reasonlist ${reasonlist.length}");
                   listkontrol.contains(kontrol)
                       ? print("")
                       : listkontrol.add(kontrol);
+                  print("$listkontrol ${listkontrol.length}");
 
                   kontrolnamelist.contains(kontrolname)
                       ? print("")
                       : kontrolnamelist.add(kontrolname);
-
+                  print("$kontrolnamelist ${kontrolnamelist.length}");
                   namaalatkontrol == null
                       ? namaalatkontrol = listkontrol[0]
                       : namaalatkontrol = namaalatkontrol;
-
+                  print("$namaalatkontrol ${namaalatkontrol.length}");
                   listidkontrol.contains(idkontrol)
                       ? print("")
                       : listidkontrol.add(idkontrol);
-
+                  print("$listidkontrol ${listidkontrol.length}");
                   kontrolnamechoosen == null
                       ? kontrolnamechoosen = kontrolnamelist[0]
                       : kontrolnamechoosen = kontrolnamechoosen;
@@ -206,6 +208,7 @@ class _SemuaState extends State<Semua> with Validation {
                 scrollDirection: Axis.vertical,
                 itemCount: listkontrol.length == null ? 0 : listkontrol.length,
                 itemBuilder: (BuildContext context, int index) {
+                  print(listkontrol.length);
                   statusa(index);
                   if (listkontrol.length == null) {
                     return Container(

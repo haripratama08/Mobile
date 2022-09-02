@@ -28,9 +28,9 @@ dependencies:
   rules: ^2.0.0
   mime: ^1.0.1
   path_provider: ^2.0.9
-  syncfusion_flutter_charts: ^19.4.50
-  syncfusion_flutter_pdf: ^19.4.50-beta
-  syncfusion_flutter_datepicker: ^19.4.50
+  syncfusion_flutter_charts: ^20.2.43
+  syncfusion_flutter_pdf: ^20.2.43
+  syncfusion_flutter_datepicker: ^20.2.43
 
 dev_dependencies:
   flutter_test:

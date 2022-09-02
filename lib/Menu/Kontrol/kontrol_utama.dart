@@ -158,6 +158,7 @@ class _KontrolUtamaState extends State<KontrolUtama>
       var jsonString = await http
           .get(url, headers: {HttpHeaders.authorizationHeader: '$token'});
       var jsonResponse = json.decode(jsonString.body);
+      print(jsonResponse);
       if (this.mounted) {
         setState(() {
           ganti = false;
@@ -220,6 +221,7 @@ class _KontrolUtamaState extends State<KontrolUtama>
                     iDkontrol == null
                         ? iDkontrol = listidkontrol[0]
                         : iDkontrol = iDkontrol;
+                    status == null ? status = liststate[0] : status = status;
                     loop = false;
                     Future.delayed(const Duration(seconds: 3), () {
                       return loadState();

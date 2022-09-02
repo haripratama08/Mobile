@@ -109,6 +109,52 @@ class _KontrolAutoState extends State<KontrolAuto> with Validation {
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
                                       Text(
+                                        "Batas",
+                                        style: TextStyle(
+                                          fontFamily: 'Kohi',
+                                          color: Colors.green[900],
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: MediaQuery.of(context)
+                                                  .size
+                                                  .width /
+                                              30,
+                                        ),
+                                      ),
+                                      SizedBox(
+                                        height: 5,
+                                      ),
+                                      Padding(
+                                        padding:
+                                            const EdgeInsets.only(left: 10),
+                                        child: Container(
+                                          height: 32,
+                                          width: 85 * 3 / 2,
+                                          decoration: myBoxDecoration(),
+                                          child: TextFormField(
+                                            textInputAction:
+                                                TextInputAction.done,
+                                            validator: (value) {
+                                              return threshold.text = value;
+                                            },
+                                            controller: threshold,
+                                            keyboardType: TextInputType.number,
+                                            autofocus: false,
+                                            textAlign: TextAlign.center,
+                                            decoration: InputDecoration(
+                                              hintText: 'Batas',
+                                              labelStyle: TextStyle(
+                                                  color: Colors.white,
+                                                  fontFamily: "Kohi"),
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Text(
                                         "Status",
                                         style: TextStyle(
                                           fontFamily: 'Kohi',
@@ -181,53 +227,6 @@ class _KontrolAutoState extends State<KontrolAuto> with Validation {
                                       ),
                                     ],
                                   ),
-                                  Column(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      Text(
-                                        "Batas",
-                                        style: TextStyle(
-                                          fontFamily: 'Kohi',
-                                          color: Colors.green[900],
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: MediaQuery.of(context)
-                                                  .size
-                                                  .width /
-                                              30,
-                                        ),
-                                      ),
-                                      SizedBox(
-                                        height: 5,
-                                      ),
-                                      Padding(
-                                        padding:
-                                            const EdgeInsets.only(left: 10),
-                                        child: Container(
-                                          height: 32,
-                                          width: 85 * 3 / 2,
-                                          decoration: myBoxDecoration(),
-                                          child: TextFormField(
-                                            validator: (value) {
-                                              if (value.isEmpty) {
-                                                return 'isikan batas';
-                                              }
-                                              return null;
-                                            },
-                                            controller: threshold,
-                                            keyboardType: TextInputType.number,
-                                            autofocus: false,
-                                            textAlign: TextAlign.center,
-                                            decoration: InputDecoration(
-                                              hintText: 'Batas',
-                                              labelStyle: TextStyle(
-                                                  color: Colors.white,
-                                                  fontFamily: "Kohi"),
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
                                 ],
                               ),
                             ],
@@ -245,7 +244,9 @@ class _KontrolAutoState extends State<KontrolAuto> with Validation {
                               )
                             : ((selectedalat?.isEmpty ?? true) ||
                                     (pilihsensor?.isEmpty ?? true) ||
-                                    (threshold.text?.isEmpty ?? true))
+                                    (threshold.text?.isEmpty ?? true) ||
+                                    (selectedkondisi?.isEmpty ?? true) ||
+                                    (selectedstate?.isEmpty ?? true))
                                 ? GestureDetector(
                                     onTap: () {},
                                     child: Container(
